@@ -53,8 +53,4 @@
     max-width: 95vw !important;
     margin: 0 auto !important;
   }
-  
-  * {
-    @apply border-border;
-  }
 }
