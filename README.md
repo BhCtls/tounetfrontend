@@ -34,7 +34,7 @@ A modern React TypeScript frontend application for the TouNetCore API system, pr
 
 - Node.js 18+ 
 - npm or yarn
-- TouNetCore backend API running on `localhost:8081`
+- TouNetCore backend API running on `localhost:44544`
 
 ### Installation
 
@@ -91,7 +91,7 @@ src/
 
 ## API Integration
 
-The frontend connects to the TouNetCore Go backend API running on `localhost:8081`. Key features include:
+The frontend connects to the TouNetCore Go backend API running on `localhost:44544`. Key features include:
 
 - **Authentication**: JWT-based login and registration
 - **User Management**: Profile updates and user administration
@@ -145,7 +145,7 @@ The frontend connects to the TouNetCore Go backend API running on `localhost:808
 
 The API base URL is configured in `src/lib/api.ts`:
 ```typescript
-const API_BASE_URL = 'http://localhost:8081/api/v1';
+const API_BASE_URL = 'http://localhost:44544/api/v1';
 ```
 
 Update this URL if your backend API runs on a different port or domain.

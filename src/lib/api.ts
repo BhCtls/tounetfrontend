@@ -8,18 +8,21 @@ import type {
   App,
   NKey,
   InviteCode,
+  InviteCodesResponse,
+  UsersResponse,
   GenerateNKeyRequest,
   AdminGenerateNKeyRequest,
   ValidateNKeyRequest,
   CreateUserRequest,
   CreateAppRequest,
+  UpdateAppRequest,
   UpdateUserRequest,
+  AdminUpdateUserRequest,
   PaginatedResponse,
   AuditLog
 } from '../types/api';
 
-//const API_BASE_URL = 'http://192.168.1.6:44544/api/v1';
-const API_BASE_URL = 'https://api.riv62hjux.nyat.app:43419/api/v1';
+const API_BASE_URL = 'http://localhost:44544/api/v1';
 
 // Create axios instance
 const apiClient = axios.create({
@@ -147,7 +150,7 @@ export const nkeyApi = {
 // Admin API
 export const adminApi = {
   // User management
-  getUsers: async (page = 1, size = 10): Promise<ApiResponse<PaginatedResponse<User>>> => {
+  getUsers: async (page = 1, size = 10): Promise<ApiResponse<UsersResponse>> => {
     const response = await apiClient.get(`/admin/users?page=${page}&size=${size}`);
     return response.data;
   },
@@ -157,13 +160,13 @@ export const adminApi = {
     return response.data;
   },
 
-  updateUser: async (id: number, data: Partial<CreateUserRequest>): Promise<ApiResponse<User>> => {
-    const response = await apiClient.put(`/admin/users/${id}`, data);
+  updateUser: async (id: number, data: AdminUpdateUserRequest): Promise<ApiResponse<User>> => {
+    const response = await apiClient.post(`/admin/users/${id}/update`, data);
     return response.data;
   },
 
-  deleteUser: async (id: number): Promise<ApiResponse<void>> => {
-    const response = await apiClient.delete(`/admin/users/${id}`);
+  deleteUser: async (id: number): Promise<ApiResponse<{ deleted_user_id: number }>> => {
+    const response = await apiClient.post(`/admin/users/${id}/delete`);
     return response.data;
   },
 
@@ -178,19 +181,24 @@ export const adminApi = {
     return response.data;
   },
 
-  updateApp: async (id: number, data: Partial<CreateAppRequest>): Promise<ApiResponse<App>> => {
-    const response = await apiClient.put(`/admin/apps/${id}`, data);
+  updateApp: async (app_id: string, data: UpdateAppRequest): Promise<ApiResponse<App>> => {
+    const response = await apiClient.post(`/admin/apps/${app_id}/update`, data);
     return response.data;
   },
 
-  deleteApp: async (id: number): Promise<ApiResponse<void>> => {
-    const response = await apiClient.delete(`/admin/apps/${id}`);
+  toggleApp: async (app_id: string): Promise<ApiResponse<{ app_id: string; is_active: boolean }>> => {
+    const response = await apiClient.post(`/admin/apps/${app_id}/toggle`);
+    return response.data;
+  },
+
+  deleteApp: async (app_id: string): Promise<ApiResponse<{ deleted_app_id: string }>> => {
+    const response = await apiClient.post(`/admin/apps/${app_id}/delete`);
     return response.data;
   },
 
   // Invite codes
-  getInviteCodes: async (): Promise<ApiResponse<InviteCode[]>> => {
-    const response = await apiClient.get('/admin/invite-codes');
+  getInviteCodes: async (page = 1, size = 20): Promise<ApiResponse<InviteCodesResponse>> => {
+    const response = await apiClient.get(`/admin/invite-codes?page=${page}&size=${size}`);
     return response.data;
   },
 
@@ -201,12 +209,6 @@ export const adminApi = {
 
   deleteInviteCode: async (code: string): Promise<ApiResponse<{ deleted_code: string }>> => {
     const response = await apiClient.post(`/admin/invite-codes/${code}/delete`);
-    return response.data;
-  },
-
-  // NKey management
-  generateNKey: async (data: AdminGenerateNKeyRequest): Promise<ApiResponse<NKey>> => {
-    const response = await apiClient.post('/admin/nkey/generate', data);
     return response.data;
   },
 
