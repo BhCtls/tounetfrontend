@@ -37,14 +37,32 @@ const createAppSchema = z.object({
   is_active: z.boolean(),
 });
 
+const updateUserSchema = z.object({
+  username: z.string().min(3, 'Username must be at least 3 characters').optional(),
+  status: z.enum(['admin', 'user', 'disabled']).optional(),
+  phone: z.string().min(10, 'Phone number is required').optional(),
+  pushdeer_token: z.string().optional(),
+});
+
+const updateAppSchema = z.object({
+  name: z.string().min(1, 'Name is required').optional(),
+  description: z.string().min(1, 'Description is required').optional(),
+  required_permission_level: z.enum(['admin', 'user']).optional(),
+  is_active: z.boolean().optional(),
+});
+
 type CreateUserForm = z.infer<typeof createUserSchema>;
 type CreateAppForm = z.infer<typeof createAppSchema>;
+type UpdateUserForm = z.infer<typeof updateUserSchema>;
+type UpdateAppForm = z.infer<typeof updateAppSchema>;
 
 export function AdminDashboard() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<'users' | 'apps' | 'invites'>('users');
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [showCreateApp, setShowCreateApp] = useState(false);
+  const [editingUser, setEditingUser] = useState<any>(null);
+  const [editingApp, setEditingApp] = useState<any>(null);
   const [copiedCode, setCopiedCode] = useState<string>('');
 
   // Queries
@@ -64,11 +82,18 @@ export function AdminDashboard() {
     },
   });
 
-  const { data: inviteCodes, isLoading: inviteCodesLoading } = useQuery({
+  const { data: inviteCodesData, isLoading: inviteCodesLoading, error: inviteCodesError } = useQuery({
     queryKey: ['admin', 'invite-codes'],
     queryFn: async () => {
-      const response = await adminApi.getInviteCodes();
-      return response.data;
+      console.log('Fetching invite codes...');
+      try {
+        const response = await adminApi.getInviteCodes(1, 50);
+        console.log('Invite codes response:', response);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching invite codes:', error);
+        throw error;
+      }
     },
   });
 
@@ -86,6 +111,14 @@ export function AdminDashboard() {
       required_permission_level: 'user',
       is_active: true,
     },
+  });
+
+  const updateUserForm = useForm<UpdateUserForm>({
+    resolver: zodResolver(updateUserSchema),
+  });
+
+  const updateAppForm = useForm<UpdateAppForm>({
+    resolver: zodResolver(updateAppSchema),
   });
 
   // Mutations
@@ -121,10 +154,44 @@ export function AdminDashboard() {
     },
   });
 
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: UpdateUserForm }) => 
+      adminApi.updateUser(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+      setEditingUser(null);
+      updateUserForm.reset();
+    },
+  });
+
   const deleteAppMutation = useMutation({
     mutationFn: adminApi.deleteApp,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'apps'] });
+    },
+  });
+
+  const updateAppMutation = useMutation({
+    mutationFn: ({ app_id, data }: { app_id: string; data: UpdateAppForm }) => 
+      adminApi.updateApp(app_id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'apps'] });
+      setEditingApp(null);
+      updateAppForm.reset();
+    },
+  });
+
+  const toggleAppMutation = useMutation({
+    mutationFn: adminApi.toggleApp,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'apps'] });
+    },
+  });
+
+  const deleteInviteCodeMutation = useMutation({
+    mutationFn: adminApi.deleteInviteCode,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'invite-codes'] });
     },
   });
 
@@ -140,14 +207,61 @@ export function AdminDashboard() {
     createAppMutation.mutate(data);
   };
 
+  const onUpdateUser = (data: UpdateUserForm) => {
+    if (editingUser) {
+      updateUserMutation.mutate({
+        id: editingUser.id,
+        data: {
+          ...data,
+          pushdeer_token: data.pushdeer_token || '',
+        },
+      });
+    }
+  };
+
+  const onUpdateApp = (data: UpdateAppForm) => {
+    if (editingApp) {
+      updateAppMutation.mutate({
+        app_id: editingApp.app_id,
+        data,
+      });
+    }
+  };
+
+  const handleEditUser = (user: any) => {
+    setEditingUser(user);
+    updateUserForm.reset({
+      username: user.username,
+      status: user.status,
+      phone: user.phone,
+      pushdeer_token: user.pushdeer_token || '',
+    });
+  };
+
+  const handleEditApp = (app: any) => {
+    setEditingApp(app);
+    updateAppForm.reset({
+      name: app.name,
+      description: app.description,
+      required_permission_level: app.required_permission_level,
+      is_active: app.is_active,
+    });
+  };
+
   const handleCopyInviteCode = async (code: string) => {
     await copyToClipboard(code);
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(''), 2000);
   };
 
-  const users = usersData?.items || [];
+  const users = usersData?.users || [];
   const totalUsers = usersData?.total || 0;
+  const inviteCodes = inviteCodesData?.invite_codes || [];
+  const totalInviteCodes = inviteCodesData?.total || 0;
+
+  // Debug logging - can be removed in production
+  console.log('InviteCodesData:', inviteCodesData);
+  console.log('InviteCodes array length:', inviteCodes.length);
 
   return (
     <div className="space-y-6">
@@ -173,12 +287,12 @@ export function AdminDashboard() {
               <div className="text-sm text-gray-600">Active Apps</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{inviteCodes?.length || 0}</div>
-              <div className="text-sm text-gray-600">Invite Codes</div>
+              <div className="text-2xl font-bold text-purple-600">{totalInviteCodes}</div>
+              <div className="text-sm text-gray-600">Total Invite Codes</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
-                {inviteCodes?.filter(code => !code.is_used).length || 0}
+                {inviteCodes?.filter((code: any) => !code.code_user_id).length || 0}
               </div>
               <div className="text-sm text-gray-600">Unused Codes</div>
             </div>
@@ -277,6 +391,56 @@ export function AdminDashboard() {
             </Card>
           )}
 
+          {editingUser && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Edit User: {editingUser.username}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={updateUserForm.handleSubmit(onUpdateUser)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      label="Username"
+                      {...updateUserForm.register('username')}
+                      error={updateUserForm.formState.errors.username?.message}
+                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Status
+                      </label>
+                      <select
+                        {...updateUserForm.register('status')}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option value="disabled">Disabled</option>
+                      </select>
+                    </div>
+                    <Input
+                      label="Phone"
+                      {...updateUserForm.register('phone')}
+                      error={updateUserForm.formState.errors.phone?.message}
+                    />
+                    <Input
+                      label="PushDeer Token (Optional)"
+                      {...updateUserForm.register('pushdeer_token')}
+                      error={updateUserForm.formState.errors.pushdeer_token?.message}
+                    />
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button type="submit" disabled={updateUserMutation.isPending}>
+                      {updateUserMutation.isPending ? 'Updating...' : 'Update User'}
+                    </Button>
+                    <Button variant="outline" onClick={() => setEditingUser(null)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
           <Card>
             <CardContent className="p-0">
               {usersLoading ? (
@@ -325,14 +489,23 @@ export function AdminDashboard() {
                             {formatDate(user.created_at)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => deleteUserMutation.mutate(user.id)}
-                              disabled={deleteUserMutation.isPending}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <div className="flex justify-end space-x-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditUser(user)}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => deleteUserMutation.mutate(user.id)}
+                                disabled={deleteUserMutation.isPending}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -415,6 +588,61 @@ export function AdminDashboard() {
             </Card>
           )}
 
+          {editingApp && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Edit Application: {editingApp.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={updateAppForm.handleSubmit(onUpdateApp)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      label="Name"
+                      {...updateAppForm.register('name')}
+                      error={updateAppForm.formState.errors.name?.message}
+                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Permission Level
+                      </label>
+                      <select
+                        {...updateAppForm.register('required_permission_level')}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                  </div>
+                  <Input
+                    label="Description"
+                    {...updateAppForm.register('description')}
+                    error={updateAppForm.formState.errors.description?.message}
+                  />
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="is_active"
+                      {...updateAppForm.register('is_active')}
+                      className="rounded border-gray-300"
+                    />
+                    <label htmlFor="is_active" className="ml-2 text-sm text-gray-700">
+                      Active
+                    </label>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button type="submit" disabled={updateAppMutation.isPending}>
+                      {updateAppMutation.isPending ? 'Updating...' : 'Update Application'}
+                    </Button>
+                    <Button variant="outline" onClick={() => setEditingApp(null)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {appsLoading ? (
               <Loading text="Loading applications..." />
@@ -427,13 +655,30 @@ export function AdminDashboard() {
                         <CardTitle className="text-base">{app.name}</CardTitle>
                         <CardDescription>{app.app_id}</CardDescription>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteAppMutation.mutate(app.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditApp(app)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleAppMutation.mutate(app.app_id)}
+                          disabled={toggleAppMutation.isPending}
+                        >
+                          {app.is_active ? 'Disable' : 'Enable'}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteAppMutation.mutate(app.app_id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -472,7 +717,11 @@ export function AdminDashboard() {
             <CardContent className="p-0">
               {inviteCodesLoading ? (
                 <Loading text="Loading invite codes..." />
-              ) : (
+              ) : inviteCodesError ? (
+                <div className="p-8 text-center">
+                  <p className="text-red-500">Error loading invite codes: {String(inviteCodesError)}</p>
+                </div>
+              ) : inviteCodes.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -495,41 +744,97 @@ export function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {inviteCodes?.map((code) => (
-                        <tr key={code.id}>
+                      {inviteCodes.map((code: any, index: number) => (
+                        <tr key={code.code || index}>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <code className="text-sm font-mono text-gray-900">{code.code}</code>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              code.is_used ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                              code.code_user_id ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                             }`}>
-                              {code.is_used ? 'Used' : 'Available'}
+                              {code.code_user_id ? 'Used' : 'Available'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {code.used_by || '-'}
+                            {code.used_by ? 
+                              (typeof code.used_by === 'string' ? code.used_by : code.used_by.username) 
+                              : '-'
+                            }
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {formatDate(code.created_at)}
+                            {code.time ? formatDate(code.time) : '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleCopyInviteCode(code.code)}
-                            >
-                              {copiedCode === code.code ? (
-                                <Check className="w-4 h-4" />
-                              ) : (
-                                <Copy className="w-4 h-4" />
-                              )}
-                            </Button>
+                            <div className="flex justify-end space-x-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCopyInviteCode(code.code)}
+                              >
+                                {copiedCode === code.code ? (
+                                  <Check className="w-4 h-4" />
+                                ) : (
+                                  <Copy className="w-4 h-4" />
+                                )}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => deleteInviteCodeMutation.mutate(code.code)}
+                                disabled={deleteInviteCodeMutation.isPending}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                </div>
+              ) : (
+                <div className="p-8 text-center">
+                  <Key className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No invite codes found</h3>
+                  <p className="text-gray-500 mb-4">
+                    Generate a new invite code to get started.
+                  </p>
+                  <Button
+                    onClick={() => generateInviteCodeMutation.mutate()}
+                    disabled={generateInviteCodeMutation.isPending}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    {generateInviteCodeMutation.isPending ? 'Generating...' : 'Generate First Code'}
+                  </Button>
+                  
+                  {/* Debug info - remove this in production */}
+                  <div className="mt-6 p-4 bg-gray-50 rounded-lg text-left">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Debug Information:</p>
+                    <div className="text-xs text-gray-600 space-y-1">
+                      <p>Loading: {inviteCodesLoading ? 'true' : 'false'}</p>
+                      <p>Data exists: {inviteCodesData ? 'true' : 'false'}</p>
+                      <p>Array length: {inviteCodes?.length || 0}</p>
+                      <p>Error: {inviteCodesError ? String(inviteCodesError) : 'none'}</p>
+                    </div>
+                    <details className="mt-2">
+                      <summary className="text-xs text-gray-500 cursor-pointer">Raw API Response</summary>
+                      <pre className="mt-2 text-xs bg-white p-2 rounded border overflow-auto max-h-40">
+                        {JSON.stringify(inviteCodesData, null, 2)}
+                      </pre>
+                    </details>
+                    <div className="mt-2">
+                      <button
+                        onClick={() => {
+                          console.log('Manual invite codes refetch...');
+                          queryClient.invalidateQueries({ queryKey: ['admin', 'invite-codes'] });
+                        }}
+                        className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                      >
+                        Refresh Data
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </CardContent>

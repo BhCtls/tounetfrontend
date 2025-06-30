@@ -2,19 +2,21 @@ export interface User {
   id: number;
   username: string;
   phone: string;
-  pushdeer_token: string;
+  pushdeer_token?: string;
   status: 'admin' | 'user' | 'disabled';
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
+  last_login?: string;
 }
 
 export interface App {
-  id: number;
+  id?: number;
   app_id: string;
   name: string;
   description: string;
   required_permission_level: 'admin' | 'user';
   is_active: boolean;
+  secret_key?: string;
   created_at: string;
   updated_at: string;
 }
@@ -31,12 +33,20 @@ export interface NKey {
 }
 
 export interface InviteCode {
-  id: number;
+  id?: number;
   code: string;
-  is_used: boolean;
-  used_by?: string;
-  created_at: string;
-  used_at?: string;
+  used?: boolean;
+  used_by?: string | null;
+  code_user_id?: number | null;
+  time?: string;
+  created_at?: string;
+  used_at?: string | null;
+}
+
+// Response type for invite codes list
+export interface InviteCodesResponse {
+  invite_codes: InviteCode[];
+  total: number;
 }
 
 export interface AuditLog {
@@ -100,7 +110,21 @@ export interface CreateAppRequest {
   is_active: boolean;
 }
 
+export interface UpdateAppRequest {
+  name?: string;
+  description?: string;
+  required_permission_level?: 'admin' | 'user';
+  is_active?: boolean;
+}
+
 export interface UpdateUserRequest {
+  phone?: string;
+  pushdeer_token?: string;
+}
+
+export interface AdminUpdateUserRequest {
+  username?: string;
+  status?: 'admin' | 'user' | 'disabled';
   phone?: string;
   pushdeer_token?: string;
 }
@@ -111,4 +135,10 @@ export interface PaginatedResponse<T> {
   page: number;
   size: number;
   pages: number;
+}
+
+// Users response structure from backend
+export interface UsersResponse {
+  users: User[];
+  total: number;
 }

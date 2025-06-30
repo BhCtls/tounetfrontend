@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TouNetCore Frontend Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background-color: #2563eb;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3b82f6;
+        }
+        .error {
+            border-left-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .success {
+            border-left-color: #10b981;
+            background-color: #f0fdf4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TouNetCore Frontend 测试页面</h1>
+        <p>这个页面用来测试前端功能和API连接。</p>
+        
+        <h2>API 连接测试</h2>
+        <button class="test-button" onclick="testApiConnection()">测试API连接</button>
+        <button class="test-button" onclick="testLogin()">测试登录</button>
+        <button class="test-button" onclick="testReactApp()">测试React应用</button>
+        
+        <div id="results"></div>
+        
+        <h2>React应用链接</h2>
+        <a href="http://localhost:5173" target="_blank" style="color: #3b82f6; text-decoration: none;">
+            打开React应用 →
+        </a>
+    </div>
+
+    <script>
+        function addResult(message, type = 'result') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        async function testApiConnection() {
+            addResult('正在测试API连接...');
+            try {
+                const response = await fetch('http://localhost:44544/api/v1/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'test',
+                        password: 'test'
+                    })
+                });
+                
+                if (response.ok) {
+                    addResult('✅ API服务器连接正常', 'success');
+                } else {
+                    addResult(`⚠️ API响应状态: ${response.status}`, 'result');
+                }
+            } catch (error) {
+                addResult(`❌ API连接失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            addResult('正在测试管理员登录...');
+            try {
+                const response = await fetch('http://localhost:44544/api/v1/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'admin123'
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.code === 200) {
+                    addResult('✅ 管理员登录成功', 'success');
+                    addResult(`Token: ${data.data.token.substring(0, 50)}...`, 'result');
+                } else {
+                    addResult(`❌ 登录失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ 登录请求失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testReactApp() {
+            addResult('正在测试React应用...');
+            try {
+                const response = await fetch('http://localhost:5173');
+                if (response.ok) {
+                    addResult('✅ React应用服务器响应正常', 'success');
+                    addResult('请点击上方链接打开React应用', 'result');
+                } else {
+                    addResult(`❌ React应用响应错误: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ React应用连接失败: ${error.message}`, 'error');
+                addResult('请确保开发服务器正在运行: npm run dev', 'result');
+            }
+        }
+
+        // 页面加载时自动测试
+        window.onload = function() {
+            addResult('页面加载完成，开始自动测试...', 'success');
+            setTimeout(() => {
+                testApiConnection();
+                setTimeout(() => {
+                    testLogin();
+                    setTimeout(() => {
+                        testReactApp();
+                    }, 1000);
+                }, 1000);
+            }, 500);
+        };
+    </script>
+</body>
+</html>
