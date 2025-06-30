@@ -2,7 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { userApi } from '../lib/api';
 import { isTokenExpired } from '../lib/utils';
+import { PermissionUtils } from '../lib/permissions';
 import type { User } from '../types/api';
+import type { PermissionLevel } from '../lib/permissions';
 
 interface AuthContextType {
   user: User | null;
@@ -12,6 +14,8 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isTrusted: boolean;
+  hasPermission: (requiredLevel: PermissionLevel) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -50,6 +54,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = !!token && !!user;
   const isAdmin = user?.status === 'admin';
+  const isTrusted = PermissionUtils.hasPermission(user?.status || 'disableduser', 'trusted');
+  
+  const hasPermission = (requiredLevel: PermissionLevel): boolean => {
+    if (!user) return false;
+    return PermissionUtils.hasPermission(user.status, requiredLevel);
+  };
 
   return (
     <AuthContext.Provider
@@ -61,6 +71,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         isAuthenticated,
         isAdmin,
+        isTrusted,
+        hasPermission,
       }}
     >
       {children}

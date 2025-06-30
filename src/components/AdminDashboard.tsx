@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Loading } from './ui/Loading';
+import { PermissionBadge } from './PermissionGuard';
 import { 
   Users, 
   Settings, 
@@ -26,15 +27,29 @@ const createUserSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
   phone: z.string().min(10, 'Phone number is required'),
   pushdeer_token: z.string().optional(),
-  status: z.enum(['admin', 'user', 'disabled']),
+  status: z.enum(['admin', 'trusted', 'user', 'disableduser']),
 });
 
 const createAppSchema = z.object({
   app_id: z.string().min(1, 'App ID is required'),
   name: z.string().min(1, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
-  required_permission_level: z.enum(['admin', 'user']),
+  required_permission_level: z.enum(['admin', 'trusted', 'user']),
   is_active: z.boolean(),
+});
+
+const updateUserSchema = z.object({
+  username: z.string().min(3, 'Username must be at least 3 characters').optional(),
+  status: z.enum(['admin', 'trusted', 'user', 'disableduser']).optional(),
+  phone: z.string().min(10, 'Phone number is required').optional(),
+  pushdeer_token: z.string().optional(),
+});
+
+const updateAppSchema = z.object({
+  name: z.string().min(1, 'Name is required').optional(),
+  description: z.string().min(1, 'Description is required').optional(),
+  required_permission_level: z.enum(['admin', 'trusted', 'user']).optional(),
+  is_active: z.boolean().optional(),
 });
 
 type CreateUserForm = z.infer<typeof createUserSchema>;
@@ -254,8 +269,9 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
-                        <option value="disabled">Disabled</option>
+                        <option value="disableduser">Disabled User</option>
                       </select>
                     </div>
                   </div>
@@ -269,6 +285,57 @@ export function AdminDashboard() {
                       {createUserMutation.isPending ? 'Creating...' : 'Create User'}
                     </Button>
                     <Button variant="outline" onClick={() => setShowCreateUser(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
+          {editingUser && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Edit User: {editingUser.username}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={updateUserForm.handleSubmit(onUpdateUser)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      label="Username"
+                      {...updateUserForm.register('username')}
+                      error={updateUserForm.formState.errors.username?.message}
+                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Status
+                      </label>
+                      <select
+                        {...updateUserForm.register('status')}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      >
+                        <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
+                        <option value="admin">Admin</option>
+                        <option value="disableduser">Disabled User</option>
+                      </select>
+                    </div>
+                    <Input
+                      label="Phone"
+                      {...updateUserForm.register('phone')}
+                      error={updateUserForm.formState.errors.phone?.message}
+                    />
+                    <Input
+                      label="PushDeer Token (Optional)"
+                      {...updateUserForm.register('pushdeer_token')}
+                      error={updateUserForm.formState.errors.pushdeer_token?.message}
+                    />
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button type="submit" disabled={updateUserMutation.isPending}>
+                      {updateUserMutation.isPending ? 'Updating...' : 'Update User'}
+                    </Button>
+                    <Button variant="outline" onClick={() => setEditingUser(null)}>
                       Cancel
                     </Button>
                   </div>
@@ -310,13 +377,7 @@ export function AdminDashboard() {
                             <div className="font-medium text-gray-900">{user.username}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              user.status === 'admin' ? 'bg-purple-100 text-purple-800' :
-                              user.status === 'user' ? 'bg-green-100 text-green-800' :
-                              'bg-red-100 text-red-800'
-                            }`}>
-                              {user.status}
-                            </span>
+                            <PermissionBadge level={user.status} />
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {user.phone}
@@ -390,6 +451,7 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
                       </select>
                     </div>
@@ -407,6 +469,62 @@ export function AdminDashboard() {
                       {createAppMutation.isPending ? 'Creating...' : 'Create App'}
                     </Button>
                     <Button variant="outline" onClick={() => setShowCreateApp(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
+          {editingApp && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Edit Application: {editingApp.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={updateAppForm.handleSubmit(onUpdateApp)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      label="Name"
+                      {...updateAppForm.register('name')}
+                      error={updateAppForm.formState.errors.name?.message}
+                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Permission Level
+                      </label>
+                      <select
+                        {...updateAppForm.register('required_permission_level')}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      >
+                        <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                  </div>
+                  <Input
+                    label="Description"
+                    {...updateAppForm.register('description')}
+                    error={updateAppForm.formState.errors.description?.message}
+                  />
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="is_active"
+                      {...updateAppForm.register('is_active')}
+                      className="rounded border-gray-300"
+                    />
+                    <label htmlFor="is_active" className="ml-2 text-sm text-gray-700">
+                      Active
+                    </label>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button type="submit" disabled={updateAppMutation.isPending}>
+                      {updateAppMutation.isPending ? 'Updating...' : 'Update Application'}
+                    </Button>
+                    <Button variant="outline" onClick={() => setEditingApp(null)}>
                       Cancel
                     </Button>
                   </div>
@@ -439,11 +557,7 @@ export function AdminDashboard() {
                   <CardContent>
                     <p className="text-sm text-gray-600 mb-2">{app.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        app.required_permission_level === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                        {app.required_permission_level}
-                      </span>
+                      <PermissionBadge level={app.required_permission_level} />
                       <div className={`w-2 h-2 rounded-full ${app.is_active ? 'bg-green-400' : 'bg-gray-400'}`} />
                     </div>
                   </CardContent>

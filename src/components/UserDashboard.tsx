@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Loading } from './ui/Loading';
+import { PermissionBadge } from './PermissionGuard';
 import { Key, Smartphone, Users, Copy, Check } from 'lucide-react';
 import { formatDate, copyToClipboard } from '../lib/utils';
 
@@ -116,8 +117,8 @@ export function UserDashboard() {
               <div className="text-sm text-gray-600">Available Apps</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{user?.status}</div>
-              <div className="text-sm text-gray-600">Account Status</div>
+              <PermissionBadge level={user?.status || 'disableduser'} />
+              <div className="text-sm text-gray-600 mt-1">Account Status</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{formatDate(user?.created_at || '')}</div>
