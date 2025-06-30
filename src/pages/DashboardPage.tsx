@@ -1,7 +1,8 @@
 import { useAuth } from '../contexts/AuthContext';
 import { Card, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { User, Shield, LogOut } from 'lucide-react';
+import { PermissionBadge } from '../components/PermissionGuard';
+import { User, LogOut } from 'lucide-react';
 import { Loading } from '../components/ui/Loading';
 import { UserDashboard } from '../components/UserDashboard';
 import { AdminDashboard } from '../components/AdminDashboard';
@@ -34,12 +35,9 @@ export function DashboardPage() {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
               <h1 className="text-3xl font-bold text-gray-900">TouNetCore</h1>
-              {isAdmin && (
-                <span className="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                  <Shield className="w-3 h-3 mr-1" />
-                  Admin
-                </span>
-              )}
+              <div className="ml-3">
+                <PermissionBadge level={user.status} />
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center text-sm text-gray-700">

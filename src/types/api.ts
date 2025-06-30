@@ -3,7 +3,7 @@ export interface User {
   username: string;
   phone: string;
   pushdeer_token?: string;
-  status: 'admin' | 'user' | 'disabled';
+  status: 'admin' | 'trusted' | 'user' | 'disableduser';
   created_at: string;
   updated_at?: string;
   last_login?: string;
@@ -14,7 +14,7 @@ export interface App {
   app_id: string;
   name: string;
   description: string;
-  required_permission_level: 'admin' | 'user';
+  required_permission_level: 'admin' | 'trusted' | 'user';
   is_active: boolean;
   secret_key?: string;
   created_at: string;
@@ -97,7 +97,7 @@ export interface ValidateNKeyRequest {
 export interface CreateUserRequest {
   username: string;
   password: string;
-  status: 'admin' | 'user' | 'disabled';
+  status: 'admin' | 'trusted' | 'user' | 'disableduser';
   phone: string;
   pushdeer_token: string;
 }
@@ -106,14 +106,14 @@ export interface CreateAppRequest {
   app_id: string;
   name: string;
   description: string;
-  required_permission_level: 'admin' | 'user';
+  required_permission_level: 'admin' | 'trusted' | 'user';
   is_active: boolean;
 }
 
 export interface UpdateAppRequest {
   name?: string;
   description?: string;
-  required_permission_level?: 'admin' | 'user';
+  required_permission_level?: 'admin' | 'trusted' | 'user';
   is_active?: boolean;
 }
 
@@ -124,7 +124,7 @@ export interface UpdateUserRequest {
 
 export interface AdminUpdateUserRequest {
   username?: string;
-  status?: 'admin' | 'user' | 'disabled';
+  status?: 'admin' | 'trusted' | 'user' | 'disableduser';
   phone?: string;
   pushdeer_token?: string;
 }

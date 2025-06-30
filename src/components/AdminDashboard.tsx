@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Loading } from './ui/Loading';
+import { PermissionBadge } from './PermissionGuard';
 import { 
   Users, 
   Settings, 
@@ -26,20 +27,20 @@ const createUserSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
   phone: z.string().min(10, 'Phone number is required'),
   pushdeer_token: z.string().optional(),
-  status: z.enum(['admin', 'user', 'disabled']),
+  status: z.enum(['admin', 'trusted', 'user', 'disableduser']),
 });
 
 const createAppSchema = z.object({
   app_id: z.string().min(1, 'App ID is required'),
   name: z.string().min(1, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
-  required_permission_level: z.enum(['admin', 'user']),
+  required_permission_level: z.enum(['admin', 'trusted', 'user']),
   is_active: z.boolean(),
 });
 
 const updateUserSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters').optional(),
-  status: z.enum(['admin', 'user', 'disabled']).optional(),
+  status: z.enum(['admin', 'trusted', 'user', 'disableduser']).optional(),
   phone: z.string().min(10, 'Phone number is required').optional(),
   pushdeer_token: z.string().optional(),
 });
@@ -47,7 +48,7 @@ const updateUserSchema = z.object({
 const updateAppSchema = z.object({
   name: z.string().min(1, 'Name is required').optional(),
   description: z.string().min(1, 'Description is required').optional(),
-  required_permission_level: z.enum(['admin', 'user']).optional(),
+  required_permission_level: z.enum(['admin', 'trusted', 'user']).optional(),
   is_active: z.boolean().optional(),
 });
 
@@ -368,8 +369,9 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
-                        <option value="disabled">Disabled</option>
+                        <option value="disableduser">Disabled User</option>
                       </select>
                     </div>
                   </div>
@@ -413,8 +415,9 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
-                        <option value="disabled">Disabled</option>
+                        <option value="disableduser">Disabled User</option>
                       </select>
                     </div>
                     <Input
@@ -474,13 +477,7 @@ export function AdminDashboard() {
                             <div className="font-medium text-gray-900">{user.username}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              user.status === 'admin' ? 'bg-purple-100 text-purple-800' :
-                              user.status === 'user' ? 'bg-green-100 text-green-800' :
-                              'bg-red-100 text-red-800'
-                            }`}>
-                              {user.status}
-                            </span>
+                            <PermissionBadge level={user.status} />
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {user.phone}
@@ -563,6 +560,7 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
                       </select>
                     </div>
@@ -610,6 +608,7 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
                       </select>
                     </div>
@@ -684,11 +683,7 @@ export function AdminDashboard() {
                   <CardContent>
                     <p className="text-sm text-gray-600 mb-2">{app.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        app.required_permission_level === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                        {app.required_permission_level}
-                      </span>
+                      <PermissionBadge level={app.required_permission_level} />
                       <div className={`w-2 h-2 rounded-full ${app.is_active ? 'bg-green-400' : 'bg-gray-400'}`} />
                     </div>
                   </CardContent>
