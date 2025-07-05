@@ -21,7 +21,8 @@ import type {
   AuditLog
 } from '../types/api';
 
-const API_BASE_URL = 'http://localhost:44544/api/v1';
+//const API_BASE_URL = 'http://192.168.1.6:44544/api/v1';
+const API_BASE_URL = 'https://api.riv62hjux.nyat.app:43419/api/v1';
 
 // Create axios instance
 const apiClient = axios.create({

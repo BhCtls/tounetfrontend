@@ -252,7 +252,10 @@ export function UserDashboard() {
                       </span>
                     </div>
                   </div>
+                  {/* Status Indicator 
                   <div className={`w-2 h-2 rounded-full ${app.is_active ? 'bg-green-400' : 'bg-gray-400'}`} />
+                  */}
+                  <div className={`w-2 h-2 rounded-full bg-green-400 }`} />
                 </div>
               </div>
             ))}
