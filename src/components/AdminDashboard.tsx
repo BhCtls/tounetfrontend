@@ -34,6 +34,7 @@ const createAppSchema = z.object({
   app_id: z.string().min(1, 'App ID is required'),
   name: z.string().min(1, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
+  url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   required_permission_level: z.enum(['admin', 'trusted', 'user']),
   is_active: z.boolean(),
 });
@@ -48,6 +49,7 @@ const updateUserSchema = z.object({
 const updateAppSchema = z.object({
   name: z.string().min(1, 'Name is required').optional(),
   description: z.string().min(1, 'Description is required').optional(),
+  url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   required_permission_level: z.enum(['admin', 'trusted', 'user']).optional(),
   is_active: z.boolean().optional(),
 });
@@ -244,6 +246,7 @@ export function AdminDashboard() {
     updateAppForm.reset({
       name: app.name,
       description: app.description,
+      url: app.url || '',
       required_permission_level: app.required_permission_level,
       is_active: app.is_active,
     });
@@ -550,6 +553,12 @@ export function AdminDashboard() {
                     {...createAppForm.register('description')}
                     error={createAppForm.formState.errors.description?.message}
                   />
+                  <Input
+                    label="URL (Optional)"
+                    {...createAppForm.register('url')}
+                    error={createAppForm.formState.errors.url?.message}
+                    placeholder="https://example.com"
+                  />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -618,6 +627,12 @@ export function AdminDashboard() {
                     {...updateAppForm.register('description')}
                     error={updateAppForm.formState.errors.description?.message}
                   />
+                  <Input
+                    label="URL (Optional)"
+                    {...updateAppForm.register('url')}
+                    error={updateAppForm.formState.errors.url?.message}
+                    placeholder="https://example.com"
+                  />
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -682,6 +697,11 @@ export function AdminDashboard() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-gray-600 mb-2">{app.description}</p>
+                    {app.url && (
+                      <p className="text-xs text-blue-600 mb-2">
+                        URL: <a href={app.url} target="_blank" rel="noopener noreferrer" className="underline">{app.url}</a>
+                      </p>
+                    )}
                     <div className="flex items-center justify-between">
                       <PermissionBadge level={app.required_permission_level} />
                       <div className={`w-2 h-2 rounded-full ${app.is_active ? 'bg-green-400' : 'bg-gray-400'}`} />
