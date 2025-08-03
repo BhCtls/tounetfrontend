@@ -9,7 +9,7 @@ import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Loading } from './ui/Loading';
 import { PermissionBadge } from './PermissionGuard';
-import { Key, Smartphone, Users, Copy, Check } from 'lucide-react';
+import { Key, Smartphone, Users, Copy, Check, ExternalLink } from 'lucide-react';
 import { formatDate, copyToClipboard } from '../lib/utils';
 
 const updateProfileSchema = z.object({
@@ -29,6 +29,7 @@ export function UserDashboard() {
   const queryClient = useQueryClient();
   const [copiedNKey, setCopiedNKey] = useState<string>('');
   const [generatedNKey, setGeneratedNKey] = useState<string>('');
+  const [accessingApp, setAccessingApp] = useState<string>('');
 
   const { data: apps, isLoading: appsLoading } = useQuery({
     queryKey: ['user', 'apps'],
@@ -91,6 +92,61 @@ export function UserDashboard() {
     await copyToClipboard(nkey);
     setCopiedNKey(nkey);
     setTimeout(() => setCopiedNKey(''), 2000);
+  };
+
+  const handleAppAccess = async (appId: string, appUrl?: string) => {
+    if (!appUrl || !user?.username) {
+      return;
+    }
+
+    setAccessingApp(appId);
+    
+    try {
+      // Generate NKey for this specific app
+      const response = await nkeyApi.generate({
+        username: [user.username],
+        app_ids: [appId],
+      });
+
+      const nkey = response.data.nkey;
+      
+      // Create URL with nkey as parameter
+      const urlWithNkey = `${appUrl}${appUrl.includes('?') ? '&' : '?'}nkey=${nkey}`;
+      
+      // Navigate in current window
+      window.location.href = urlWithNkey;
+    } catch (error) {
+      console.error('Failed to generate NKey for app access:', error);
+      alert('Failed to access application. Please try again.');
+    } finally {
+      setAccessingApp('');
+    }
+  };
+
+  const handleCopyAppLink = async (appId: string, appUrl?: string) => {
+    if (!appUrl || !user?.username) {
+      return;
+    }
+
+    try {
+      // Generate NKey for this specific app
+      const response = await nkeyApi.generate({
+        username: [user.username],
+        app_ids: [appId],
+      });
+
+      const nkey = response.data.nkey;
+      
+      // Create URL with nkey as parameter (backup method)
+      const urlWithNkey = `${appUrl}${appUrl.includes('?') ? '&' : '?'}nkey=${nkey}`;
+      
+      await copyToClipboard(urlWithNkey);
+      setCopiedNKey(appId + '_link'); // Use app_id to identify copied link
+      setTimeout(() => setCopiedNKey(''), 3000);
+    } catch (error) {
+      console.error('Failed to generate link for app access:', error);
+      alert('Failed to generate app link. Please try again.');
+    }
   };
 
   if (appsLoading) {
@@ -240,11 +296,24 @@ export function UserDashboard() {
             {apps?.map((app) => (
               <div
                 key={app.id}
-                className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                className={`border rounded-lg p-4 transition-all ${
+                  app.url && accessingApp !== app.app_id
+                    ? 'hover:shadow-md hover:border-blue-300 cursor-pointer'
+                    : 'hover:shadow-sm'
+                } ${accessingApp === app.app_id ? 'opacity-50 pointer-events-none' : ''}`}
+                onClick={() => app.url && accessingApp !== app.app_id && handleAppAccess(app.app_id, app.url)}
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{app.name}</h3>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-medium text-gray-900">{app.name}</h3>
+                      {app.url && (
+                        <ExternalLink className="w-4 h-4 text-blue-500" />
+                      )}
+                      {accessingApp === app.app_id && (
+                        <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-600 mt-1">{app.description}</p>
                     <div className="mt-2">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -252,11 +321,42 @@ export function UserDashboard() {
                       </span>
                     </div>
                   </div>
-                  {/* Status Indicator 
                   <div className={`w-2 h-2 rounded-full ${app.is_active ? 'bg-green-400' : 'bg-gray-400'}`} />
-                  */}
-                  <div className={`w-2 h-2 rounded-full bg-green-400 }`} />
                 </div>
+                
+                {app.url && (
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-gray-600">
+                        {accessingApp === app.app_id ? 'Generating access key...' : 'Click to access with auto-login'}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent card click
+                          handleCopyAppLink(app.app_id, app.url);
+                        }}
+                        title="Copy link with access key"
+                      >
+                        {copiedNKey === app.app_id + '_link' ? (
+                          <Check className="w-3 h-3 text-green-600" />
+                        ) : (
+                          <Copy className="w-3 h-3" />
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Access key expires in 15 minutes
+                    </p>
+                  </div>
+                )}
+                
+                {!app.url && (
+                  <div className="mt-4 text-center text-sm text-gray-500">
+                    No direct access URL configured
+                  </div>
+                )}
               </div>
             ))}
           </div>

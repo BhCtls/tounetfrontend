@@ -13,6 +13,7 @@ export interface App {
   app_id: string;
   name: string;
   description: string;
+  url?: string;
   required_permission_level: 'admin' | 'trusted' | 'user';
   is_active: boolean;
   created_at: string;
@@ -96,6 +97,7 @@ export interface CreateAppRequest {
   app_id: string;
   name: string;
   description: string;
+  url?: string;
   required_permission_level: 'admin' | 'trusted' | 'user';
   is_active: boolean;
 }
@@ -103,6 +105,7 @@ export interface CreateAppRequest {
 export interface UpdateAppRequest {
   name?: string;
   description?: string;
+  url?: string;
   required_permission_level?: 'admin' | 'trusted' | 'user';
   is_active?: boolean;
 }
