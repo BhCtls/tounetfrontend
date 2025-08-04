@@ -11,6 +11,7 @@ import type {
   InviteCodesResponse,
   UsersResponse,
   GenerateNKeyRequest,
+  AdminGenerateNKeyRequest,
   ValidateNKeyRequest,
   CreateUserRequest,
   CreateAppRequest,
@@ -159,6 +160,12 @@ export const adminApi = {
 
   deleteInviteCode: async (code: string): Promise<ApiResponse<{ deleted_code: string }>> => {
     const response = await apiClient.post(`/admin/invite-codes/${code}/delete`);
+    return response.data;
+  },
+
+  // NKey management
+  generateNKey: async (data: AdminGenerateNKeyRequest): Promise<ApiResponse<NKey>> => {
+    const response = await apiClient.post('/admin/nkey/generate', data);
     return response.data;
   },
 

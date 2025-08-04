@@ -59,7 +59,7 @@ export function RegisterPage() {
         <div className="text-center">
           <UserPlus className="mx-auto h-12 w-12 text-primary-600" />
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Create your account
+            用户注册
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Or{' '}
@@ -67,16 +67,16 @@ export function RegisterPage() {
               to="/login"
               className="font-medium text-primary-600 hover:text-primary-500"
             >
-              sign in to your existing account
+              已有账号？点此登陆
             </Link>
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Register</CardTitle>
+            <CardTitle>注册</CardTitle>
             <CardDescription>
-              Create a new account to access TouNetCore
+              创建新TouNet账号
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -97,7 +97,7 @@ export function RegisterPage() {
                 label="Username"
                 {...register('username')}
                 error={errors.username?.message}
-                placeholder="Enter your username"
+                placeholder="Enter your username（其实可以中文）"
               />
 
               <Input
@@ -112,14 +112,14 @@ export function RegisterPage() {
                 label="Phone Number"
                 {...register('phone')}
                 error={errors.phone?.message}
-                placeholder="13800138000"
+                placeholder="13800138000（必填，无需提供真实手机号）"
               />
 
               <Input
-                label="PushDeer Token (Optional)"
+                label="PushDeer Token"
                 {...register('pushdeer_token')}
                 error={errors.pushdeer_token?.message}
-                placeholder="PUSHDEER_XXXXXXXXX"
+                placeholder="PUSHDEER_XXXXXXXXX（可选）"
               />
 
               <Input
@@ -145,14 +145,14 @@ export function RegisterPage() {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-2 bg-white text-gray-500">
-                    Sample Invite Codes
+                    这个地方css写的太好不想删了
                   </span>
                 </div>
               </div>
               <div className="mt-2 text-xs text-gray-500 text-center">
-                <code className="bg-gray-100 px-1 rounded">METzuzFY8KSudQOnvpS-Qw</code>
+                <code className="bg-gray-100 px-1 rounded">Powered by Vite+ts+React</code>
                 <br />
-                <code className="bg-gray-100 px-1 rounded">Wh9iukC14-VXTnDHwaeiQw</code>
+                <code className="bg-gray-100 px-1 rounded">Code by Claude Sonnet 4.0</code>
               </div>
             </div>
           </CardContent>
