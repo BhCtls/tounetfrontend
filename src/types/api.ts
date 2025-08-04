@@ -80,6 +80,11 @@ export interface GenerateNKeyRequest {
   app_ids: string[];
 }
 
+export interface AdminGenerateNKeyRequest {
+  username: string; // 管理员API使用单个用户名字符串
+  app_ids: string[];
+}
+
 export interface ValidateNKeyRequest {
   nkey: string;
   app_id: string;

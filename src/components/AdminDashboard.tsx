@@ -54,15 +54,24 @@ const updateAppSchema = z.object({
   is_active: z.boolean().optional(),
 });
 
+const adminGenerateNKeySchema = z.object({
+  username: z.string().min(1, 'Username is required'),
+  app_ids: z.string().min(1, 'At least one app must be selected'),
+});
+
 type CreateUserForm = z.infer<typeof createUserSchema>;
 type CreateAppForm = z.infer<typeof createAppSchema>;
+type UpdateUserForm = z.infer<typeof updateUserSchema>;
+type UpdateAppForm = z.infer<typeof updateAppSchema>;
+type AdminGenerateNKeyForm = z.infer<typeof adminGenerateNKeySchema>;
 
 export function AdminDashboard() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<'users' | 'apps' | 'invites'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'apps' | 'invites' | 'nkeys'>('users');
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [showCreateApp, setShowCreateApp] = useState(false);
   const [copiedCode, setCopiedCode] = useState<string>('');
+  const [generatedNKey, setGeneratedNKey] = useState<string>('');
 
   // Queries
   const { data: usersData, isLoading: usersLoading } = useQuery({
@@ -105,6 +114,18 @@ export function AdminDashboard() {
     },
   });
 
+  const updateUserForm = useForm<UpdateUserForm>({
+    resolver: zodResolver(updateUserSchema),
+  });
+
+  const updateAppForm = useForm<UpdateAppForm>({
+    resolver: zodResolver(updateAppSchema),
+  });
+
+  const adminGenerateNKeyForm = useForm<AdminGenerateNKeyForm>({
+    resolver: zodResolver(adminGenerateNKeySchema),
+  });
+
   // Mutations
   const createUserMutation = useMutation({
     mutationFn: adminApi.createUser,
@@ -145,6 +166,38 @@ export function AdminDashboard() {
     },
   });
 
+  const updateAppMutation = useMutation({
+    mutationFn: ({ app_id, data }: { app_id: string; data: UpdateAppForm }) => 
+      adminApi.updateApp(app_id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'apps'] });
+      setEditingApp(null);
+      updateAppForm.reset();
+    },
+  });
+
+  const toggleAppMutation = useMutation({
+    mutationFn: adminApi.toggleApp,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'apps'] });
+    },
+  });
+
+  const deleteInviteCodeMutation = useMutation({
+    mutationFn: adminApi.deleteInviteCode,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'invite-codes'] });
+    },
+  });
+
+  const adminGenerateNKeyMutation = useMutation({
+    mutationFn: adminApi.generateNKey,
+    onSuccess: (response) => {
+      setGeneratedNKey(response.data.nkey);
+      adminGenerateNKeyForm.reset();
+    },
+  });
+
   // Handlers
   const onCreateUser = (data: CreateUserForm) => {
     createUserMutation.mutate({
@@ -178,6 +231,13 @@ export function AdminDashboard() {
     }
   };
 
+  const onAdminGenerateNKey = (data: AdminGenerateNKeyForm) => {
+    adminGenerateNKeyMutation.mutate({
+      username: data.username, // 管理员API使用字符串，不是数组
+      app_ids: data.app_ids.split(',').map(id => id.trim()),
+    });
+  };
+
   const handleEditUser = (user: any) => {
     setEditingUser(user);
     updateUserForm.reset({
@@ -205,7 +265,13 @@ export function AdminDashboard() {
     setTimeout(() => setCopiedCode(''), 2000);
   };
 
-  const users = usersData?.items || [];
+  const handleCopyNKey = async (nkey: string) => {
+    await copyToClipboard(nkey);
+    setCopiedCode(nkey);
+    setTimeout(() => setCopiedCode(''), 2000);
+  };
+
+  const users = usersData?.users || [];
   const totalUsers = usersData?.total || 0;
 
   return (
@@ -249,9 +315,10 @@ export function AdminDashboard() {
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           {[
-            { key: 'users', label: 'Users', icon: Users },
-            { key: 'apps', label: 'Applications', icon: Settings },
-            { key: 'invites', label: 'Invite Codes', icon: Key },
+            { key: 'users', label: 'User', icon: Users },
+            { key: 'apps', label: 'App', icon: Settings },
+            { key: 'invites', label: 'InviteCode', icon: Shield },
+            { key: 'nkeys', label: 'NKey', icon: Key },
           ].map(({ key, label, icon: Icon }) => (
             <button
               key={key}
@@ -707,6 +774,101 @@ export function AdminDashboard() {
                   </table>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* NKey Management Tab */}
+      {activeTab === 'nkeys' && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold">NKey Management</h2>
+            <div className="text-sm text-gray-600">
+              Generate NKeys for any user and application
+            </div>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                Generate NKey
+              </CardTitle>
+              <CardDescription>
+                Generate temporary access keys for users to access specific applications.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={adminGenerateNKeyForm.handleSubmit(onAdminGenerateNKey)} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Username"
+                    {...adminGenerateNKeyForm.register('username')}
+                    error={adminGenerateNKeyForm.formState.errors.username?.message}
+                    placeholder="Enter username"
+                  />
+                  <Input
+                    label="App IDs (comma-separated)"
+                    {...adminGenerateNKeyForm.register('app_ids')}
+                    error={adminGenerateNKeyForm.formState.errors.app_ids?.message}
+                    placeholder="searchall, CardPreview, etc."
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={adminGenerateNKeyMutation.isPending}
+                >
+                  {adminGenerateNKeyMutation.isPending ? 'Generating...' : 'Generate NKey'}
+                </Button>
+              </form>
+
+              {generatedNKey && (
+                <div className="mt-6 p-4 bg-green-50 rounded-md border border-green-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-green-800 mb-2">NKey Generated Successfully:</p>
+                      <code className="text-sm text-green-700 break-all block bg-white p-2 rounded border">
+                        {generatedNKey}
+                      </code>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleCopyNKey(generatedNKey)}
+                      className="ml-4"
+                    >
+                      {copiedCode === generatedNKey ? (
+                        <Check className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-green-600 mt-2">
+                    This key expires in 15 minutes.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setGeneratedNKey('')}
+                    className="mt-2"
+                  >
+                    Clear
+                  </Button>
+                </div>
+              )}
+
+              <div className="mt-6 p-4 bg-blue-50 rounded-md">
+                <h4 className="text-sm font-medium text-blue-800 mb-2">Usage Instructions:</h4>
+                <ul className="text-xs text-blue-700 space-y-1">
+                  <li>• Enter the exact username (case-sensitive)</li>
+                  <li>• List app IDs separated by commas (e.g., "app1, app2, app3")</li>
+                  <li>• The user must have access to the specified applications</li>
+                  <li>• Generated NKeys expire automatically after 15 minutes</li>
+                  <li>• A notification will be sent to the user if they have a PushDeer token（undeveloped）</li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
         </div>

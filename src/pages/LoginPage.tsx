@@ -53,7 +53,7 @@ export function LoginPage() {
         <div className="text-center">
           <LogIn className="mx-auto h-12 w-12 text-primary-600" />
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Sign in to TouNetCore
+            登录到TouNet
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Or{' '}
@@ -61,16 +61,16 @@ export function LoginPage() {
               to="/register"
               className="font-medium text-primary-600 hover:text-primary-500"
             >
-              create a new account
+              创建新账号
             </Link>
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Login</CardTitle>
+            <CardTitle>登录</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              输入您的凭据
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -117,9 +117,9 @@ export function LoginPage() {
                 </div>
               </div>
               <div className="mt-2 text-xs text-gray-500 text-center">
-                Username: <code className="bg-gray-100 px-1 rounded">admin</code>
+                开什么玩笑: <code className="bg-gray-100 px-1 rounded">怎么会有admin示例账户呢</code>
                 <br />
-                Password: <code className="bg-gray-100 px-1 rounded">admin123</code>
+                Password: <code className="bg-gray-100 px-1 rounded">只是css不想删掉了</code>
               </div>
             </div>
           </CardContent>

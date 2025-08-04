@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { userApi, nkeyApi } from '../lib/api';
+import { userApi, nkeyApi, adminApi } from '../lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/Card';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Loading } from './ui/Loading';
 import { PermissionBadge } from './PermissionGuard';
-import { Key, Smartphone, Users, Copy, Check, ExternalLink } from 'lucide-react';
+import { Key, Smartphone, Users, Copy, Check, ExternalLink, RefreshCw } from 'lucide-react';
 import { formatDate, copyToClipboard } from '../lib/utils';
 
 const updateProfileSchema = z.object({
@@ -30,6 +30,7 @@ export function UserDashboard() {
   const [copiedNKey, setCopiedNKey] = useState<string>('');
   const [generatedNKey, setGeneratedNKey] = useState<string>('');
   const [accessingApp, setAccessingApp] = useState<string>('');
+  const [appStatus, setAppStatus] = useState<Record<string, 'checking' | 'online' | 'offline'>>({});
 
   const { data: apps, isLoading: appsLoading } = useQuery({
     queryKey: ['user', 'apps'],
@@ -38,6 +39,17 @@ export function UserDashboard() {
       return response.data;
     },
   });
+
+  // Check app statuses when apps data is loaded
+  useEffect(() => {
+    if (apps && Array.isArray(apps)) {
+      apps.forEach(app => {
+        if (app.url) {
+          checkAppStatus(app.app_id, app.url);
+        }
+      });
+    }
+  }, [apps]);
 
   const { data: user } = useQuery({
     queryKey: ['user', 'me'],
@@ -59,8 +71,20 @@ export function UserDashboard() {
     resolver: zodResolver(generateNKeySchema),
     defaultValues: {
       username: user?.username || '',
+      app_ids: '',
     },
   });
+
+  // Reset form when user data changes (especially when user status changes)
+  useEffect(() => {
+    if (user) {
+      const isTrusted = user.status === 'trusted' || user.status === 'admin';
+      generateNKeyForm.reset({
+        username: isTrusted ? '' : user.username,
+        app_ids: '',
+      });
+    }
+  }, [user, generateNKeyForm]);
 
   const updateProfileMutation = useMutation({
     mutationFn: userApi.updateMe,
@@ -81,17 +105,75 @@ export function UserDashboard() {
     updateProfileMutation.mutate(data);
   };
 
-  const onGenerateNKey = (data: GenerateNKeyForm) => {
-    generateNKeyMutation.mutate({
-      username: [data.username],
-      app_ids: data.app_ids.split(',').map(id => id.trim()),
-    });
+  const onGenerateNKey = async (data: GenerateNKeyForm) => {
+    // Check if user is trusted and can generate NKeys for others
+    const isTrusted = user?.status === 'trusted' || user?.status === 'admin';
+    
+    try {
+      let response;
+      if (isTrusted) {
+        // Use admin API for trusted users to generate NKeys for others
+        response = await adminApi.generateNKey({
+          username: data.username, // Use the input username directly
+          app_ids: data.app_ids.split(',').map(id => id.trim()),
+        });
+      } else {
+        // Regular user API for non-trusted users
+        response = await nkeyApi.generate({
+          username: [data.username],
+          app_ids: data.app_ids.split(',').map(id => id.trim()),
+        });
+      }
+      
+      setGeneratedNKey(response.data.nkey);
+      generateNKeyForm.reset({
+        username: isTrusted ? '' : user?.username || '',
+        app_ids: '',
+      });
+    } catch (error) {
+      console.error('Failed to generate NKey:', error);
+      alert('Failed to generate NKey. Please check the username and try again.');
+    }
   };
 
   const handleCopyNKey = async (nkey: string) => {
     await copyToClipboard(nkey);
     setCopiedNKey(nkey);
     setTimeout(() => setCopiedNKey(''), 2000);
+  };
+
+  const pingUrl = async (url: string): Promise<boolean> => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(url, {
+        method: 'HEAD', // Use HEAD to minimize data transfer
+        mode: 'cors', // Use cors mode to get actual response status
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      // Consider only 2xx and 3xx status codes as online
+      // All 4xx and 5xx status codes are treated as offline
+      // but 401 403 is online
+      return response.status >= 200 && response.status < 404;
+    } catch (error) {
+      console.log(`App unreachable: ${url}`, error);
+      return false;
+    }
+  };
+
+  const checkAppStatus = async (appId: string, url: string) => {
+    setAppStatus(prev => ({ ...prev, [appId]: 'checking' }));
+    
+    const isOnline = await pingUrl(url);
+    
+    setAppStatus(prev => ({ 
+      ...prev, 
+      [appId]: isOnline ? 'online' : 'offline' 
+    }));
   };
 
   const handleAppAccess = async (appId: string, appUrl?: string) => {
@@ -228,18 +310,35 @@ export function UserDashboard() {
             <CardTitle className="flex items-center">
               <Key className="w-5 h-5 mr-2" />
               Generate NKey
+              {(user?.status === 'trusted' || user?.status === 'admin') && (
+                <span className="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                  Trusted Access
+                </span>
+              )}
             </CardTitle>
             <CardDescription>
-              Generate temporary access keys for your applications.
+              {(user?.status === 'trusted' || user?.status === 'admin') 
+                ? 'Generate temporary access keys for any user and their applications.'
+                : 'Generate temporary access keys for your applications.'
+              }
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={generateNKeyForm.handleSubmit(onGenerateNKey)} className="space-y-4">
               <Input
-                label="Username"
+                label={
+                  (user?.status === 'trusted' || user?.status === 'admin') 
+                    ? "Target Username" 
+                    : "Username"
+                }
                 {...generateNKeyForm.register('username')}
                 error={generateNKeyForm.formState.errors.username?.message}
-                readOnly
+                readOnly={!(user?.status === 'trusted' || user?.status === 'admin')}
+                placeholder={
+                  (user?.status === 'trusted' || user?.status === 'admin') 
+                    ? "Enter any username" 
+                    : user?.username
+                }
               />
               <Input
                 label="App IDs (comma-separated)"
@@ -254,6 +353,18 @@ export function UserDashboard() {
                 {generateNKeyMutation.isPending ? 'Generating...' : 'Generate NKey'}
               </Button>
             </form>
+
+            {(user?.status === 'trusted' || user?.status === 'admin') && (
+              <div className="mt-4 p-3 bg-yellow-50 rounded-md border border-yellow-200">
+                <h4 className="text-sm font-medium text-yellow-800 mb-2">Trusted User Privileges:</h4>
+                <ul className="text-xs text-yellow-700 space-y-1">
+                  <li>• You can generate NKeys for any user in the system</li>
+                  <li>• Enter the target username in the field above</li>
+                  <li>• Ensure the target user has access to the specified applications</li>
+                  <li>• Generated NKeys will be valid for the target user's account</li>
+                </ul>
+              </div>
+            )}
 
             {generatedNKey && (
               <div className="mt-4 p-3 bg-green-50 rounded-md">
@@ -321,34 +432,57 @@ export function UserDashboard() {
                       </span>
                     </div>
                   </div>
-                  <div className={`w-2 h-2 rounded-full ${app.is_active ? 'bg-green-400' : 'bg-gray-400'}`} />
+                  <div className={`w-2 h-2 rounded-full ${
+                    !app.url 
+                      ? 'bg-gray-400' // No URL configured
+                      : appStatus[app.app_id] === 'checking' 
+                        ? 'bg-yellow-400 animate-pulse' // Checking status
+                        : appStatus[app.app_id] === 'online' 
+                          ? 'bg-green-400' // Online
+                          : 'bg-red-400' // Offline
+                  }`} />
                 </div>
                 
                 {app.url && (
                   <div className="mt-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs text-gray-600">
-                        {accessingApp === app.app_id ? 'Generating access key...' : 'Click to access with auto-login'}
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent card click
-                          handleCopyAppLink(app.app_id, app.url);
-                        }}
-                        title="Copy link with access key"
-                      >
-                        {copiedNKey === app.app_id + '_link' ? (
-                          <Check className="w-3 h-3 text-green-600" />
-                        ) : (
-                          <Copy className="w-3 h-3" />
-                        )}
-                      </Button>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-600">
+                          {accessingApp === app.app_id ? 'Generating access key...' : 'Click to login with 15-minute access key'}
+                        </p>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent card click
+                            if (app.url) {
+                              checkAppStatus(app.app_id, app.url);
+                            }
+                          }}
+                          title="Refresh status"
+                          disabled={appStatus[app.app_id] === 'checking'}
+                        >
+                          <RefreshCw className={`w-3 h-3 ${appStatus[app.app_id] === 'checking' ? 'animate-spin' : ''}`} />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent card click
+                            handleCopyAppLink(app.app_id, app.url);
+                          }}
+                          title="Copy link with access key"
+                        >
+                          {copiedNKey === app.app_id + '_link' ? (
+                            <Check className="w-3 h-3 text-green-600" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Access key expires in 15 minutes
-                    </p>
                   </div>
                 )}
                 
