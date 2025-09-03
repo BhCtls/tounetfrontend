@@ -44,6 +44,14 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+              <Route 
+                path="/frontend" 
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                } 
+              />
             </Routes>
           </Router>
         </AuthProvider>

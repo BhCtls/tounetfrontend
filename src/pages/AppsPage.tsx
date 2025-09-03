@@ -149,7 +149,7 @@ export function AppsPage() {
       });
 
       const nkey = response.data.nkey;
-      const urlWithNkey = `${appUrl}${appUrl.includes('?') ? '&' : '?'}nkey=${nkey}`;
+      const urlWithNkey = `${appUrl}${appUrl.includes('?') ? '&' : '?'}ntoken=${nkey}`;
       window.location.href = urlWithNkey;
     } catch (error) {
       console.error('Failed to generate NKey for app access:', error);

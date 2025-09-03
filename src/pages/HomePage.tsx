@@ -159,25 +159,30 @@ export function HomePage() {
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'top',
       backgroundSize: 'cover',
-      backgroundAttachment: 'fixed'
+      backgroundAttachment: 'fixed',
+      margin: 0,
+      fontFamily: 'SEGA_Humming, Arial, sans-serif'
     }}>
       {/* Title */}
-      <div className="flex justify-center text-gray-700 text-2xl font-bold py-6" style={{
+      <div className="flex justify-center" style={{
+        color: 'rgb(53, 53, 53)',
         fontFamily: 'SEGA_Humming, Arial, sans-serif',
+        fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
         <h1>Tounet -2025.9-</h1>
       </div>
 
       {/* Switch and Login */}
-      <div className="flex justify-between items-center px-4 mb-4">
-        <div className="flex items-center gap-4">
+      <div className="text-right px-4 mb-4">
+        <div className="inline-flex items-center gap-4">
+          <span>Debug Button</span>
           <Button variant="outline" size="sm" onClick={toggleDebug}>
-            Debug Button: {showDebug ? 'ON' : 'OFF'}
+            switch
           </Button>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex justify-end mt-2">
           {user ? (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-sm text-gray-700">
@@ -245,61 +250,124 @@ export function HomePage() {
       </div>
 
       {/* Basic Functions */}
-      <div className="flex justify-center text-gray-700 text-xl font-bold mb-4" style={{
-        fontFamily: 'SEGA_Humming, Arial, sans-serif'
+      <div className="flex justify-center" style={{
+        color: 'rgb(53, 53, 53)',
+        fontFamily: 'SEGA_Humming, Arial, sans-serif',
+        fontSize: 'large'
       }}>
         <h3>基本功能</h3>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4">
-        <div 
-          className="grid gap-5 p-5 backdrop-blur-sm bg-white/50 rounded-lg shadow-lg mb-6 lg:grid-cols-5 lg:max-w-[95vw]"
-          style={{
-            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))'
-          }}
-        >
-          {apps.map((app, index) => (
-            <div
-              key={index}
-              className="app-button bg-white/90 backdrop-blur-sm rounded-lg p-4 cursor-pointer transition-all hover:shadow-md hover:bg-white/95 flex flex-col items-center justify-center text-center font-bold"
-              onClick={() => {
-                if (app.requireAuth && !user) {
-                  alert('请先登录后访问此功能');
-                  return;
-                }
-                window.location.href = app.url;
-              }}
-              style={{
-                boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)'
-              }}
-            >
-              <span className="text-xl mb-2">{app.emoji}</span>
-              <span className="text-sm">{app.name}</span>
-            </div>
-          ))}
-        </div>
+      <div 
+        className="app-container"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+          gap: '20px',
+          padding: '20px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          transition: 'all 0.3s ease',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          borderRadius: '10px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+          margin: '0 auto',
+          maxWidth: '95vw'
+        }}
+      >
+        {apps.map((app, index) => (
+          <div
+            key={index}
+            className="app-button"
+            onClick={() => {
+              if (app.requireAuth && !user) {
+                alert('请先登录后访问此功能');
+                return;
+              }
+              window.location.href = app.url;
+            }}
+            style={{
+              margin: '10px',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              borderRadius: '10px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              padding: '15px',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              backdropFilter: 'blur(5px)',
+              WebkitBackdropFilter: 'blur(5px)',
+              boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
+              flexDirection: 'row'
+            }}
+          >
+            <span style={{ fontSize: '20px', marginRight: '10px' }}>{app.emoji}</span>
+            <span>{app.name}</span>
+          </div>
+        ))}
+      </div>
 
         {/* Other Tools */}
-        <div className="flex justify-center text-gray-700 text-xl font-bold mb-4" style={{
-          fontFamily: 'SEGA_Humming, Arial, sans-serif'
+        <div className="flex justify-center" style={{
+          color: 'rgb(53, 53, 53)',
+          fontFamily: 'SEGA_Humming, Arial, sans-serif',
+          fontSize: 'large',
+          marginTop: '20px'
         }}>
           <h3>其他功能，建议从申请key页面中进入</h3>
         </div>
         
         <div 
-          className="grid gap-5 p-5 backdrop-blur-sm bg-white/50 rounded-lg shadow-lg mb-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:max-w-[95vw]"
+          className="app-container"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+            gap: '20px',
+            padding: '20px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            transition: 'all 0.3s ease',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            borderRadius: '10px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            margin: '20px auto',
+            maxWidth: '95vw'
+          }}
         >
           {toolApps.map((app, index) => (
             <div
               key={index}
-              className="app-button bg-white/90 backdrop-blur-sm rounded-lg p-4 cursor-pointer transition-all hover:shadow-md hover:bg-white/95 flex flex-col items-center justify-center text-center font-bold"
+              className="app-button"
               onClick={() => window.location.href = app.url}
               style={{
-                boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)'
+                margin: '10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: '10px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                textAlign: 'center',
+                padding: '15px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(5px)',
+                WebkitBackdropFilter: 'blur(5px)',
+                boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
+                flexDirection: 'row'
               }}
             >
-              <span className="text-xl mb-2">{app.emoji}</span>
-              <span className="text-sm">{app.name}</span>
+              <span style={{ fontSize: '20px', marginRight: '10px' }}>{app.emoji}</span>
+              <span>{app.name}</span>
             </div>
           ))}
         </div>
@@ -307,32 +375,68 @@ export function HomePage() {
         {/* Debug Apps */}
         {showDebug && (
           <div 
-            className="grid gap-5 p-5 backdrop-blur-sm bg-white/50 rounded-lg shadow-lg mb-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:max-w-[95vw]"
+            className="app-container"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+              gap: '20px',
+              padding: '20px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              transition: 'all 0.3s ease',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              borderRadius: '10px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+              margin: '20px auto',
+              maxWidth: '95vw'
+            }}
           >
             {debugApps.map((app, index) => (
               <div
                 key={index}
-                className="app-button bg-white/90 backdrop-blur-sm rounded-lg p-4 cursor-pointer transition-all hover:shadow-md hover:bg-white/95 flex flex-col items-center justify-center text-center font-bold"
+                className="app-button"
                 onClick={() => window.location.href = app.url}
                 style={{
-                  boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)'
+                  margin: '10px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  padding: '15px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  backdropFilter: 'blur(5px)',
+                  WebkitBackdropFilter: 'blur(5px)',
+                  boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
+                  flexDirection: 'row'
                 }}
               >
-                <span className="text-xl mb-2">{app.emoji}</span>
-                <span className="text-sm">{app.name}</span>
+                <span style={{ fontSize: '20px', marginRight: '10px' }}>{app.emoji}</span>
+                <span>{app.name}</span>
               </div>
             ))}
           </div>
         )}
-      </div>
 
       {/* Footer */}
-      <div className="fixed bottom-2 right-2 text-xs text-right">
-        <span className="text-green-600 cursor-pointer">powered by LLMs</span> | 
-        <span className="text-green-600"> 仅供个人学习使用，备案号：</span> | 
-        <span className="text-green-600 cursor-pointer" onClick={() => window.location.href = 'pages/basic/aboutme.html'}>关于🔗</span> | 
-        <span className="text-green-600 cursor-pointer" onClick={() => window.location.href = 'docs/license.html'}>LICENSE🔗</span> | 
-        <span className="text-green-600 cursor-pointer" onClick={() => window.location.href = 'announce.html'}>公告🔗</span>
+      <div style={{
+        position: 'fixed',
+        bottom: '10px',
+        right: '10px',
+        fontSize: '12px',
+        textAlign: 'right'
+      }}>
+        <span style={{ color: 'green', cursor: 'pointer' }}>powered by LLMs</span> | 
+        <span style={{ color: 'green' }}> 仅供个人学习使用，备案号：</span> | 
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'pages/basic/aboutme.html'}>关于🔗</span> | 
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'docs/license.html'}>LICENSE🔗</span> | 
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'announce.html'}>公告🔗</span>
       </div>
     </div>
   );

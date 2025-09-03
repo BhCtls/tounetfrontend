@@ -238,10 +238,10 @@
       }
     });
 
-    // 页面加载时自动检查URL中的nkey参数
+    // 页面加载时自动检查URL中的ntoken参数
     function autoVerifyFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
-        const nkey = urlParams.get('nkey');
+        const nkey = urlParams.get('ntoken');
         
         if (nkey) {
             // 填入token输入框
