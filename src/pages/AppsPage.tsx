@@ -218,7 +218,7 @@ export function AppsPage() {
                   }}
                 >
                   <div className="flex items-center justify-between w-full mb-2">
-                    <span className="text-xl">🎮</span>
+                    <span className="text-xl">{app.emoji || '🎮'}</span>
                     <div className={`w-2 h-2 rounded-full ${
                       !app.url 
                         ? 'bg-gray-400'

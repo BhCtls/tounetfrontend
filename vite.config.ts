@@ -9,6 +9,13 @@ export default defineConfig({
     port: 5174,      // 明确指定端口
     strictPort: true, // 如果端口被占用则失败而不是尝试其他端口
     allowedHosts: ['.nyat.app', 'localhost', '192.168.1.6', '127.0.0.1', '[::1]'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:44544',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   },
   build: {
     outDir: 'dist',

@@ -162,7 +162,7 @@ export function UserDashboard() {
                 }}
               >
                 <div className="flex items-center justify-between w-full mb-2">
-                  <span className="text-xl">🎮</span>
+                  <span className="text-xl">{app.emoji || '🎮'}</span>
                   {app.url && (
                     <ExternalLink className="w-4 h-4 text-blue-500" />
                   )}

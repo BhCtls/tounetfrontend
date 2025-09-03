@@ -35,6 +35,7 @@ const createAppSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
   url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  emoji: z.string().optional(),
   required_permission_level: z.enum(['admin', 'trusted', 'user']),
   is_active: z.boolean(),
 });
@@ -50,6 +51,7 @@ const updateAppSchema = z.object({
   name: z.string().min(1, 'Name is required').optional(),
   description: z.string().min(1, 'Description is required').optional(),
   url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  emoji: z.string().optional(),
   required_permission_level: z.enum(['admin', 'trusted', 'user']).optional(),
   is_active: z.boolean().optional(),
 });
@@ -273,6 +275,7 @@ export function AdminDashboard() {
       name: app.name,
       description: app.description,
       url: app.url || '',
+      emoji: app.emoji || '',
       required_permission_level: app.required_permission_level,
       is_active: app.is_active,
     });
@@ -592,6 +595,12 @@ export function AdminDashboard() {
                     error={createAppForm.formState.errors.url?.message}
                     placeholder="https://example.com"
                   />
+                  <Input
+                    label="Emoji (Optional)"
+                    {...createAppForm.register('emoji')}
+                    error={createAppForm.formState.errors.emoji?.message}
+                    placeholder="🚀 (Leave empty to use first letter)"
+                  />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -666,6 +675,12 @@ export function AdminDashboard() {
                     error={updateAppForm.formState.errors.url?.message}
                     placeholder="https://example.com"
                   />
+                  <Input
+                    label="Emoji (Optional)"
+                    {...updateAppForm.register('emoji')}
+                    error={updateAppForm.formState.errors.emoji?.message}
+                    placeholder="🚀 (Leave empty to use first letter)"
+                  />
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -698,9 +713,12 @@ export function AdminDashboard() {
                 <Card key={app.id}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-base">{app.name}</CardTitle>
-                        <CardDescription>{app.app_id}</CardDescription>
+                      <div className="flex items-center">
+                        <span className="text-xl mr-2">{app.emoji || '📱'}</span>
+                        <div>
+                          <CardTitle className="text-base">{app.name}</CardTitle>
+                          <CardDescription>{app.app_id}</CardDescription>
+                        </div>
                       </div>
                       <div className="flex space-x-1">
                         <Button
