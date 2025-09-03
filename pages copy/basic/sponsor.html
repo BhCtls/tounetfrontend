@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Sponsor me</title>
+    <style>
+        body {
+        background-color: #f2f2f2;
+        background-image: url("../../assets/images/backgrounds/bg1.png");
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: cover;
+        background-attachment: fixed;
+        margin: 0;
+        font-family: SEGA_Humming;
+        }
+        @font-face {
+        font-family: SEGA_Humming;
+        src: url(../../assets/fonts/SEGA_Humming.ttf) format("truetype")
+        }
+        .pay-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 30px auto 20px auto;
+        }
+        @media (max-width: 600px) {
+            .pay-row {
+            max-width: 400px;
+            }
+        }
+        .pay-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48%;
+        }
+        .pay-item img {
+            width: 100%;
+            max-width: 480px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ccc;
+            margin-bottom: 8px;
+        }
+        .other-pay {
+            background: #888;
+            border-radius: 16px;
+            padding: 10px 20px;
+            color: #fff;
+            max-width: 420px;
+            margin: 15px auto 24px auto;
+            text-align: center;
+        }
+        .sponsor-header {
+            background: #888;
+            border-radius: 16px;
+            padding: 18px 20px;
+            color: #fff;
+            max-width: 420px;
+            margin: 15px auto 24px auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="sponsor-header">
+        <h1 style="color: #fff; margin-top: 0;">赞助饱饱</h1>
+        <p style="color: #fff; ">如果你喜欢我，欢迎赞助我！</p>
+        <p style="color: #fff;">你可以通过以下方式支持我：</p>
+    </div>
+    <div class="pay-row">
+        <div class="pay-item">
+            <img src="../../assets/images/misc/alipay.png" alt="支付宝"/>
+            <span style="color: #6ea8ff;text-shadow: #888;font-size: 24px">支付宝</span>
+        </div>
+        <div class="pay-item">
+            <img src="../../assets/images/misc/wechat.png" alt="微信"/>
+            <span style="color: #7eff87;text-shadow: #888;font-size: 24px">微信</span>
+        </div>
+    </div>
+    <div class="other-pay">
+        <h3 style="color: #fff;">其他支付方式</h3>
+        <a href="https://www.paypal.me/BhCtls" target="_blank">PayPal</a>
+    </div>
+</body>
+</html>

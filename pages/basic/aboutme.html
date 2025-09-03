@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <link rel="shortcut icon" href="../../assets/images/icons/icon.png" type="image/png">
+    <link rel="icon" href="../../assets/images/icons/icon.png">
+    <style>
+        body {
+            background-color: #f2f2f2;
+            background-image: url("../../assets/images/backgrounds/bg3.png");
+            background-repeat: no-repeat;
+            background-position: top;
+            background-size: cover;
+        }   
+
+        @font-face {
+            font-family: SEGA_Humming;
+            src: url(../../assets/fonts/SEGA_Humming.ttf) format("truetype")
+        }
+
+        .container {
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 900px;
+            margin: 50px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .title {
+            display: flex;
+            justify-content: center;
+            color: cornflowerblue;
+            text-shadow: darkgray 1px 1px 1px;
+        }
+        .introduction {
+            margin-top: 10px;
+            font-family: SEGA_Humming;
+        }
+        .header-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .header-section img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+        .contact-container {
+            background-color: pink;
+            padding: 5px; /* Reduced padding for less vertical space */
+            border-radius: 10px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            line-height: 1.2; /* Reduced line-height for closer text spacing */
+            font-family: SEGA_Humming;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .back-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                margin: 20px 10px;
+            }
+            .header-section img {
+                width: 70px;
+                height: 70px;
+            }
+            .contact-container-first {
+                width: 2.5%;
+                max-width: 100%; /* Ensure it doesn't exceed the container width */
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" class="back-link">← 返回主页</a>
+    <div class="container">
+        <div class="title">
+            <h1>关于透明</h1>
+        </div>
+        <div class="header-section">
+            <img src="../../assets/images/icons/icon.png" alt="Profile Icon">
+            <div class="introduction">
+                <h1>透明</h1>
+                <p>透明是一个简单的人。人如其名，透明是小透明一枚。</p>
+                <p>04 | 男性 | 石家庄&杭州</p>
+                <p>wds | 学マス | 街机&移动端音游 | 同人音乐 | 写博客</p>
+            </div>
+        </div>
+        <div class="introduction">
+            <h2>兴趣爱好</h2>
+            <p>喜欢音乐游戏(特别是街机)与写博客。编程未入门。美食和逛街也是我人生中不可或缺的部分。</p>
+            <p>SEGA三家平均游戏经验4年以上，三虹极曾达成。</p>
+            <p>🚰SDVX vf17或帝，💿二寺sp初段，🎹钢琴机泼盆仅摸过。</p>
+            <p>个人买一些周边专辑做收藏，不过我更青睐数字专辑。</p>
+            <h2>关于自推</h2>
+            <p>目前主推<span style="color: skyblue; font-weight: bold; font-size: 110%;">三角葵</span>（如生命般激推），在推<span style="color: saddlebrown; font-weight: bold; font-size: 110%;">倉本千奈</span>，<span style="color: lightskyblue; font-weight: bold; font-size: 110%;">双葉湊音</span>，<span style="color: sandybrown; font-weight: bold; font-size: 110%;">しぐれうい</span>，<span style="color: rgb(255, 140, 184); font-weight: bold; font-size: 110%;">鳳ここな</span>。喜欢玉桂狗视频。</p>
+            <p>您若是BlackY与onoken的粉丝，也欢迎与我交友！</p>
+            <p>如果您是我的同担，那么随时欢迎探讨推活事宜。若您有忌讳请提前考虑，我恐怕难以顾及所有忌讳。</p>
+            <p>自己虽年迈，但等待发现更多可爱且值得一推的生命!</p>
+            <h2>关于交友</h2> 
+            <p>只要没有聊到闹掰，加不加好友，无非只是方便或不方便看看聊聊。</p>
+            <p>最大的雷点是<span style="color: red; font-weight: bold; font-size: 110%;">云玩家发言·行为</span>。我极端讨厌狗屁不懂且乐意当串子的人。</p>
+            <p>空间会发<span style="color: red; font-weight: bold; font-size: 110%;">无预警血图</span>的,<span style="color:red;font-weight:bold; font-size: 110%;">待人刻薄者</span>也不建议加好友。</p>
+            <p style="background: #fffbe6; border-radius: 10px; padding: 8px 14px; color: #b08a00;display: inline-block;" onclick="window.open('kl_image.png')">关注我，获取更多细碎生活日常！
+                <span style="font-size: 20%;color: grey;">点击此处获取扩列图全图</span></p>
+            <h2>成就解锁（全都可以点）</h2>
+            <p>音乐游戏：<span>舞萌祭将星将</span>|<span>中二新将煌将</span>|<span>音击赤击确认。</span></p>
+            <p>ai辅助编程：<span onclick="window.open('/wxtk/')">语法填空生成器</span>｜<span onclick="window.open('/')">中二节奏读图算rating</span>｜<span onclick="window.open('/searchall')">数据库查找工具</span>｜<span onclick="window.open('/')">文字游戏：魔法花园</span></p>
+            <p>博客：三年来已持续书写80000余字（略摸），仍在持续更新</p>
+            <p>同音：电子专辑墙有100+张专辑（含二寺ost等）</p>
+            <!--下次改扩列条的时候删掉 点击此处或大标题获取扩列图全图-->
+        </div>
+        <div id="container1" class="contact-container contact-container-first hidden" onclick="toggleContainers()">
+            <p>&nbsp;</p>
+            <p>&lt;</p>
+            <p>&nbsp;</p>
+        </div>
+        <div id="container2" class="contact-container" onclick="toggleContainers()">
+            <p style="font-size: 60%;">＞＞＞＞关闭＞＞＞＞</p>
+            <p>B站：<span onclick="window.open('https://space.bilibili.com/123109251')" style="color: blue;">三角葵</span></p>
+            <p>QQ:<span onclick="window.open('https://qm.qq.com/cgi-bin/qm/qr?k=fdiUIj5qJFRDaK6y4CrRjMtN8KsgGUwx#')" style="color: blue;">1084701403</span></p>
+            <img src="../../assets/images/misc/qr.png" alt="点击下载扩列二维码" style="width: 170px; height: 170px;">
+        </div>
+    </div>
+</body>
+
+<script>
+    function toggleContainers() {
+        var container1 = document.getElementById("container1");
+        var container2 = document.getElementById("container2");
+
+        if (!container1.classList.contains("hidden")) {
+            container1.classList.add("hidden");
+            container2.classList.remove("hidden");
+        } else {
+            container1.classList.remove("hidden");
+            container2.classList.add("hidden");
+        }
+    }
+</script>
+</html>
+
+
+

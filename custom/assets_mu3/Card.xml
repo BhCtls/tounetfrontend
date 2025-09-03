@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CardData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <dataName>card102036</dataName>
+  <Name>
+    <id>102036</id>
+    <str>【SSR】三角 葵[夏宵スターマイン]</str>
+  </Name>
+  <CharaID>
+    <id>1002</id>
+    <str>三角 葵</str>
+  </CharaID>
+  <NickName>夏宵スターマイン</NickName>
+  <SortOrder>20505</SortOrder>
+  <Attribute>Aqua</Attribute>
+  <School>
+    <id>999</id>
+    <str>プロモーション</str>
+  </School>
+  <NameForCommonModel />
+  <IsCommonModel>false</IsCommonModel>
+  <IsDigital>false</IsDigital>
+  <IsTicketUsable>true</IsTicketUsable>
+  <CardEffect>
+    <IsEffect>false</IsEffect>
+    <EffectID>0</EffectID>
+  </CardEffect>
+  <Gakunen>
+    <id>2</id>
+    <str>高校2年生</str>
+  </Gakunen>
+  <PersonalityIDs />
+  <Rarity>SSR</Rarity>
+  <LevelParam>
+    <int>60</int>
+    <int>257</int>
+    <int>280</int>
+    <int>295</int>
+    <int>307</int>
+    <int>317</int>
+    <int>0</int>
+    <int>0</int>
+    <int>0</int>
+    <int>322</int>
+  </LevelParam>
+  <SkillID>
+    <id>105020</id>
+    <str>アタック +14</str>
+  </SkillID>
+  <ChoKaikaSkillID>
+    <id>105021</id>
+    <str>アタック +16</str>
+  </ChoKaikaSkillID>
+  <CardRightsName>
+    <id>0</id>
+    <str>-</str>
+  </CardRightsName>
+  <VersionID>
+    <id>1045</id>
+    <str>ver_1_45</str>
+  </VersionID>
+  <CardNumberString>[O.N.G.E.K.I.]Special Card</CardNumberString>
+  <LicenseID>
+    <id>0</id>
+    <str>-</str>
+  </LicenseID>
+  <IsLockedAtTheBeginning>false</IsLockedAtTheBeginning>
+  <PrintEndDateTime>0001-01-01T00:00:00</PrintEndDateTime>
+</CardData>

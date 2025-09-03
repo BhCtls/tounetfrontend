@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蜂巢预览</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .hive-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .hive-container:active {
+            cursor: grabbing;
+        }
+
+        .hive-grid {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+        }
+
+        .hexagon {
+            width: 60px;
+            height: 52px;
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hexagon:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 52px;
+            background-color: #444;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            border: 2px solid #666;
+            transition: all 0.1s ease;
+        }
+
+        .hexagon:hover:before {
+            background-color: #555;
+            border-color: #888;
+        }
+
+        .hexagon.active:before {
+            background-color: #ffd700;
+            border-color: #ffed4e;
+        }
+
+        .info-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .controls button {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-panel">
+        <div>蜂巢预览系统</div>
+        <div>已激活格子: <span id="activeCount">0</span></div>
+        <div>总格子数: <span id="totalCount">0</span></div>
+        <div>鼠标拖拽移动视角</div>
+    </div>
+
+    <div class="hive-container" id="hiveContainer">
+        <div class="hive-grid" id="hiveGrid"></div>
+    </div>
+
+    <div class="controls">
+        <button onclick="clearAll()">清空所有</button>
+        <button onclick="resetView()">重置视角</button>
+        <button onclick="generatePattern()">随机图案</button>
+    </div>
+
+    <script>
+        class HiveGrid {
+            constructor() {
+                this.container = document.getElementById('hiveContainer');
+                this.grid = document.getElementById('hiveGrid');
+                this.hexagons = new Map();
+                this.activeHexagons = new Set();
+                
+                // 六边形尺寸
+                this.hexWidth = 60;
+                this.hexHeight = 52;
+                this.hexSpacingX = 52; // 水平间距 (约为六边形宽度的0.866倍)
+                this.hexSpacingY = 50; // 垂直间距 (六边形高度的0.75倍)
+                
+                // 视角控制
+                this.isDragging = false;
+                this.lastMouseX = 0;
+                this.lastMouseY = 0;
+                this.translateX = 0;
+                this.translateY = 0;
+                
+                this.init();
+            }
+
+            init() {
+                this.generateHexagons();
+                this.setupEventListeners();
+                this.updateCounters();
+            }
+
+            generateHexagons() {
+                // 生成足够大的网格以覆盖视口
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                
+                const cols = Math.ceil(viewportWidth / this.hexSpacingX) + 10;
+                const rows = Math.ceil(viewportHeight / this.hexSpacingY) + 10;
+                
+                const startCol = -Math.floor(cols / 2);
+                const startRow = -Math.floor(rows / 2);
+                
+                for (let row = startRow; row < startRow + rows; row++) {
+                    for (let col = startCol; col < startCol + cols; col++) {
+                        this.createHexagon(col, row);
+                    }
+                }
+            }
+
+            createHexagon(col, row) {
+                const hexagon = document.createElement('div');
+                hexagon.className = 'hexagon';
+                
+                // 计算六边形位置 (奇偶列交错排列，形成标准蜂巢结构)
+                const x = col * this.hexSpacingX;
+                const y = row * this.hexSpacingY + (col % 2) * (this.hexSpacingY / 2);
+                
+                hexagon.style.left = x + 'px';
+                hexagon.style.top = y + 'px';
+                
+                const key = `${col},${row}`;
+                hexagon.dataset.key = key;
+                
+                hexagon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleHexagon(hexagon, key);
+                });
+                
+                this.hexagons.set(key, hexagon);
+                this.grid.appendChild(hexagon);
+            }
+
+            toggleHexagon(hexagon, key) {
+                if (this.activeHexagons.has(key)) {
+                    this.activeHexagons.delete(key);
+                    hexagon.classList.remove('active');
+                } else {
+                    this.activeHexagons.add(key);
+                    hexagon.classList.add('active');
+                }
+                this.updateCounters();
+            }
+
+            setupEventListeners() {
+                // 鼠标拖拽
+                this.container.addEventListener('mousedown', (e) => {
+                    this.isDragging = true;
+                    this.lastMouseX = e.clientX;
+                    this.lastMouseY = e.clientY;
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!this.isDragging) return;
+                    
+                    const deltaX = e.clientX - this.lastMouseX;
+                    const deltaY = e.clientY - this.lastMouseY;
+                    
+                    this.translateX += deltaX;
+                    this.translateY += deltaY;
+                    
+                    this.grid.style.transform = `translate(calc(-50% + ${this.translateX}px), calc(-50% + ${this.translateY}px))`;
+                    
+                    this.lastMouseX = e.clientX;
+                    this.lastMouseY = e.clientY;
+                    
+                    // 动态加载更多六边形
+                    this.checkAndLoadMore();
+                });
+
+                document.addEventListener('mouseup', () => {
+                    this.isDragging = false;
+                });
+
+                // 触摸支持
+                this.container.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        this.isDragging = true;
+                        this.lastMouseX = e.touches[0].clientX;
+                        this.lastMouseY = e.touches[0].clientY;
+                    }
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!this.isDragging || e.touches.length !== 1) return;
+                    e.preventDefault();
+                    
+                    const deltaX = e.touches[0].clientX - this.lastMouseX;
+                    const deltaY = e.touches[0].clientY - this.lastMouseY;
+                    
+                    this.translateX += deltaX;
+                    this.translateY += deltaY;
+                    
+                    this.grid.style.transform = `translate(calc(-50% + ${this.translateX}px), calc(-50% + ${this.translateY}px))`;
+                    
+                    this.lastMouseX = e.touches[0].clientX;
+                    this.lastMouseY = e.touches[0].clientY;
+                    
+                    this.checkAndLoadMore();
+                });
+
+                document.addEventListener('touchend', () => {
+                    this.isDragging = false;
+                });
+
+                // 窗口大小改变时重新生成
+                window.addEventListener('resize', () => {
+                    this.generateMoreHexagons();
+                });
+            }
+
+            checkAndLoadMore() {
+                // 当视角移动时，检查是否需要生成更多六边形
+                const threshold = 500;
+                if (Math.abs(this.translateX) > threshold || Math.abs(this.translateY) > threshold) {
+                    this.generateMoreHexagons();
+                    this.translateX *= 0.8; // 缓慢重置偏移以避免无限扩展
+                    this.translateY *= 0.8;
+                }
+            }
+
+            generateMoreHexagons() {
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                
+                const cols = Math.ceil(viewportWidth / this.hexSpacingX) + 15;
+                const rows = Math.ceil(viewportHeight / this.hexSpacingY) + 15;
+                
+                const startCol = -Math.floor(cols / 2);
+                const startRow = -Math.floor(rows / 2);
+                
+                for (let row = startRow; row < startRow + rows; row++) {
+                    for (let col = startCol; col < startCol + cols; col++) {
+                        const key = `${col},${row}`;
+                        if (!this.hexagons.has(key)) {
+                            this.createHexagon(col, row);
+                        }
+                    }
+                }
+                this.updateCounters();
+            }
+
+            updateCounters() {
+                document.getElementById('activeCount').textContent = this.activeHexagons.size;
+                document.getElementById('totalCount').textContent = this.hexagons.size;
+            }
+
+            clearAll() {
+                this.activeHexagons.clear();
+                this.hexagons.forEach(hexagon => {
+                    hexagon.classList.remove('active');
+                });
+                this.updateCounters();
+            }
+
+            resetView() {
+                this.translateX = 0;
+                this.translateY = 0;
+                this.grid.style.transform = 'translate(-50%, -50%)';
+            }
+
+            generatePattern() {
+                this.clearAll();
+                // 生成随机图案
+                const patternSize = 50;
+                this.hexagons.forEach((hexagon, key) => {
+                    if (Math.random() < 0.3) { // 30% 概率激活
+                        this.activeHexagons.add(key);
+                        hexagon.classList.add('active');
+                    }
+                });
+                this.updateCounters();
+            }
+        }
+
+        // 全局函数
+        let hiveGrid;
+
+        function clearAll() {
+            hiveGrid.clearAll();
+        }
+
+        function resetView() {
+            hiveGrid.resetView();
+        }
+
+        function generatePattern() {
+            hiveGrid.generatePattern();
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            hiveGrid = new HiveGrid();
+        });
+    </script>
+</body>
+</html>
