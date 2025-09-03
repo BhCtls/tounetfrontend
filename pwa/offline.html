@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>离线模式 - Tounet</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            background-image: url("../assets/images/backgrounds/bg.png");
+            background-repeat: no-repeat;
+            background-position: top;
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        
+        .offline-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: 20px;
+        }
+        
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        .offline-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .offline-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+        
+        .offline-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .network-status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .status-offline {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-online {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📱</div>
+        <div class="offline-title">离线模式</div>
+        <div class="offline-message">
+            您当前处于离线状态，无法访问此页面。<br>
+            请检查网络连接后重试，或返回主页查看已缓存的内容。
+        </div>
+        
+        <div class="offline-actions">
+            <button class="btn btn-primary" onclick="retry()">🔄 重新尝试</button>
+            <a href="/" class="btn btn-secondary">🏠 返回主页</a>
+        </div>
+        
+        <div id="network-status" class="network-status status-offline">
+            <span class="pulse">🔴</span> 网络连接断开
+        </div>
+    </div>
+
+    <script>
+        function retry() {
+            if (navigator.onLine) {
+                window.location.reload();
+            } else {
+                alert('网络仍然断开，请检查您的网络连接。');
+            }
+        }
+
+        function updateNetworkStatus() {
+            const statusDiv = document.getElementById('network-status');
+            if (navigator.onLine) {
+                statusDiv.className = 'network-status status-online';
+                statusDiv.innerHTML = '<span>🟢</span> 网络已连接';
+                setTimeout(() => {
+                    if (confirm('网络已恢复，是否重新加载页面？')) {
+                        window.location.reload();
+                    }
+                }, 1000);
+            } else {
+                statusDiv.className = 'network-status status-offline';
+                statusDiv.innerHTML = '<span class="pulse">🔴</span> 网络连接断开';
+            }
+        }
+
+        // 监听网络状态变化
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+
+        // 初始化网络状态
+        updateNetworkStatus();
+
+        // 定期检查网络状态
+        setInterval(() => {
+            updateNetworkStatus();
+        }, 5000);
+    </script>
+</body>
+</html>

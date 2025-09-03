@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>带密钥验证的PNG上传（支持JPG）</title>
+</head>
+<body>
+  <h2>上传 PNG/JPG 文件（将强制转为 .png）</h2>
+  <input type="file" id="fileInput" accept=".png,.jpg,.jpeg" />
+  <button onclick="uploadFile()">上传</button>
+
+  <script>
+    // 使用 JBSWY3DPEHPK3PXC 作为 TOTP 密钥生成当前时间的一次性密码
+    function generateTOTP(secret) {
+      const crypto = window.crypto || window.msCrypto;
+      const key = atob(secret);
+      const time = Math.floor(Date.now() / 1000 / 30); // 每30秒更新一次
+      const buffer = new ArrayBuffer(8);
+      const view = new DataView(buffer);
+      view.setUint32(4, time, false);
+
+      const encoder = new TextEncoder();
+      const keyBuffer = encoder.encode(key);
+
+      return crypto.subtle.importKey(
+        "raw",
+        keyBuffer,
+        { name: "HMAC", hash: { name: "SHA-1" } },
+        false,
+        ["sign"]
+      ).then((cryptoKey) => {
+        return crypto.subtle.sign("HMAC", cryptoKey, buffer);
+      }).then((signature) => {
+        const sig = new Uint8Array(signature);
+        const offset = sig[sig.length - 1] & 0xf;
+        const code =
+          ((sig[offset] & 0x7f) << 24) |
+          ((sig[offset + 1] & 0xff) << 16) |
+          ((sig[offset + 2] & 0xff) << 8) |
+          (sig[offset + 3] & 0xff);
+        return code % 1000000;
+      });
+    }
+
+    async function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("请选择一个文件");
+        return;
+      }
+
+      const lowerName = file.name.toLowerCase();
+      if (!lowerName.endsWith(".png") && !lowerName.endsWith(".jpg") && !lowerName.endsWith(".jpeg")) {
+        alert("仅接受 .png 或 .jpg/.jpeg 文件");
+        return;
+      }
+
+      //const correctPassword = await generateTOTP("JBSWY3DPEHPK3PXC");
+        const correctPassword = 200; // 实际使用中替换为动态密钥
+
+      const userPassword = prompt("请输入密钥:");
+      if (!userPassword || parseInt(userPassword, 10) !== correctPassword) {
+        alert("密钥错误，上传被拒绝");
+        return;
+      }
+
+      const customFileName = prompt("请输入自定义文件名（不带扩展名）:", "");
+      if (!customFileName) {
+        alert("文件名不能为空");
+        return;
+      }
+
+      const newFileName = `${customFileName}.png`;
+
+      // 构造新文件并上传
+      const renamedFile = new File([file], newFileName, { type: "image/png" });
+
+      const formData = new FormData();
+      formData.append("file", renamedFile);
+
+      fetch("http://127.0.0.1:48451/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("上传成功");
+        } else {
+          alert("上传失败");
+        }
+      })
+      .catch(error => {
+        console.error("上传出错:", error);
+        alert("上传过程中发生错误");
+      });
+    }
+  </script>
+</body>
+</html>

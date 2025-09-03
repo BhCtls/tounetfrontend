@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安装指南 - Tounet PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .platform {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .platform h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .screenshot {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .benefits {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .benefits h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .benefit-item::before {
+            content: "✅";
+            margin-right: 10px;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .install-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+        }
+        
+        .install-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step-number {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">← 返回主页</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📱 安装 Tounet 应用</h1>
+            <p>将 Tounet 安装到您的设备，获得更好的使用体验</p>
+            <button class="install-btn" onclick="promptInstall()">🚀 立即安装应用</button>
+        </div>
+        
+        <div class="benefits">
+            <h3>🎯 安装应用的好处</h3>
+            <div class="benefit-item">快速启动，无需打开浏览器</div>
+            <div class="benefit-item">离线使用，网络断开也能访问</div>
+            <div class="benefit-item">节省流量，内容智能缓存</div>
+            <div class="benefit-item">桌面图标，一键访问</div>
+            <div class="benefit-item">推送通知，不错过重要更新</div>
+            <div class="benefit-item">全屏体验，沉浸式界面</div>
+        </div>
+        
+        <div class="platform">
+            <h3>🖥️ 桌面浏览器 (Chrome/Edge/Firefox)</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>寻找安装图标</strong><br>
+                    在地址栏右侧查找安装图标（通常是一个下载或加号图标）
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>点击安装</strong><br>
+                    点击安装图标，然后在弹出的对话框中确认安装
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>完成安装</strong><br>
+                    应用将被安装到您的桌面或应用列表中
+                </div>
+            </div>
+        </div>
+        
+        <div class="platform">
+            <h3>📱 Android (Chrome)</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>打开菜单</strong><br>
+                    点击浏览器右上角的三点菜单按钮
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>选择安装选项</strong><br>
+                    找到并点击"安装应用"或"添加到主屏幕"选项
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>确认安装</strong><br>
+                    在弹出的对话框中点击"安装"按钮
+                </div>
+            </div>
+        </div>
+        
+        <div class="platform">
+            <h3>🍎 iPhone/iPad (Safari)</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>打开分享菜单</strong><br>
+                    点击底部工具栏的分享按钮（方形带箭头的图标）
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>添加到主屏幕</strong><br>
+                    在分享选项中找到并点击"添加到主屏幕"
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>自定义名称</strong><br>
+                    可以修改应用名称，然后点击"添加"完成安装
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <strong>💡 提示：</strong>
+            如果您没有看到安装选项，请确保您使用的是支持 PWA 的现代浏览器，并且网站支持离线功能。
+        </div>
+        
+        <div class="note">
+            <strong>🔧 故障排除：</strong>
+            如果安装失败，请尝试刷新页面或清除浏览器缓存后重试。某些浏览器可能需要您先与网站进行一定程度的交互才能显示安装提示。
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        
+        // 监听安装提示事件
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('安装提示已准备');
+        });
+        
+        // 手动触发安装提示
+        async function promptInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const choiceResult = await deferredPrompt.userChoice;
+                
+                if (choiceResult.outcome === 'accepted') {
+                    alert('🎉 感谢您安装 Tounet 应用！');
+                } else {
+                    alert('😊 您可以随时通过浏览器菜单安装应用');
+                }
+                
+                deferredPrompt = null;
+            } else {
+                // 如果没有安装提示，显示手动安装指南
+                alert('请按照上方的指南手动安装应用，或稍后再试。\n\n某些浏览器需要您先使用网站一段时间才会显示安装提示。');
+            }
+        }
+        
+        // 检测是否已安装
+        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+            // 应用已安装且以独立模式运行
+            document.querySelector('.install-btn').textContent = '✅ 应用已安装';
+            document.querySelector('.install-btn').disabled = true;
+            document.querySelector('.install-btn').style.background = '#4CAF50';
+        }
+        
+        // 监听应用安装事件
+        window.addEventListener('appinstalled', () => {
+            alert('🎉 Tounet 应用安装成功！您现在可以在桌面或应用列表中找到它。');
+        });
+    </script>
+</body>
+</html>

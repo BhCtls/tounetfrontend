@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA 测试 - Tounet</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← 返回主页</a>
+    
+    <h1>🔧 PWA 功能测试</h1>
+    
+    <div class="test-container">
+        <h2>基础 PWA 功能检测</h2>
+        <div class="test-item">
+            <span>Service Worker 支持</span>
+            <span id="sw-support" class="status">检测中...</span>
+        </div>
+        <div class="test-item">
+            <span>Service Worker 注册状态</span>
+            <span id="sw-status" class="status">检测中...</span>
+        </div>
+        <div class="test-item">
+            <span>Manifest 文件</span>
+            <span id="manifest-status" class="status">检测中...</span>
+        </div>
+        <div class="test-item">
+            <span>离线支持</span>
+            <span id="offline-status" class="status">检测中...</span>
+        </div>
+        <div class="test-item">
+            <span>安装提示支持</span>
+            <span id="install-status" class="status">检测中...</span>
+        </div>
+        <div class="test-item">
+            <span>通知权限</span>
+            <span id="notification-status" class="status">检测中...</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>功能测试</h2>
+        <button class="btn" onclick="testNotification()">测试通知</button>
+        <button class="btn" onclick="testCacheStatus()">检查缓存状态</button>
+        <button class="btn" onclick="testOfflineMode()">模拟离线模式</button>
+        <button class="btn" onclick="clearAllData()">清除所有数据</button>
+        <button class="btn" onclick="exportConfig()">导出配置</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>应用信息</h2>
+        <div id="app-info"></div>
+    </div>
+    
+    <div class="info-box">
+        <h3>📱 如何安装 PWA</h3>
+        <p><strong>Chrome/Edge (桌面):</strong> 地址栏右侧的安装图标</p>
+        <p><strong>Chrome (移动):</strong> 菜单 → "添加到主屏幕"</p>
+        <p><strong>Safari (iOS):</strong> 分享按钮 → "添加到主屏幕"</p>
+        <p><strong>Firefox:</strong> 地址栏右侧的安装图标</p>
+    </div>
+
+    <script>
+        // 检测 PWA 功能
+        async function checkPWAFeatures() {
+            // Service Worker 支持
+            const swSupport = 'serviceWorker' in navigator;
+            updateStatus('sw-support', swSupport);
+            
+            // Service Worker 状态
+            if (swSupport) {
+                try {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    updateStatus('sw-status', !!registration);
+                } catch (e) {
+                    updateStatus('sw-status', false);
+                }
+            } else {
+                updateStatus('sw-status', false);
+            }
+            
+            // Manifest 检测
+            const manifestLink = document.querySelector('link[rel="manifest"]');
+            updateStatus('manifest-status', !!manifestLink);
+            
+            // 离线支持检测（通过检查缓存）
+            try {
+                const cacheNames = await caches.keys();
+                updateStatus('offline-status', cacheNames.length > 0);
+            } catch (e) {
+                updateStatus('offline-status', false);
+            }
+            
+            // 安装提示支持
+            updateStatus('install-status', 'BeforeInstallPromptEvent' in window || 'onbeforeinstallprompt' in window);
+            
+            // 通知权限
+            if ('Notification' in window) {
+                updateStatus('notification-status', Notification.permission !== 'denied');
+            } else {
+                updateStatus('notification-status', false);
+            }
+        }
+        
+        function updateStatus(id, success) {
+            const element = document.getElementById(id);
+            element.textContent = success ? '✅ 支持' : '❌ 不支持';
+            element.className = `status ${success ? 'success' : 'error'}`;
+        }
+        
+        // 测试通知
+        async function testNotification() {
+            if ('Notification' in window) {
+                let permission = Notification.permission;
+                
+                if (permission === 'default') {
+                    permission = await Notification.requestPermission();
+                }
+                
+                if (permission === 'granted') {
+                    new Notification('PWA 测试通知', {
+                        body: '通知功能正常工作！',
+                        icon: '/icon.png',
+                        badge: '/icon.png'
+                    });
+                } else {
+                    alert('通知权限被拒绝');
+                }
+            } else {
+                alert('浏览器不支持通知功能');
+            }
+        }
+        
+        // 检查缓存状态
+        async function testCacheStatus() {
+            try {
+                const cacheNames = await caches.keys();
+                const cacheInfo = [];
+                
+                for (const cacheName of cacheNames) {
+                    const cache = await caches.open(cacheName);
+                    const keys = await cache.keys();
+                    cacheInfo.push(`${cacheName}: ${keys.length} 个文件`);
+                }
+                
+                alert(`缓存状态:\n${cacheInfo.join('\n')}`);
+            } catch (e) {
+                alert('无法访问缓存: ' + e.message);
+            }
+        }
+        
+        // 模拟离线模式
+        function testOfflineMode() {
+            alert('请打开开发者工具，在 Network 选项卡中选择 "Offline" 来测试离线功能');
+        }
+        
+        // 清除所有数据
+        async function clearAllData() {
+            if (confirm('确定要清除所有应用数据吗？这将删除缓存、本地存储等。')) {
+                try {
+                    // 清除缓存
+                    const cacheNames = await caches.keys();
+                    await Promise.all(cacheNames.map(name => caches.delete(name)));
+                    
+                    // 清除存储
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    alert('所有数据已清除，页面将重新加载');
+                    window.location.reload();
+                } catch (e) {
+                    alert('清除数据失败: ' + e.message);
+                }
+            }
+        }
+        
+        // 导出配置
+        function exportConfig() {
+            if (window.pwaTools) {
+                window.pwaTools.exportConfig();
+            } else {
+                alert('PWA 工具未加载');
+            }
+        }
+        
+        // 显示应用信息
+        function showAppInfo() {
+            const info = {
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                online: navigator.onLine,
+                cookieEnabled: navigator.cookieEnabled,
+                platform: navigator.platform,
+                screen: `${screen.width}x${screen.height}`,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+                pixelRatio: window.devicePixelRatio
+            };
+            
+            const infoHtml = Object.entries(info)
+                .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
+                .join('<br>');
+            
+            document.getElementById('app-info').innerHTML = infoHtml;
+        }
+        
+        // 页面加载时执行检测
+        document.addEventListener('DOMContentLoaded', () => {
+            checkPWAFeatures();
+            showAppInfo();
+        });
+    </script>
+</body>
+</html>

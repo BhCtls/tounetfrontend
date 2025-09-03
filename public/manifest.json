@@ -1,0 +1,17 @@
+{
+  "name": "Tounet",
+  "short_name": "Tounet",
+  "description": "Tounet - 个人应用平台",
+  "theme_color": "#ffffff",
+  "background_color": "#f2f2f2",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

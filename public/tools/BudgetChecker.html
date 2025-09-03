@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>预算卡片生成器</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+      width: 480px;
+      max-width: 90%;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input[type="number"]:focus,
+    input[type="date"]:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #007bff, #0056b3);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #0069d9, #004080);
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 25px 20px;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      transition: background-image 0.3s ease;
+    }
+
+    .theme-light {
+      background-image: linear-gradient(to right, #66cc99, #99cc33);
+    }
+
+    .theme-yellow {
+      background-image: linear-gradient(to right, #ffeb3b, #fdd835);
+    }
+
+    .theme-dark {
+      background-image: linear-gradient(to right, #5a005a, #990099);
+    }
+
+    .theme-danger {
+      background-image: linear-gradient(to right, #ff3333, #e74c3c);
+    }
+
+    .header-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .daily-zen {
+      text-align: center;
+      font-style: italic;
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 15px;
+    }
+
+    .content-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .left,
+    .right {
+      width: 48%;
+    }
+
+    .divider {
+      width: 2px;
+      height: 100px;
+      background-color: white;
+    }
+
+    .info {
+      margin-bottom: 8px;
+    }
+
+    canvas {
+      display: none;
+    }
+
+    /* Toast 样式 */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>预算卡片生成器</h2>
+  <p>该应用不需要Ntoken鉴权，后续可能会按照Ntoken来记录历史消费一览。</p>
+
+  <label for="date">日期：</label>
+  <input type="date" id="date" />
+
+  <label for="budget">今日可用预算：</label>
+  <input type="number" id="budget" placeholder="输入预算金额"/>
+
+  <label for="count">消费笔数：</label>
+  <input type="number" id="count" placeholder="输入消费笔数"/>
+
+  <label for="totalSpent">消费总金额：</label>
+  <input type="number" id="totalSpent" placeholder="输入消费总金额"/>
+
+  <button onclick="generateCard()">生成一览表</button>
+  <button onclick="saveAsImage()">保存为图片</button>
+
+  <div id="card" class="result theme-light" style="display:none;">
+    <div class="header-title"></div>
+    <div class="daily-zen" id="dailyZen">正在加载每日一句...</div>
+    <div class="content-row">
+      <div class="left"></div>
+      <div class="divider"></div>
+      <div class="right"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Canvas for rendering image -->
+<canvas id="canvas"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js "></script>
+<script>
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}年${month}月${day}日`;
+  }
+
+  function formatFilenameDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+  }
+
+  async function fetchDailyZen() {
+    try {
+      const res = await fetch('https://api.github.com/zen ');
+      const data = await res.text();
+      document.getElementById('dailyZen').textContent = `"${data}"`;
+    } catch (error) {
+      document.getElementById('dailyZen').textContent = `"专注当下，理性消费。"`;
+    }
+  }
+
+  function generateCard() {
+    const budgetInput = document.getElementById('budget');
+    const countInput = document.getElementById('count');
+    const totalSpentInput = document.getElementById('totalSpent');
+    const dateInput = document.getElementById('date');
+
+    const budget = parseFloat(budgetInput.value);
+    const count = parseInt(countInput.value);
+    const totalSpent = parseFloat(totalSpentInput.value);
+
+    if ([budget, count, totalSpent].some(isNaN)) {
+      showToast("请输入所有数值");
+      return;
+    }
+
+    const selectedDate = dateInput.value ? new Date(dateInput.value) : new Date();
+    const card = document.getElementById('card');
+    const left = card.querySelector('.left');
+    const right = card.querySelector('.right');
+    const title = card.querySelector('.header-title');
+
+    const remaining = budget - totalSpent;
+    const percent = (totalSpent / budget) * 100;
+
+    // 设置主题
+    const themes = ['theme-light', 'theme-yellow', 'theme-dark', 'theme-danger'];
+    themes.forEach(cls => card.classList.remove(cls));
+
+    if (percent > 150) {
+      card.classList.add('theme-danger');
+    } else if (percent >= 100) {
+      card.classList.add('theme-dark');
+    } else if (percent >= 70) {
+      card.classList.add('theme-yellow');
+    } else {
+      card.classList.add('theme-light');
+    }
+
+    // 更新标题和内容
+    title.textContent = `${formatDate(selectedDate)} 预算简报`;
+
+    left.innerHTML = `
+      <div class="info"><strong>今日可用预算:</strong></div>
+      <div class="info">￥${remaining.toFixed(2)} / ￥${budget.toFixed(2)}</div>
+    `;
+
+    right.innerHTML = `
+      <div class="info"><strong>消费笔数:</strong> ${count} 笔</div>
+      <div class="info"><strong>消费总金额:</strong> ￥${totalSpent.toFixed(2)}</div>
+      <div class="info"><strong>消费预算比例:</strong> ${percent.toFixed(2)} %</div>
+    `;
+
+    card.style.display = 'flex';
+
+    fetchDailyZen();
+  }
+
+  async function saveAsImage() {
+    const card = document.getElementById('card');
+    if (card.style.display === 'none') {
+      showToast("请先生成卡片内容");
+      return;
+    }
+
+    const dateStr = formatFilenameDate(new Date());
+    const filename = `budget_card_${dateStr}.png`;
+
+    const canvas = await html2canvas(card);
+    const dataURL = canvas.toDataURL("image/png");
+
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = filename;
+    link.click();
+  }
+</script>
+</body>
+</html>
