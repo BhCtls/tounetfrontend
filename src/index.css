@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: SEGA_Humming;
+  src: url('./assets/fonts/SEGA_Humming.ttf') format("truetype")
+}
+
 @layer base {
   html {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -9,5 +14,46 @@
   
   body {
     @apply bg-gray-50 text-gray-900;
+    font-family: SEGA_Humming, Arial, sans-serif;
+  }
+}
+
+/* 移动端适配样式 */
+@media (max-width: 768px) {
+  .app-container {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+    gap: 10px !important;
+    padding-left: 15px !important;
+  }
+
+  .app-button {
+    width: 100% !important;
+    height: 80px !important;
+    background-color: rgba(255, 255, 255, 0.55) !important;
+    border-radius: 10px !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+  }
+
+  .app-button span:first-child {
+    margin: 0 !important;
+    font-size: 24px !important;
+  }
+  
+  .app-button span:last-child {
+    display: none !important;
+  }
+}
+
+/* 大屏幕适配 */
+@media (min-width: 1000px) {
+  .app-container {
+    grid-template-columns: repeat(5, 1fr) !important;
+    width: 95% !important;
+    max-width: 95vw !important;
+    margin: 0 auto !important;
   }
 }
