@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { userApi, nkeyApi, publicApi } from '../lib/api';
+import { userApi, nkeyApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
@@ -13,7 +13,6 @@ import { useMutation } from '@tanstack/react-query';
 import { authApi } from '../lib/api';
 import { useNavigate } from 'react-router-dom';
 import type { App } from '../types/api';
-import { useDynamicAssets } from '../hooks/useDynamicAssets';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -31,23 +30,13 @@ export function HomePage() {
   const [accessingApp, setAccessingApp] = useState<string>('');
 
   // 获取用户可用的应用列表
-  const { data: apiApps } = useQuery({
+  const { data: apiApps, isLoading: appsLoading } = useQuery({
     queryKey: ['user', 'apps'],
     queryFn: async () => {
       const response = await userApi.getMyApps();
       return response.data;
     },
     enabled: !!user, // 只有登录用户才获取应用列表
-  });
-
-  // 获取公开应用列表（无需登录）
-  const { data: publicApps } = useQuery({
-    queryKey: ['public', 'apps'],
-    queryFn: async () => {
-      const response = await publicApi.getPublicApps();
-      return response.data;
-    },
-    enabled: !user, // 未登录时获取公开应用
   });
 
   const {
@@ -100,35 +89,15 @@ export function HomePage() {
       alert('请先登录后访问此功能');
       return;
     }
-    
-    // 定义需要客户端路由的内部页面路径
-  const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps', '/songpic'];
-    
-    // 只有明确定义的内部路由才使用客户端导航
-    const isInternalRoute = internalRoutes.includes(app.url);
-    
-    try {
-      if (isInternalRoute) {
-        navigate(app.url);
-        return;
-      }
-      // 所有其他路径（包括外部应用、静态文件等）都使用完整页面跳转
-      window.location.href = app.url;
-    } catch (err) {
-      // fallback to full navigation on any unexpected error
-      window.location.href = app.url;
-    }
+    window.location.href = app.url;
   };
 
-  // 生成应用的显示图标（优先使用emoji，静态应用用预设emoji，API应用用emoji或首字母）
+  // 生成应用的显示图标（API应用用首字母，静态应用用emoji）
   const getAppIcon = (app: any) => {
     if (app.isStatic) {
       return app.emoji;
     }
-    // API应用优先使用emoji字段，没有emoji时使用首字母
-    if (app.apiApp?.emoji) {
-      return app.apiApp.emoji;
-    }
+    // API应用使用首字母
     return app.name?.charAt(0) || '📱';
   };
 
@@ -143,24 +112,17 @@ export function HomePage() {
 
   const apps = [
     {
-      name: '赞助我……',
-      emoji: '🥺',
-      url: '/sponsor.html',
-      description: '支持开发者',
+      name: '博客（不定期更新）',
+      emoji: '✍️',
+      url: '/sjkblog',
+      description: '个人博客，不定期更新各种内容',
       isStatic: true
     },
     {
-      name: '曲绘检索',
-      emoji: '🖼️',
-      url: '/songpic',
-      description: '根据 game / sort / name 查询曲绘',
-      isStatic: true
-    },
-    {
-      name: 'nano banana',
-      emoji: '🍌',
-      url: 'https://aistudio.google.com/prompts/new_chat?model=models%2Fgemini-2.5-flash-image&prompt=e.',
-      description: '快速入口',
+      name: '三角葵reve',
+      emoji: '📁',
+      url: '/live',
+      description: '音乐相关内容',
       isStatic: true
     },
     {
@@ -168,18 +130,98 @@ export function HomePage() {
       emoji: '🔑',
       url: '/frontend',
       description: '申请访问密钥',
-      requireAuth: true
+      requireAuth: true,
+      isStatic: true
     },
+    {
+      name: '音游数据库查询',
+      emoji: '📊',
+      url: '/searchallv3',
+      description: '查询音游相关数据',
+      isStatic: true
+    }
   ];
 
   const toolApps = [
-        {
-      name: '中二成绩图识别',
-      emoji: '✍️',
-      url: 'https://huggingface.co/spaces/BhCtls/Chunipic',
-      description: '识图脚本',
+    {
+      name: '预算检查器',
+      emoji: '💰',
+      url: '/tools/BudgetChecker.html',
+      description: '检查和管理预算',
       isStatic: true
     },
+    {
+      name: 'dxpass渲染器',
+      emoji: '🌸',
+      url: '/tools/dxprender.html',
+      description: '生成dxpass图片',
+      isStatic: true
+    },
+    {
+      name: '语法填空生成器',
+      emoji: '📄',
+      url: '/wxtk/',
+      description: '生成语法填空练习',
+      isStatic: true
+    },
+    {
+      name: '部分解包资源查找',
+      emoji: '🐰',
+      url: '/segaassets/',
+      description: '查找游戏资源文件',
+      isStatic: true
+    },
+    {
+      name: '音撃風卡面预览',
+      emoji: '🃏',
+      url: '/card-preview/CardPreview.html',
+      description: '预览卡片设计',
+      isStatic: true
+    },
+    {
+      name: '赞助我……',
+      emoji: '🥺',
+      url: '/pages/basic/sponsor.html',
+      description: '支持开发者',
+      isStatic: true
+    },
+    {
+      name: '安装应用',
+      emoji: '📱',
+      url: '/pwa/install.html',
+      description: '安装PWA应用',
+      isStatic: true
+    },
+    {
+      name: 'Null Definition',
+      emoji: '🚫',
+      url: '/scoresheet/',
+      description: '暂时未定义功能',
+      isStatic: true
+    }
+  ];
+
+  // 合并静态应用和API应用
+  const allBasicApps = [
+    ...apps.map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
+    ...(user && apiApps || []).map((app: App) => ({
+      name: app.name,
+      emoji: app.name.charAt(0).toUpperCase(), // 使用应用名称的第一个字符
+      url: app.url || '',
+      description: app.description,
+      app_id: app.app_id,
+      requireAuth: true,
+      isStatic: false,
+      apiApp: app
+    }))
+  ];
+
+  const allToolApps = [
+    ...toolApps.map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
+    // 可以在这里添加更多从API获取的工具应用
+  ];
+
+  const debugApps = [
     {
       name: '内网穿透管理（不可用）',
       emoji: '🔧',
@@ -376,23 +418,18 @@ export function HomePage() {
           maxWidth: '95vw'
         }}
       >
-        {apps.map((app, index) => (
+        {allBasicApps.map((app, index) => (
           <div
             key={index}
             className="app-button"
             onClick={async () => {
-              // 如果是公开应用，直接跳转（不需要nkey）
-              if (app.isPublic && app.url) {
-                window.location.href = app.url;
-              }
               // 如果是API应用且用户已登录，使用一键登录
-              else if (!app.isStatic && app.apiApp && user) {
+              if (!app.isStatic && app.apiApp && user) {
                 await handleApiAppAccess(app.apiApp);
               } else {
                 // 静态应用直接跳转
                 handleStaticAppAccess(app);
               }
-              window.location.href = app.url;
             }}
             style={{
               margin: '10px',
@@ -410,11 +447,18 @@ export function HomePage() {
               backdropFilter: 'blur(5px)',
               WebkitBackdropFilter: 'blur(5px)',
               boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
-              flexDirection: 'row'
+              flexDirection: 'row',
+              opacity: accessingApp === app.app_id ? 0.6 : 1,
+              pointerEvents: accessingApp === app.app_id ? 'none' : 'auto'
             }}
           >
-            <span style={{ fontSize: '20px', marginRight: '10px' }}>{app.emoji}</span>
+            <span style={{ fontSize: '20px', marginRight: '10px' }}>
+              {getAppIcon(app)}
+            </span>
             <span>{app.name}</span>
+            {accessingApp === app.app_id && (
+              <div style={{ marginLeft: '10px', fontSize: '12px' }}>登录中...</div>
+            )}
           </div>
         ))}
       </div>
@@ -426,7 +470,7 @@ export function HomePage() {
           fontSize: 'large',
           marginTop: '20px'
         }}>
-          <h3>其他功能，建议从申请key页面中进入</h3>
+          <h3>其他功能（修正检讨中……）</h3>
         </div>
         
         <div 
@@ -448,11 +492,11 @@ export function HomePage() {
             maxWidth: '95vw'
           }}
         >
-          {toolApps.map((app, index) => (
+          {allToolApps.map((app, index) => (
             <div
               key={index}
               className="app-button"
-              onClick={() => window.location.href = app.url}
+              onClick={() => handleStaticAppAccess(app)}
               style={{
                 margin: '10px',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -472,7 +516,9 @@ export function HomePage() {
                 flexDirection: 'row'
               }}
             >
-              <span style={{ fontSize: '20px', marginRight: '10px' }}>{app.emoji}</span>
+              <span style={{ fontSize: '20px', marginRight: '10px' }}>
+                {getAppIcon(app)}
+              </span>
               <span>{app.name}</span>
             </div>
           ))}
