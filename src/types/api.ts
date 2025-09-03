@@ -16,7 +16,7 @@ export interface App {
   description: string;
   url?: string;
   emoji?: string;
-  required_permission_level: 'admin' | 'trusted' | 'user' | 'disableduser';
+  required_permission_level: 'admin' | 'trusted' | 'user';
   is_active: boolean;
   secret_key?: string;
   created_at: string;

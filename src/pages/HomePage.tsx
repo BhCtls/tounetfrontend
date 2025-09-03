@@ -92,12 +92,15 @@ export function HomePage() {
     window.location.href = app.url;
   };
 
-  // 生成应用的显示图标（API应用用首字母，静态应用用emoji）
+  // 生成应用的显示图标（优先使用emoji，静态应用用预设emoji，API应用用emoji或首字母）
   const getAppIcon = (app: any) => {
     if (app.isStatic) {
       return app.emoji;
     }
-    // API应用使用首字母
+    // API应用优先使用emoji字段，没有emoji时使用首字母
+    if (app.apiApp?.emoji) {
+      return app.apiApp.emoji;
+    }
     return app.name?.charAt(0) || '📱';
   };
 
@@ -206,7 +209,7 @@ export function HomePage() {
     ...apps.map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
     ...(user && apiApps || []).map((app: App) => ({
       name: app.name,
-      emoji: app.name.charAt(0).toUpperCase(), // 使用应用名称的第一个字符
+      emoji: app.emoji || app.name.charAt(0).toUpperCase(), // 优先使用API应用的emoji字段
       url: app.url || '',
       description: app.description,
       app_id: app.app_id,
