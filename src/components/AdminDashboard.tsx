@@ -341,7 +341,7 @@ export function AdminDashboard() {
 
       {/* Tabs */}
       <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px rounded-lg bg-white flex space-x-8">
           {[
             { key: 'users', label: 'User', icon: Users },
             { key: 'apps', label: 'App', icon: Settings },

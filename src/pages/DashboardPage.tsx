@@ -35,14 +35,18 @@ export function DashboardPage() {
   }
 
   return (
-      <div className="min-h-screen" style={{
-      backgroundColor: '#f2f2f2',
-      backgroundImage: 'url("assets/images/backgrounds/bg7.png")',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'top',
-      backgroundSize: 'cover',
-      backgroundAttachment: 'fixed'
-    }}>
+    <div 
+      className="min-h-screen" 
+      style={{
+        backgroundColor: '#f2f2f2',
+        backgroundImage: 'url("/assets/images/backgrounds/bg7.png")',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'top',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        fontFamily: 'SEGA_Humming, Arial, sans-serif'
+      }}
+    >
       {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
