@@ -299,7 +299,7 @@ export function HomePage() {
   return (
     <div className="min-h-screen" style={{
       backgroundColor: '#f2f2f2',
-      backgroundImage: backgroundLoaded ? `url("${backgroundUrl}")` : 'none',
+      backgroundImage: 'url("assets/images/backgrounds/bg7.png")',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'top',
       backgroundSize: 'cover',

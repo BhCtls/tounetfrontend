@@ -41,12 +41,12 @@ export function DashboardPage() {
       className="min-h-screen" 
       style={{
         backgroundColor: '#f2f2f2',
-        backgroundImage: backgroundLoaded ? `url("${backgroundUrl}")` : 'url("/assets/images/backgrounds/bg7.png")',
+        backgroundImage: 'url("/assets/images/backgrounds/bg7.png")',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'top',
         backgroundSize: 'cover',
         backgroundAttachment: 'fixed',
-        fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif"
+        fontFamily: 'SEGA_Humming, Arial, sans-serif'
       }}
     >
       {/* Header */}
