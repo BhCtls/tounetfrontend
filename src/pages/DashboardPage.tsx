@@ -2,13 +2,20 @@ import { useAuth } from '../contexts/AuthContext';
 import { Card, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { PermissionBadge } from '../components/PermissionGuard';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, Home } from 'lucide-react';
 import { Loading } from '../components/ui/Loading';
 import { UserDashboard } from '../components/UserDashboard';
 import { AdminDashboard } from '../components/AdminDashboard';
+import { useNavigate } from 'react-router-dom';
 
 export function DashboardPage() {
   const { user, logout, isLoading, isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   if (isLoading) {
     return <Loading text="Loading dashboard..." />;
@@ -28,7 +35,14 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{
+      backgroundColor: '#f2f2f2',
+      backgroundImage: 'url("assets/images/backgrounds/bg7.png")',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'top',
+      backgroundSize: 'cover',
+      backgroundAttachment: 'fixed'
+    }}>
       {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,11 +54,15 @@ export function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Button variant="outline" size="sm" onClick={() => navigate('/')}>
+                <Home className="w-4 h-4 mr-2" />
+                返回主页
+              </Button>
               <div className="flex items-center text-sm text-gray-700">
                 <User className="w-4 h-4 mr-2" />
                 {user.username}
               </div>
-              <Button variant="outline" size="sm" onClick={logout}>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>

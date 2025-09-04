@@ -8,6 +8,8 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { AppsPage } from './pages/AppsPage';
+import { SponsorPage } from './pages/SponsorPage';
+import { AboutMePage } from './pages/AboutMePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,6 +30,8 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/sponsor" element={<SponsorPage />} />
+              <Route path="/about" element={<AboutMePage />} />
               <Route 
                 path="/dashboard" 
                 element={
