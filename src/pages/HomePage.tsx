@@ -29,7 +29,7 @@ export function HomePage() {
   const [accessingApp, setAccessingApp] = useState<string>('');
 
   // 获取用户可用的应用列表
-  const { data: apiApps, isLoading: appsLoading } = useQuery({
+  const { data: apiApps } = useQuery({
     queryKey: ['user', 'apps'],
     queryFn: async () => {
       const response = await userApi.getMyApps();
