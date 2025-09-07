@@ -24,7 +24,6 @@ type LoginForm = z.infer<typeof loginSchema>;
 export function HomePage() {
   const { user, login, logout } = useAuth();
   const navigate = useNavigate();
-  const { fontLoaded, backgroundLoaded, backgroundUrl } = useDynamicAssets();
   const [error, setError] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
   const [accessingApp, setAccessingApp] = useState<string>('');
@@ -154,13 +153,6 @@ export function HomePage() {
       isStatic: true
     },
     {
-      name: 'dxpass渲染器',
-      emoji: '🌸',
-      url: '/tools/dxprender.html',
-      description: '生成dxpass图片',
-      isStatic: true
-    },
-    {
       name: '语法填空生成器',
       emoji: '📄',
       url: '/wxtk/',
@@ -168,23 +160,9 @@ export function HomePage() {
       isStatic: true
     },
     {
-      name: '部分解包资源查找',
-      emoji: '🐰',
-      url: '/segaassets/',
-      description: '查找游戏资源文件',
-      isStatic: true
-    },
-    {
-      name: '音撃風卡面预览',
-      emoji: '🃏',
-      url: '/card-preview/CardPreview.html',
-      description: '预览卡片设计',
-      isStatic: true
-    },
-    {
       name: '赞助我……',
       emoji: '🥺',
-      url: '/pages/basic/sponsor.html',
+      url: '/sponsor',
       description: '支持开发者',
       isStatic: true
     },
@@ -238,57 +216,6 @@ export function HomePage() {
       description: '虚拟花园功能'
     },
     {
-      name: '安装应用',
-      emoji: '📱',
-      url: '/pwa/install.html',
-      description: '安装PWA应用',
-      isStatic: true
-    },
-  ];
-
-  // 合并静态应用、API应用和公开应用
-  const allBasicApps = [
-    ...apps.map(app => ({ ...app, app_id: undefined, apiApp: undefined, isPublic: false })),
-    // 已登录用户的API应用
-    ...(user && apiApps || []).map((app: App) => ({
-      name: app.name,
-      emoji: app.emoji || app.name.charAt(0).toUpperCase(), // 优先使用API应用的emoji字段
-      url: app.url || '',
-      description: app.description,
-      app_id: app.app_id,
-      requireAuth: true,
-      isStatic: false,
-      apiApp: app,
-      isPublic: false
-    })),
-    // 未登录时的公开应用
-    ...(!user && publicApps || []).map((app: App) => ({
-      name: app.name,
-      emoji: app.emoji || app.name.charAt(0).toUpperCase(),
-      url: app.url || '',
-      description: app.description,
-      app_id: app.app_id,
-      requireAuth: false,
-      isStatic: false,
-      apiApp: app,
-      isPublic: true // 标记为公开应用
-    }))
-  ];
-
-  const allToolApps = [
-    ...toolApps.map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
-    // 可以在这里添加更多从API获取的工具应用
-  ];
-
-  const debugApps = [
-    {
-      name: 'Null Definition',
-      emoji: '🚫',
-      url: '/scoresheet/',
-      description: '暂时未定义功能',
-      isStatic: true
-    },
-    {
       name: 'PWA测试',
       emoji: '🎵',
       url: 'pwa/pwa-test.html',
@@ -305,26 +232,26 @@ export function HomePage() {
       backgroundSize: 'cover',
       backgroundAttachment: 'fixed',
       margin: 0,
-      fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif"
+      fontFamily: 'SEGA_Humming, Arial, sans-serif'
     }}>
       {/* Title */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
-        fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif",
+        fontFamily: 'SEGA_Humming, Arial, sans-serif',
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-  <h1>Tounet 5.3.1 202601</h1>
+        <h1>Tounet 5.0.0 Alpha2.0</h1>
       </div>
 
       {/* Switch and Login */}
-        <div className="text-right px-4 mb-4">
-          <div className="inline-flex items-center gap-4">
-            <span>Debug Button</span>
-            <Button variant="outline" size="sm" onClick={toggleDebug}>
-              switch
-            </Button>
-          </div>
+      <div className="text-right px-4 mb-4">
+        <div className="inline-flex items-center gap-4">
+          <span>Debug Button</span>
+          <Button variant="outline" size="sm" onClick={toggleDebug}>
+            switch
+          </Button>
+        </div>
         
         <div className="flex justify-end mt-2">
           {user ? (
@@ -342,53 +269,78 @@ export function HomePage() {
               </Button>
             </div>
           ) : (
-            <Card className="w-80">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center">
-                  <LogIn className="w-5 h-5 mr-2" />
-                  快速登录
-                </CardTitle>
-                <CardDescription>登录后可访问更多功能</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                  {error && (
-                    <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-                      {error}
+            <>
+              {/* Desktop Login Form */}
+              <Card className="w-80 hidden md:block">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center">
+                    <LogIn className="w-5 h-5 mr-2" />
+                    快速登录
+                  </CardTitle>
+                  <CardDescription>登录后可访问更多功能</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                    {error && (
+                      <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
+                        {error}
+                      </div>
+                    )}
+                    <Input
+                      placeholder="Username"
+                      {...register('username')}
+                      error={errors.username?.message}
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      {...register('password')}
+                      error={errors.password?.message}
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        type="submit"
+                        size="sm"
+                        className="flex-1"
+                        disabled={loginMutation.isPending}
+                      >
+                        {loginMutation.isPending ? 'Logging in...' : 'Login'}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate('/register')}
+                      >
+                        <UserPlus className="w-4 h-4" />
+                      </Button>
                     </div>
-                  )}
-                  <Input
-                    placeholder="Username"
-                    {...register('username')}
-                    error={errors.username?.message}
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    {...register('password')}
-                    error={errors.password?.message}
-                  />
-                  <div className="flex gap-2">
-                    <Button
-                      type="submit"
-                      size="sm"
-                      className="flex-1"
-                      disabled={loginMutation.isPending}
-                    >
-                      {loginMutation.isPending ? 'Logging in...' : 'Login'}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate('/register')}
-                    >
-                      <UserPlus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+                  </form>
+                </CardContent>
+              </Card>
+
+              {/* Mobile Login Buttons */}
+              <div className="flex gap-2 md:hidden">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => navigate('/login')}
+                  className="flex items-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  登录
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => navigate('/register')}
+                  className="flex items-center gap-2"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  注册
+                </Button>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -396,7 +348,7 @@ export function HomePage() {
       {/* Basic Functions */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
-        fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif",
+        fontFamily: 'SEGA_Humming, Arial, sans-serif',
         fontSize: 'large'
       }}>
         <h3>基本功能</h3>
@@ -469,7 +421,7 @@ export function HomePage() {
         {/* Other Tools */}
         <div className="flex justify-center" style={{
           color: 'rgb(53, 53, 53)',
-          fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif",
+          fontFamily: 'SEGA_Humming, Arial, sans-serif',
           fontSize: 'large',
           marginTop: '20px'
         }}>
@@ -589,7 +541,7 @@ export function HomePage() {
       }}>
         <span style={{ color: 'green', cursor: 'pointer' }}>powered by LLMs</span> | 
         <span style={{ color: 'green' }}> 仅供个人学习使用，备案号：</span> | 
-        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'pages/basic/aboutme.html'}>关于🔗</span> | 
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/about')}>关于🔗</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'docs/license.html'}>LICENSE🔗</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'announce.html'}>公告🔗</span>
       </div>

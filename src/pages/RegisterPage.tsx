@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, ArrowLeft } from 'lucide-react';
 import { authApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -54,7 +54,16 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* Back to Home Button */}
+      <button
+        onClick={() => navigate('/')}
+        className="fixed top-5 left-5 z-50 flex items-center gap-2 bg-white/90 backdrop-blur-sm text-blue-600 px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 hover:text-white transition-all"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        返回主页
+      </button>
+
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <UserPlus className="mx-auto h-12 w-12 text-primary-600" />

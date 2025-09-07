@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dynamic font will be loaded via API */
+@font-face {
+  font-family: SEGA_Humming;
+  src: url('./assets/fonts/SEGA_Humming.ttf') format("truetype")
+}
 
 @layer base {
   html {
@@ -11,7 +14,7 @@
 
   body {
     @apply bg-gray-50 text-gray-900;
-    font-family: 'DynamicFont', Arial, sans-serif;
+    font-family: SEGA_Humming, Arial, sans-serif;
   }
 }
 

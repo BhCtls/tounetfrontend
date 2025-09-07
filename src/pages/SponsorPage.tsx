@@ -1,23 +1,21 @@
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useDynamicAssets } from '../hooks/useDynamicAssets';
 
 export function SponsorPage() {
   const navigate = useNavigate();
-  const { fontLoaded, backgroundLoaded, backgroundUrl } = useDynamicAssets();
 
   return (
     <div 
       className="min-h-screen"
       style={{
         backgroundColor: '#f2f2f2',
-        backgroundImage: backgroundLoaded ? `url("${backgroundUrl}")` : 'url("/assets/images/backgrounds/bg1.png")',
+        backgroundImage: 'url("/assets/images/backgrounds/bg1.png")',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'top',
         backgroundSize: 'cover',
         backgroundAttachment: 'fixed',
         margin: 0,
-        fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif"
+        fontFamily: 'SEGA_Humming, Arial, sans-serif'
       }}
     >
       {/* Back Link */}

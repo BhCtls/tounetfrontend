@@ -2,17 +2,15 @@ import { useAuth } from '../contexts/AuthContext';
 import { Card, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { PermissionBadge } from '../components/PermissionGuard';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, Home } from 'lucide-react';
 import { Loading } from '../components/ui/Loading';
 import { UserDashboard } from '../components/UserDashboard';
 import { AdminDashboard } from '../components/AdminDashboard';
 import { useNavigate } from 'react-router-dom';
-import { useDynamicAssets } from '../hooks/useDynamicAssets';
 
 export function DashboardPage() {
   const { user, logout, isLoading, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const { fontLoaded, backgroundLoaded, backgroundUrl } = useDynamicAssets();
 
   const handleLogout = () => {
     logout();
@@ -60,11 +58,15 @@ export function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Button variant="outline" size="sm" onClick={() => navigate('/')}>
+                <Home className="w-4 h-4 mr-2" />
+                返回主页
+              </Button>
               <div className="flex items-center text-sm text-gray-700">
                 <User className="w-4 h-4 mr-2" />
                 {user.username}
               </div>
-              <Button variant="outline" size="sm" onClick={logout}>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>

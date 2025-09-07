@@ -12,7 +12,6 @@ import { Loading } from '../components/ui/Loading';
 import { Key, User, ArrowLeft, Copy, Check, RefreshCw, Smartphone } from 'lucide-react';
 import { copyToClipboard } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { useDynamicAssets } from '../hooks/useDynamicAssets';
 
 const updateProfileSchema = z.object({
   phone: z.string().min(10, 'Phone number is required'),
@@ -30,7 +29,6 @@ type GenerateNKeyForm = z.infer<typeof generateNKeySchema>;
 export function AppsPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { fontLoaded, backgroundLoaded, backgroundUrl } = useDynamicAssets();
   const [copiedNKey, setCopiedNKey] = useState<string>('');
   const [generatedNKey, setGeneratedNKey] = useState<string>('');
   const [accessingApp, setAccessingApp] = useState<string>('');
@@ -168,7 +166,7 @@ export function AppsPage() {
   return (
     <div className="min-h-screen" style={{
       backgroundColor: '#f2f2f2',
-      backgroundImage: backgroundLoaded ? `url("${backgroundUrl}")` : 'url("assets/images/backgrounds/bg.png")',
+      backgroundImage: 'url("assets/images/backgrounds/bg.png")',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'top',
       backgroundSize: 'cover',
@@ -182,7 +180,7 @@ export function AppsPage() {
             返回主页
           </Button>
           <h1 className="text-2xl font-bold text-gray-900" style={{
-            fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif"
+            fontFamily: 'SEGA_Humming, Arial, sans-serif'
           }}>应用管理</h1>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-700">

@@ -131,44 +131,6 @@ export function UserDashboard() {
               <Settings className="w-4 h-4 mr-2" />
               Nkey生成和Profile修改
             </Button>
-            <Button
-              onClick={async () => {
-                if (signingIn) return;
-
-                setSigningIn(true);
-                try {
-                  const resp = await userApi.signin();
-                  // If API follows { code, message }
-                  if ((resp as any).code === 200) {
-                    alert('签到成功: ' + ((resp as any).message || 'success'));
-                  } else {
-                    alert('签到返回: ' + ((resp as any).message || JSON.stringify(resp)));
-                  }
-                } catch (err: any) {
-                  console.error('签到失败', err);
-                  if (err?.response?.data?.message) {
-                    alert('签到失败: ' + err.response.data.message);
-                  } else {
-                    alert('签到请求失败，请检查网络或登录状态');
-                  }
-                } finally {
-                  setSigningIn(false);
-                }
-              }}
-              className="flex-1"
-              disabled={signingIn}
-            >
-              {signingIn ? '签到中...' : '签到'}
-            </Button>
-          </div>
-
-          {/* Last sign-in info */}
-          <div className="mt-3 text-sm text-gray-600">
-            {user?.last_sign_in || user?.last_login ? (
-              <span>上次签到/登录: {formatDate(user?.last_sign_in || user?.last_login || '')}</span>
-            ) : (
-              <span>尚未签到或登录记录</span>
-            )}
           </div>
         </CardContent>
       </Card>
