@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>安装指南 - Tounet PWA</title>
     <link rel="manifest" href="manifest.json">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
+    body {
+      background-color: #f2f2f2;
+      background-image: url("../assets/images/backgrounds/bg7.png");
+      background-repeat: no-repeat;
+      background-position: top;
+      background-size: cover;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 20px;
+      font-family: SEGA_Humming, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .main-wrapper {
+        width: 100%;
+        max-width: 900px;
+        margin: 80px auto 20px auto;
+        opacity: 0.5;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        opacity: 0.85;
+    }
         
         .header {
             text-align: center;
@@ -163,7 +180,7 @@
     </style>
 </head>
 <body>
-    <a href="../index.html" class="back-btn">← 返回主页</a>
+    <a href="/" class="back-btn">← 返回主页</a>
     
     <div class="container">
         <div class="header">
