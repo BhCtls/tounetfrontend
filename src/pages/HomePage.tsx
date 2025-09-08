@@ -121,10 +121,10 @@ export function HomePage() {
       isStatic: true
     },
     {
-      name: '三角葵reve',
-      emoji: '📁',
-      url: '/live',
-      description: '音乐相关内容',
+      name: '中二成绩图识别',
+      emoji: '✍️',
+      url: '/recognize',
+      description: '识图脚本',
       isStatic: true
     },
     {
@@ -135,16 +135,6 @@ export function HomePage() {
       requireAuth: true,
       isStatic: true
     },
-    {
-      name: '音游数据库查询',
-      emoji: '📊',
-      url: '/searchallv3',
-      description: '查询音游相关数据',
-      isStatic: true
-    }
-  ];
-
-  const toolApps = [
     {
       name: '预算检查器',
       emoji: '💰',
@@ -159,10 +149,13 @@ export function HomePage() {
       description: '生成语法填空练习',
       isStatic: true
     },
+  ];
+
+  const toolApps = [
     {
       name: '赞助我……',
       emoji: '🥺',
-      url: '/sponsor',
+      url: '/sponsor.html',
       description: '支持开发者',
       isStatic: true
     },
