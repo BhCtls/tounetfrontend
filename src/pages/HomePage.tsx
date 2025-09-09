@@ -121,38 +121,6 @@ export function HomePage() {
       isStatic: true
     },
     {
-      name: '中二成绩图识别',
-      emoji: '✍️',
-      url: '/recognize',
-      description: '识图脚本',
-      isStatic: true
-    },
-    {
-      name: 'Nkey申请',
-      emoji: '🔑',
-      url: '/frontend',
-      description: '申请访问密钥',
-      requireAuth: true,
-      isStatic: true
-    },
-    {
-      name: '预算检查器',
-      emoji: '💰',
-      url: '/tools/BudgetChecker.html',
-      description: '检查和管理预算',
-      isStatic: true
-    },
-    {
-      name: '语法填空生成器',
-      emoji: '📄',
-      url: '/wxtk/',
-      description: '生成语法填空练习',
-      isStatic: true
-    },
-  ];
-
-  const toolApps = [
-    {
       name: '赞助我……',
       emoji: '🥺',
       url: '/sponsor.html',
@@ -171,6 +139,39 @@ export function HomePage() {
       emoji: '🚫',
       url: '/scoresheet/',
       description: '暂时未定义功能',
+      isStatic: true
+    },
+    {
+      name: 'Nkey申请',
+      emoji: '🔑',
+      url: '/frontend',
+      description: '申请访问密钥',
+      requireAuth: true,
+      isStatic: true
+    },
+    {
+      name: '预算检查器',
+      emoji: '💰',
+      url: '/tools/BudgetChecker.html',
+      description: '检查和管理预算',
+      isStatic: true
+    }
+
+  ];
+
+  const toolApps = [
+        {
+      name: '中二成绩图识别',
+      emoji: '✍️',
+      url: '/recognize',
+      description: '识图脚本',
+      isStatic: true
+    },
+    {
+      name: '语法填空生成器',
+      emoji: '📄',
+      url: '/wxtk/',
+      description: '生成语法填空练习',
       isStatic: true
     }
   ];
@@ -234,7 +235,7 @@ export function HomePage() {
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-        <h1>Tounet 5.0.0 Alpha2.0</h1>
+        <h1>Tounet 5.2.3 Alpha2.0</h1>
       </div>
 
       {/* Switch and Login */}
@@ -418,7 +419,7 @@ export function HomePage() {
           fontSize: 'large',
           marginTop: '20px'
         }}>
-          <h3>其他功能（修正检讨中……）</h3>
+          <h3>限时应用</h3>
         </div>
         
         <div 
