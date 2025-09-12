@@ -15,7 +15,7 @@ export function SponsorPage() {
         backgroundSize: 'cover',
         backgroundAttachment: 'fixed',
         margin: 0,
-        fontFamily: 'SEGA_Humming, Arial, sans-serif'
+        fontFamily: 'FWQingYin, Arial, sans-serif'
       }}
     >
       {/* Back Link */}

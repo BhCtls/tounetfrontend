@@ -180,7 +180,7 @@ export function AppsPage() {
             返回主页
           </Button>
           <h1 className="text-2xl font-bold text-gray-900" style={{
-            fontFamily: 'SEGA_Humming, Arial, sans-serif'
+            fontFamily: 'FWQingYin, Arial, sans-serif'
           }}>应用管理</h1>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-700">

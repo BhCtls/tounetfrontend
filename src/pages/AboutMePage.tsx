@@ -41,7 +41,7 @@ export function AboutMePage() {
           backgroundColor: '#e0e0e0',
           borderRadius: '15px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          fontFamily: 'SEGA_Humming, Arial, sans-serif'
+          fontFamily: 'FWQingYin, Arial, sans-serif'
         }}
       >
         {/* Title */}
@@ -172,7 +172,7 @@ export function AboutMePage() {
               className="cursor-pointer text-center p-2 rounded-lg"
               style={{
                 backgroundColor: 'pink',
-                fontFamily: 'SEGA_Humming, Arial, sans-serif',
+                fontFamily: 'FWQingYin, Arial, sans-serif',
                 lineHeight: '1.2'
               }}
               onClick={toggleContact}
@@ -186,7 +186,7 @@ export function AboutMePage() {
               className="cursor-pointer text-center p-2 rounded-lg"
               style={{
                 backgroundColor: 'pink',
-                fontFamily: 'SEGA_Humming, Arial, sans-serif',
+                fontFamily: 'FWQingYin, Arial, sans-serif',
                 lineHeight: '1.2'
               }}
               onClick={toggleContact}

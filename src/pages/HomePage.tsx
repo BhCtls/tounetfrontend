@@ -27,6 +27,21 @@ export function HomePage() {
   const [error, setError] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
   const [accessingApp, setAccessingApp] = useState<string>('');
+  // 可切换的背景图片列表（位于 public/assets/images/backgrounds）
+  const backgrounds = [
+    'bg.png',
+    'bg1.png',
+    'bg2.png',
+    'bg3.png',
+    'bg4.png',
+    'bg5.png',
+    'bg6.png',
+    'bg7.png',
+  ];
+  const [bgIndex, setBgIndex] = useState<number>(() => {
+    const idx = backgrounds.indexOf('bg7.png');
+    return idx >= 0 ? idx : 0;
+  });
 
   // 获取用户可用的应用列表
   const { data: apiApps } = useQuery({
@@ -88,7 +103,20 @@ export function HomePage() {
       alert('请先登录后访问此功能');
       return;
     }
-    window.location.href = app.url;
+    // If the url is an internal SPA route (starts with / and has no file extension),
+    // use client-side navigation to avoid server 404 when direct-loading the path.
+    try {
+  const isInternal = typeof app.url === 'string' && app.url.startsWith('/') && !/\.[^/]+$/.test(app.url);
+      if (isInternal) {
+        navigate(app.url);
+        return;
+      }
+      // For explicit .html files or external links, do a full navigation
+      window.location.href = app.url;
+    } catch (err) {
+      // fallback to full navigation on any unexpected error
+      window.location.href = app.url;
+    }
   };
 
   // 生成应用的显示图标（优先使用emoji，静态应用用预设emoji，API应用用emoji或首字母）
@@ -134,13 +162,7 @@ export function HomePage() {
       description: '安装PWA应用',
       isStatic: true
     },
-    {
-      name: 'Null Definition',
-      emoji: '🚫',
-      url: '/scoresheet/',
-      description: '暂时未定义功能',
-      isStatic: true
-    },
+
     {
       name: 'Nkey申请',
       emoji: '🔑',
@@ -173,6 +195,18 @@ export function HomePage() {
       url: '/wxtk/',
       description: '生成语法填空练习',
       isStatic: true
+    },
+    {
+      name: '内网穿透管理（不可用）',
+      emoji: '🔧',
+      url: 'https://192.168.1.3:4101/',
+      description: '内网穿透管理'
+    },
+    {
+      name: '虚拟花园（暂不可用）',
+      emoji: '🌸',
+      url: '/function2',
+      description: '虚拟花园功能'
     }
   ];
 
@@ -198,16 +232,11 @@ export function HomePage() {
 
   const debugApps = [
     {
-      name: '内网穿透管理（不可用）',
-      emoji: '🔧',
-      url: 'https://192.168.1.3:4101/',
-      description: '内网穿透管理'
-    },
-    {
-      name: '虚拟花园（暂不可用）',
-      emoji: '🌸',
-      url: '/function2',
-      description: '虚拟花园功能'
+      name: 'Null Definition',
+      emoji: '🚫',
+      url: '/scoresheet/',
+      description: '暂时未定义功能',
+      isStatic: true
     },
     {
       name: 'PWA测试',
@@ -220,32 +249,41 @@ export function HomePage() {
   return (
     <div className="min-h-screen" style={{
       backgroundColor: '#f2f2f2',
-      backgroundImage: 'url("assets/images/backgrounds/bg7.png")',
+      backgroundImage: `url("/assets/images/backgrounds/${backgrounds[bgIndex]}")`,
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'top',
       backgroundSize: 'cover',
       backgroundAttachment: 'fixed',
       margin: 0,
-      fontFamily: 'SEGA_Humming, Arial, sans-serif'
+      fontFamily: 'FWQingYin, Arial, sans-serif'
     }}>
       {/* Title */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
-        fontFamily: 'SEGA_Humming, Arial, sans-serif',
+        fontFamily: 'FWQingYin, Arial, sans-serif',
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-        <h1>Tounet 5.2.3 Alpha2.0</h1>
+        <h1>Tounet 5.2.3 202509</h1>
       </div>
 
       {/* Switch and Login */}
-      <div className="text-right px-4 mb-4">
-        <div className="inline-flex items-center gap-4">
-          <span>Debug Button</span>
-          <Button variant="outline" size="sm" onClick={toggleDebug}>
-            switch
-          </Button>
-        </div>
+        <div className="text-right px-4 mb-4">
+          <div className="inline-flex items-center gap-4">
+            <span>Debug Button</span>
+            <Button variant="outline" size="sm" onClick={toggleDebug}>
+              switch
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setBgIndex(i => (i + 1) % backgrounds.length)}
+              title="切换背景"
+              aria-label="切换主页背景"
+            >
+              ♻️
+            </Button>
+          </div>
         
         <div className="flex justify-end mt-2">
           {user ? (
@@ -342,7 +380,7 @@ export function HomePage() {
       {/* Basic Functions */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
-        fontFamily: 'SEGA_Humming, Arial, sans-serif',
+        fontFamily: 'FWQingYin, Arial, sans-serif',
         fontSize: 'large'
       }}>
         <h3>基本功能</h3>
@@ -415,7 +453,7 @@ export function HomePage() {
         {/* Other Tools */}
         <div className="flex justify-center" style={{
           color: 'rgb(53, 53, 53)',
-          fontFamily: 'SEGA_Humming, Arial, sans-serif',
+          fontFamily: 'FWQingYin, Arial, sans-serif',
           fontSize: 'large',
           marginTop: '20px'
         }}>

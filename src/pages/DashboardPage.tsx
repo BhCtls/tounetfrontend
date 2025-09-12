@@ -44,7 +44,7 @@ export function DashboardPage() {
         backgroundPosition: 'top',
         backgroundSize: 'cover',
         backgroundAttachment: 'fixed',
-        fontFamily: 'SEGA_Humming, Arial, sans-serif'
+        fontFamily: 'FWQingYin, Arial, sans-serif'
       }}
     >
       {/* Header */}
