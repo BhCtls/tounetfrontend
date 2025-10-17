@@ -37,6 +37,8 @@ export function HomePage() {
     'bg5.png',
     'bg6.png',
     'bg7.png',
+    'bg8.png',
+    'bg9.png'
   ];
   const [bgIndex, setBgIndex] = useState<number>(() => {
     const idx = backgrounds.indexOf('bg7.png');
@@ -103,15 +105,19 @@ export function HomePage() {
       alert('请先登录后访问此功能');
       return;
     }
-    // If the url is an internal SPA route (starts with / and has no file extension),
-    // use client-side navigation to avoid server 404 when direct-loading the path.
+    
+    // 定义需要客户端路由的内部页面路径
+    const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps'];
+    
+    // 只有明确定义的内部路由才使用客户端导航
+    const isInternalRoute = internalRoutes.includes(app.url);
+    
     try {
-  const isInternal = typeof app.url === 'string' && app.url.startsWith('/') && !/\.[^/]+$/.test(app.url);
-      if (isInternal) {
+      if (isInternalRoute) {
         navigate(app.url);
         return;
       }
-      // For explicit .html files or external links, do a full navigation
+      // 所有其他路径（包括外部应用、静态文件等）都使用完整页面跳转
       window.location.href = app.url;
     } catch (err) {
       // fallback to full navigation on any unexpected error
@@ -146,6 +152,13 @@ export function HomePage() {
       emoji: '✍️',
       url: '/sjkblog',
       description: '个人博客，不定期更新各种内容',
+      isStatic: true
+    },
+    {
+      name: '查询系统',
+      emoji: '🔍',
+      url: '/searchallv3/',
+      description: '搜索音乐游戏数据',
       isStatic: true
     },
     {
