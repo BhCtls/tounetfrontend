@@ -41,7 +41,7 @@ export function HomePage() {
     'bg9.png'
   ];
   const [bgIndex, setBgIndex] = useState<number>(() => {
-    const idx = backgrounds.indexOf('bg7.png');
+    const idx = backgrounds.indexOf('bg8.png');
     return idx >= 0 ? idx : 0;
   });
 
@@ -169,6 +169,13 @@ export function HomePage() {
       isStatic: true
     },
     {
+      name: 'nano banana',
+      emoji: '🍌',
+      url: 'https://aistudio.google.com/prompts/new_chat?model=models%2Fgemini-2.5-flash-image&prompt=Generate%20an%20image%20of%20a%20banana%20wearing%20a%20costume.',
+      description: '快速入口',
+      isStatic: true
+    },
+    {
       name: '安装应用',
       emoji: '📱',
       url: '/pwa/install.html',
@@ -189,6 +196,13 @@ export function HomePage() {
       emoji: '💰',
       url: '/tools/BudgetChecker.html',
       description: '检查和管理预算',
+      isStatic: true
+    },
+    {
+      name: '积分生成器',
+      emoji: '📝',
+      url: '/integertoy/',
+      description: '生成随机积分',
       isStatic: true
     }
 
@@ -277,7 +291,7 @@ export function HomePage() {
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-        <h1>Tounet 5.2.3 202509</h1>
+  <h1>Tounet 5.2.4 202511</h1>
       </div>
 
       {/* Switch and Login */}

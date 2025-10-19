@@ -6,7 +6,7 @@
     <style>
         body {
         background-color: #f2f2f2;
-        background-image: url("assets/images/backgrounds/bg1.png");
+    background-image: url("/assets/images/backgrounds/bg1.png");
         background-repeat: no-repeat;
         background-position: top;
         background-size: cover;
@@ -16,7 +16,7 @@
         }
         @font-face {
         font-family: SEGA_Humming;
-        src: url(assets/fonts/SEGA_Humming.ttf) format("truetype")
+    src: url(/assets/fonts/SEGA_Humming.ttf) format("truetype")
         }
         .pay-row {
             display: flex;
@@ -63,6 +63,19 @@
         }
     </style>
 </head>
+      <!-- Back Link -->
+      <button
+        onclick="navigateToHome()"
+        class="fixed top-5 left-5 z-50 flex items-center gap-2 bg-white/90 backdrop-blur-sm text-blue-600 px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 hover:text-white transition-all"
+      >
+        <span class="arrow-left-icon"></span>
+        返回主页
+      </button>
+      <script>
+        function navigateToHome() {
+          window.location.href = '/';
+        }
+      </script>
 <body>
     <div class="sponsor-header">
         <h1 style="color: #fff; margin-top: 0;">赞助饱饱</h1>
@@ -71,11 +84,11 @@
     </div>
     <div class="pay-row">
         <div class="pay-item">
-            <img src="assets/images/misc/alipay.png" alt="支付宝"/>
+            <img src="/assets/images/misc/alipay.png" alt="支付宝"/>
             <span style="color: #6ea8ff;text-shadow: #888;font-size: 24px">支付宝</span>
         </div>
         <div class="pay-item">
-            <img src="assets/images/misc/wechat.png" alt="微信"/>
+            <img src="/assets/images/misc/wechat.png" alt="微信"/>
             <span style="color: #7eff87;text-shadow: #888;font-size: 24px">微信</span>
         </div>
     </div>
