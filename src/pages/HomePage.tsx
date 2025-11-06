@@ -150,7 +150,7 @@ export function HomePage() {
     {
       name: '博客（不定期更新）',
       emoji: '✍️',
-      url: '/sjkblog',
+      url: 'https://bhctls.github.io/blog/',
       description: '个人博客，不定期更新各种内容',
       isStatic: true
     },
@@ -171,7 +171,7 @@ export function HomePage() {
     {
       name: 'nano banana',
       emoji: '🍌',
-      url: 'https://aistudio.google.com/prompts/new_chat?model=models%2Fgemini-2.5-flash-image&prompt=Generate%20an%20image%20of%20a%20banana%20wearing%20a%20costume.',
+      url: 'https://aistudio.google.com/prompts/new_chat?model=models%2Fgemini-2.5-flash-image&prompt=e.',
       description: '快速入口',
       isStatic: true
     },
@@ -212,7 +212,7 @@ export function HomePage() {
         {
       name: '中二成绩图识别',
       emoji: '✍️',
-      url: '/recognize',
+      url: 'https://huggingface.co/spaces/BhCtls/Chunipic',
       description: '识图脚本',
       isStatic: true
     },
