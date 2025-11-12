@@ -116,30 +116,22 @@
 <body>
   <div class="container">
     <div class="controls">
-      <div class="auth-section">
-        <label for="token-input">验证您的tounetNtoken</label>
-        <div class="auth-controls">
-          <input id="token-input" type="password" placeholder="输入Ntoken">
-          <button id="verify-btn">验证</button>
-        </div>
-        <div id="auth-status" class="auth-status" style="display: none;"></div>
-      </div>
       <div>
         <label for="bg-url">底图链接</label>
-        <input id="bg-url" type="text" placeholder="输入背景图片URL" value="/segaassets/maimai2/Card/UI_CardBase_0000002_100004_S.png" disabled>
+        <input id="bg-url" type="text" placeholder="输入背景图片URL" value="http://localhost:5174/api/v1/jacket/maimai2/Card/UI_CardBase_0000002_000002_S">
       </div>
       <div>
         <label for="char-url">角色图片链接</label>
-        <input id="char-url" type="text" placeholder="输入角色图片URL" value="/segaassets/maimai2/Card/UI_CardChara_250404_S.png" disabled>
+        <input id="char-url" type="text" placeholder="输入角色图片URL" value="/segaassets/maimai2/Card/UI_CardChara_250404_S.png">
       </div>
       <div>
         <label for="mask-url">pass种类</label>
-        <input id="mask-url" type="text" placeholder="输入遮罩图片URL" value="/segaassets/maimai2/Card/UI_CardFrame_0000002_S.png" disabled>
+        <input id="mask-url" type="text" placeholder="输入遮罩图片URL" value="/segaassets/maimai2/Card/UI_CardFrame_0000002_S.png">
       </div>
     </div>
     <div class="preview">
       <div class="render-area">
-        <img id="bg-img" src="/segaassets/maimai2/Card/UI_CardBase_0000002_100004_S.png" alt="背景">
+        <img id="bg-img" src="http://localhost:5174/api/v1/jacket/maimai2/Card/UI_CardBase_0000002_000002_S" alt="背景">
         <img id="char-img" src="/segaassets/maimai2/Card/UI_CardChara_250404_S.png" alt="角色">
         <img id="mask-img" src="/segaassets/maimai2/Card/UI_CardFrame_0000002_S.png" alt="遮罩">
         <!-- 虽然看起来这个锁有点儿防君子不防小人，但其实只要我把资源锁住就可以了 -->
@@ -148,128 +140,22 @@
     </div>
   </div>
   <script>
-    const tokenInput = document.getElementById('token-input');
-    const verifyBtn = document.getElementById('verify-btn');
-    const authStatus = document.getElementById('auth-status');
     const bgInput = document.getElementById('bg-url');
     const charInput = document.getElementById('char-url');
     const maskInput = document.getElementById('mask-url');
     const bgImg = document.getElementById('bg-img');
     const charImg = document.getElementById('char-img');
     const maskImg = document.getElementById('mask-img');
-
-    let isAuthenticated = false;
-
-    // 验证token函数
-    async function verifyToken() {
-      const token = tokenInput.value.trim();
-      if (!token) {
-        showAuthStatus('请输入Token', 'error');
-        return;
-      }
-
-      verifyBtn.disabled = true;
-      verifyBtn.textContent = '验证中...';
-
-      try {
-        // 向API发送验证请求
-        const response = await fetch('https://api.riv62hjux.nyat.app:43419/api/v1/nkey/validate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            nkey: token,
-            app_id: 'dxprender'
-          })
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.code === 200 && result.data.valid) {
-          isAuthenticated = true;
-          //showAuthStatus(`验证成功！用户: ${result.data.username}`, 'success');
-          showAuthStatus(`token正确✅您可以使用渲染功能了`, 'success');
-          enableImageInputs();
-        } else {
-          isAuthenticated = false;
-          showAuthStatus(result.message || 'Token验证失败', 'error');
-          disableImageInputs();
-        }
-      } catch (error) {
-        isAuthenticated = false;
-        showAuthStatus('网络错误，请检查服务器连接', 'error');
-        disableImageInputs();
-      }
-
-      verifyBtn.disabled = false;
-      verifyBtn.textContent = '验证';
-    }
-
-    // 显示验证状态
-    function showAuthStatus(message, type) {
-      authStatus.textContent = message;
-      authStatus.className = `auth-status ${type}`;
-      authStatus.style.display = 'block';
-    }
-
-    // 启用图片输入框
-    function enableImageInputs() {
-      bgInput.disabled = false;
-      charInput.disabled = false;
-      maskInput.disabled = false;
-    }
-
-    // 禁用图片输入框
-    function disableImageInputs() {
-      bgInput.disabled = true;
-      charInput.disabled = true;
-      maskInput.disabled = true;
-    }
-
-    // 绑定验证按钮事件
-    verifyBtn.addEventListener('click', verifyToken);
-
-    
-    // Token输入框回车验证
-    tokenInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        verifyToken();
-      }
-    });
-
-    // 页面加载时自动检查URL中的ntoken参数
-    function autoVerifyFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const nkey = urlParams.get('ntoken');
-        
-        if (nkey) {
-            // 填入token输入框
-            tokenInput.value = nkey;
-            // 自动触发验证
-            verifyToken();
-        }
-    }
-    
-    // 图片链接更新事件（仅在已鉴权时生效）
+    // 图片链接更新事件（实时生效）
     bgInput.addEventListener('input', () => {
-      if (isAuthenticated) {
-        bgImg.src = bgInput.value;
-      }
+      bgImg.src = bgInput.value;
     });
     charInput.addEventListener('input', () => {
-      if (isAuthenticated) {
-        charImg.src = charInput.value;
-      }
+      charImg.src = charInput.value;
     });
     maskInput.addEventListener('input', () => {
-      if (isAuthenticated) {
-        maskImg.src = maskInput.value;
-      }
+      maskImg.src = maskInput.value;
     });
-
-    // 页面加载时调用自动验证函数
-    document.addEventListener('DOMContentLoaded', autoVerifyFromURL);
   </script>
 </body>
 </html>

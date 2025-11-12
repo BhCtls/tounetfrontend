@@ -35,7 +35,8 @@ const createAppSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
   url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
-  required_permission_level: z.enum(['admin', 'trusted', 'user']),
+  emoji: z.string().optional(),
+  required_permission_level: z.enum(['admin', 'trusted', 'user', 'disableduser']),
   is_active: z.boolean(),
 });
 
@@ -50,7 +51,8 @@ const updateAppSchema = z.object({
   name: z.string().min(1, 'Name is required').optional(),
   description: z.string().min(1, 'Description is required').optional(),
   url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
-  required_permission_level: z.enum(['admin', 'trusted', 'user']).optional(),
+  emoji: z.string().optional(),
+  required_permission_level: z.enum(['admin', 'trusted', 'user', 'disableduser']).optional(),
   is_active: z.boolean().optional(),
 });
 
@@ -570,6 +572,7 @@ export function AdminDashboard() {
                         <option value="user">User</option>
                         <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
+                        <option value="disableduser">Public</option>
                       </select>
                     </div>
                     <div className="flex items-center">
@@ -618,6 +621,7 @@ export function AdminDashboard() {
                         <option value="user">User</option>
                         <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
+                        <option value="disableduser">Public</option>
                       </select>
                     </div>
                   </div>

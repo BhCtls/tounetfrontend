@@ -14,7 +14,8 @@ export interface App {
   name: string;
   description: string;
   url?: string;
-  required_permission_level: 'admin' | 'trusted' | 'user';
+  emoji?: string;
+  required_permission_level: 'admin' | 'trusted' | 'user' | 'disableduser';
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -103,7 +104,8 @@ export interface CreateAppRequest {
   name: string;
   description: string;
   url?: string;
-  required_permission_level: 'admin' | 'trusted' | 'user';
+  emoji?: string;
+  required_permission_level: 'admin' | 'trusted' | 'user' | 'disableduser';
   is_active: boolean;
 }
 
@@ -111,7 +113,8 @@ export interface UpdateAppRequest {
   name?: string;
   description?: string;
   url?: string;
-  required_permission_level?: 'admin' | 'trusted' | 'user';
+  emoji?: string;
+  required_permission_level?: 'admin' | 'trusted' | 'user' | 'disableduser';
   is_active?: boolean;
 }
 

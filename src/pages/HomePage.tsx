@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { userApi, nkeyApi, publicApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
@@ -10,6 +12,8 @@ import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from '../lib/api';
 import { useNavigate } from 'react-router-dom';
+import type { App } from '../types/api';
+import { useDynamicAssets } from '../hooks/useDynamicAssets';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -21,8 +25,30 @@ type LoginForm = z.infer<typeof loginSchema>;
 export function HomePage() {
   const { user, login, logout } = useAuth();
   const navigate = useNavigate();
+  const { fontLoaded, backgroundLoaded, backgroundUrl } = useDynamicAssets();
   const [error, setError] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
+  const [accessingApp, setAccessingApp] = useState<string>('');
+
+  // 获取用户可用的应用列表
+  const { data: apiApps } = useQuery({
+    queryKey: ['user', 'apps'],
+    queryFn: async () => {
+      const response = await userApi.getMyApps();
+      return response.data;
+    },
+    enabled: !!user, // 只有登录用户才获取应用列表
+  });
+
+  // 获取公开应用列表（无需登录）
+  const { data: publicApps } = useQuery({
+    queryKey: ['public', 'apps'],
+    queryFn: async () => {
+      const response = await publicApi.getPublicApps();
+      return response.data;
+    },
+    enabled: !user, // 未登录时获取公开应用
+  });
 
   const {
     register,
@@ -43,6 +69,69 @@ export function HomePage() {
     },
   });
 
+  // 处理应用访问 - API应用（需要ntoken）
+  const handleApiAppAccess = async (app: App) => {
+    if (!app.url || !user?.username) {
+      return;
+    }
+
+    setAccessingApp(app.app_id);
+    
+    try {
+      const response = await nkeyApi.generate({
+        username: [user.username],
+        app_ids: [app.app_id],
+      });
+
+      const nkey = response.data.nkey;
+      const urlWithNkey = `${app.url}${app.url.includes('?') ? '&' : '?'}ntoken=${nkey}`;
+      window.location.href = urlWithNkey;
+    } catch (error) {
+      console.error('Failed to generate NKey for app access:', error);
+      alert('Failed to access application. Please try again.');
+    } finally {
+      setAccessingApp('');
+    }
+  };
+
+  // 处理静态应用访问（不需要ntoken）
+  const handleStaticAppAccess = (app: any) => {
+    if (app.requireAuth && !user) {
+      alert('请先登录后访问此功能');
+      return;
+    }
+    
+    // 定义需要客户端路由的内部页面路径
+  const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps', '/songpic'];
+    
+    // 只有明确定义的内部路由才使用客户端导航
+    const isInternalRoute = internalRoutes.includes(app.url);
+    
+    try {
+      if (isInternalRoute) {
+        navigate(app.url);
+        return;
+      }
+      // 所有其他路径（包括外部应用、静态文件等）都使用完整页面跳转
+      window.location.href = app.url;
+    } catch (err) {
+      // fallback to full navigation on any unexpected error
+      window.location.href = app.url;
+    }
+  };
+
+  // 生成应用的显示图标（优先使用emoji，静态应用用预设emoji，API应用用emoji或首字母）
+  const getAppIcon = (app: any) => {
+    if (app.isStatic) {
+      return app.emoji;
+    }
+    // API应用优先使用emoji字段，没有emoji时使用首字母
+    if (app.apiApp?.emoji) {
+      return app.apiApp.emoji;
+    }
+    return app.name?.charAt(0) || '📱';
+  };
+
   const onSubmit = (data: LoginForm) => {
     setError('');
     loginMutation.mutate(data);
@@ -54,16 +143,25 @@ export function HomePage() {
 
   const apps = [
     {
-      name: '博客（不定期更新）',
-      emoji: '✍️',
-      url: '/sjkblog',
-      description: '个人博客，不定期更新各种内容'
+      name: '赞助我……',
+      emoji: '🥺',
+      url: '/sponsor.html',
+      description: '支持开发者',
+      isStatic: true
     },
     {
-      name: '三角葵reve',
-      emoji: '📁',
-      url: '/live',
-      description: '音乐相关内容'
+      name: '曲绘检索',
+      emoji: '🖼️',
+      url: '/songpic',
+      description: '根据 game / sort / name 查询曲绘',
+      isStatic: true
+    },
+    {
+      name: 'nano banana',
+      emoji: '🍌',
+      url: 'https://aistudio.google.com/prompts/new_chat?model=models%2Fgemini-2.5-flash-image&prompt=e.',
+      description: '快速入口',
+      isStatic: true
     },
     {
       name: 'Nkey申请',
@@ -72,66 +170,16 @@ export function HomePage() {
       description: '申请访问密钥',
       requireAuth: true
     },
-    {
-      name: '音游数据库查询',
-      emoji: '📊',
-      url: '/searchallv3',
-      description: '查询音游相关数据'
-    }
   ];
 
   const toolApps = [
-    {
-      name: '预算检查器',
-      emoji: '💰',
-      url: '/tools/BudgetChecker.html',
-      description: '检查和管理预算'
+        {
+      name: '中二成绩图识别',
+      emoji: '✍️',
+      url: 'https://huggingface.co/spaces/BhCtls/Chunipic',
+      description: '识图脚本',
+      isStatic: true
     },
-    {
-      name: 'dxpass渲染器',
-      emoji: '🌸',
-      url: '/tools/dxprender.html',
-      description: '生成dxpass图片'
-    },
-    {
-      name: '语法填空生成器',
-      emoji: '📄',
-      url: '/wxtk/',
-      description: '生成语法填空练习'
-    },
-    {
-      name: '部分解包资源查找',
-      emoji: '🐰',
-      url: '/segaassets/',
-      description: '查找游戏资源文件'
-    },
-    {
-      name: '音撃風卡面预览',
-      emoji: '🃏',
-      url: '/card-preview/CardPreview.html',
-      description: '预览卡片设计'
-    },
-    {
-      name: '赞助我……',
-      emoji: '🥺',
-      url: '/pages/basic/sponsor.html',
-      description: '支持开发者'
-    },
-    {
-      name: '安装应用',
-      emoji: '📱',
-      url: '/pwa/install.html',
-      description: '安装PWA应用'
-    },
-    {
-      name: 'Null Definition',
-      emoji: '🚫',
-      url: '/scoresheet/',
-      description: '暂时未定义功能'
-    }
-  ];
-
-  const debugApps = [
     {
       name: '内网穿透管理（不可用）',
       emoji: '🔧',
@@ -145,6 +193,57 @@ export function HomePage() {
       description: '虚拟花园功能'
     },
     {
+      name: '安装应用',
+      emoji: '📱',
+      url: '/pwa/install.html',
+      description: '安装PWA应用',
+      isStatic: true
+    },
+  ];
+
+  // 合并静态应用、API应用和公开应用
+  const allBasicApps = [
+    ...apps.map(app => ({ ...app, app_id: undefined, apiApp: undefined, isPublic: false })),
+    // 已登录用户的API应用
+    ...(user && apiApps || []).map((app: App) => ({
+      name: app.name,
+      emoji: app.emoji || app.name.charAt(0).toUpperCase(), // 优先使用API应用的emoji字段
+      url: app.url || '',
+      description: app.description,
+      app_id: app.app_id,
+      requireAuth: true,
+      isStatic: false,
+      apiApp: app,
+      isPublic: false
+    })),
+    // 未登录时的公开应用
+    ...(!user && publicApps || []).map((app: App) => ({
+      name: app.name,
+      emoji: app.emoji || app.name.charAt(0).toUpperCase(),
+      url: app.url || '',
+      description: app.description,
+      app_id: app.app_id,
+      requireAuth: false,
+      isStatic: false,
+      apiApp: app,
+      isPublic: true // 标记为公开应用
+    }))
+  ];
+
+  const allToolApps = [
+    ...toolApps.map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
+    // 可以在这里添加更多从API获取的工具应用
+  ];
+
+  const debugApps = [
+    {
+      name: 'Null Definition',
+      emoji: '🚫',
+      url: '/scoresheet/',
+      description: '暂时未定义功能',
+      isStatic: true
+    },
+    {
       name: 'PWA测试',
       emoji: '🎵',
       url: 'pwa/pwa-test.html',
@@ -155,18 +254,18 @@ export function HomePage() {
   return (
     <div className="min-h-screen" style={{
       backgroundColor: '#f2f2f2',
-      backgroundImage: 'url("assets/images/backgrounds/bg.png")',
+      backgroundImage: backgroundLoaded ? `url("${backgroundUrl}")` : 'none',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'top',
       backgroundSize: 'cover',
       backgroundAttachment: 'fixed',
       margin: 0,
-      fontFamily: 'SEGA_Humming, Arial, sans-serif'
+      fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif"
     }}>
       {/* Title */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
-        fontFamily: 'SEGA_Humming, Arial, sans-serif',
+        fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif",
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
@@ -174,13 +273,13 @@ export function HomePage() {
       </div>
 
       {/* Switch and Login */}
-      <div className="text-right px-4 mb-4">
-        <div className="inline-flex items-center gap-4">
-          <span>Debug Button</span>
-          <Button variant="outline" size="sm" onClick={toggleDebug}>
-            switch
-          </Button>
-        </div>
+        <div className="text-right px-4 mb-4">
+          <div className="inline-flex items-center gap-4">
+            <span>Debug Button</span>
+            <Button variant="outline" size="sm" onClick={toggleDebug}>
+              switch
+            </Button>
+          </div>
         
         <div className="flex justify-end mt-2">
           {user ? (
@@ -252,7 +351,7 @@ export function HomePage() {
       {/* Basic Functions */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
-        fontFamily: 'SEGA_Humming, Arial, sans-serif',
+        fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif",
         fontSize: 'large'
       }}>
         <h3>基本功能</h3>
@@ -281,10 +380,17 @@ export function HomePage() {
           <div
             key={index}
             className="app-button"
-            onClick={() => {
-              if (app.requireAuth && !user) {
-                alert('请先登录后访问此功能');
-                return;
+            onClick={async () => {
+              // 如果是公开应用，直接跳转（不需要nkey）
+              if (app.isPublic && app.url) {
+                window.location.href = app.url;
+              }
+              // 如果是API应用且用户已登录，使用一键登录
+              else if (!app.isStatic && app.apiApp && user) {
+                await handleApiAppAccess(app.apiApp);
+              } else {
+                // 静态应用直接跳转
+                handleStaticAppAccess(app);
               }
               window.location.href = app.url;
             }}
@@ -316,7 +422,7 @@ export function HomePage() {
         {/* Other Tools */}
         <div className="flex justify-center" style={{
           color: 'rgb(53, 53, 53)',
-          fontFamily: 'SEGA_Humming, Arial, sans-serif',
+          fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif",
           fontSize: 'large',
           marginTop: '20px'
         }}>

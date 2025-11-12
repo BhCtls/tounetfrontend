@@ -6,9 +6,18 @@ import { User, LogOut } from 'lucide-react';
 import { Loading } from '../components/ui/Loading';
 import { UserDashboard } from '../components/UserDashboard';
 import { AdminDashboard } from '../components/AdminDashboard';
+import { useNavigate } from 'react-router-dom';
+import { useDynamicAssets } from '../hooks/useDynamicAssets';
 
 export function DashboardPage() {
   const { user, logout, isLoading, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const { fontLoaded, backgroundLoaded, backgroundUrl } = useDynamicAssets();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   if (isLoading) {
     return <Loading text="Loading dashboard..." />;
@@ -28,7 +37,18 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div 
+      className="min-h-screen" 
+      style={{
+        backgroundColor: '#f2f2f2',
+        backgroundImage: backgroundLoaded ? `url("${backgroundUrl}")` : 'url("/assets/images/backgrounds/bg7.png")',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'top',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        fontFamily: fontLoaded ? "'DynamicFont', Arial, sans-serif" : "'FWQingYin', Arial, sans-serif"
+      }}
+    >
       {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
