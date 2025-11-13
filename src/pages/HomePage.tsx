@@ -291,7 +291,7 @@ export function HomePage() {
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-  <h1>Tounet 5.2.4 202511</h1>
+  <h1>Tounet 5.3.0 202511</h1>
       </div>
 
       {/* Switch and Login */}

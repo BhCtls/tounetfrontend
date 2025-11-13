@@ -82,7 +82,9 @@ export function SongPicQueryPage() {
 	};
 
 	const handleCopyUrl = (baseName: string) => {
-		const direct = `${window.location.origin}/api/v1/jacket/${game}/${effectiveSort}/${encodeURIComponent(baseName)}`;
+		// API endpoint URL (not current window origin)
+		const apiBase = 'https://api.riv62hjux.nyat.app:43419/api/v1';
+		const direct = `${apiBase}/jacket/${encodeURIComponent(game)}/${encodeURIComponent(effectiveSort)}/${encodeURIComponent(baseName)}`;
 		navigator.clipboard.writeText(direct);
 	};
 
