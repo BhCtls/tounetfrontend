@@ -79,6 +79,11 @@ export const userApi = {
     const response = await apiClient.get('/user/apps');
     return response.data;
   },
+  // Sign-in (daily check-in)
+  signin: async (): Promise<ApiResponse<any>> => {
+    const response = await apiClient.post('/user/signin');
+    return response.data;
+  },
 };
 
 // Public API (no auth required)

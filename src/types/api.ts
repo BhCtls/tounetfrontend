@@ -3,6 +3,7 @@ export interface User {
   username: string;
   phone: string;
   pushdeer_token?: string;
+  last_sign_in?: string;
   status: 'admin' | 'trusted' | 'user' | 'disableduser';
   created_at: string;
   updated_at: string;
