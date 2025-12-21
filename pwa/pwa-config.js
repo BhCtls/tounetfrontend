@@ -3,14 +3,14 @@ const PWAConfig = {
   // 应用信息
   app: {
     name: 'Tounet',
-    version: '4.0.0-202509',
-    author: '淅淅沥沥又无法捕捉的雨'
+    version: '5.3.1-202601',
+    author: '凉爽但刺痛的风'
   },
   
   // 缓存策略
   cache: {
     strategy: 'cache-first', // cache-first, network-first, stale-while-revalidate
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7天
+    maxAge: 1 * 12 * 60 * 60 * 1000, // 12小时
     maxEntries: 100
   },
   

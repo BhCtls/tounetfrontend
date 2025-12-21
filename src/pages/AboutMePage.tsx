@@ -70,7 +70,7 @@ export function AboutMePage() {
             <h1 className="text-2xl mb-2">透明</h1>
             <p className="mb-1">透明是一个简单的人。人如其名，透明是小透明一枚。</p>
             <p className="mb-1">04 | 男性 | 石家庄&杭州</p>
-            <p>wds | 学マス | 街机&移动端音游 | 同人音乐 | 写博客</p>
+            <p>wds | restage | 街机&移动端音游 | 同人音乐 | 写博客</p>
           </div>
         </div>
 
@@ -90,7 +90,6 @@ export function AboutMePage() {
               目前主推
               <span className="font-bold text-lg" style={{ color: 'skyblue' }}>三角葵</span>
               （如生命般激推），在推
-              <span className="font-bold text-lg" style={{ color: 'saddlebrown' }}>倉本千奈</span>，
               <span className="font-bold text-lg" style={{ color: 'lightskyblue' }}>双葉湊音</span>，
               <span className="font-bold text-lg" style={{ color: 'sandybrown' }}>しぐれうい</span>，
               <span className="font-bold text-lg" style={{ color: 'rgb(255, 140, 184)' }}>鳳ここな</span>。
@@ -132,7 +131,7 @@ export function AboutMePage() {
             <p className="mb-2">
               音乐游戏：
               <span className="text-blue-600">舞萌祭将星将</span>|
-              <span className="text-blue-600">中二新将煌将</span>|
+              <span className="text-blue-600">中二sun&plus全鸟</span>|
               <span className="text-blue-600">音击赤击确认。</span>
             </p>
             <p className="mb-2">
