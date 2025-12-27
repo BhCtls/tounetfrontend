@@ -111,7 +111,7 @@ export function HomePage() {
     }
     
     // 定义需要客户端路由的内部页面路径
-    const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps', '/song-pic-query'];
+    const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps', '/song-pic-query', '/freedom-const'];
     
     // 只有明确定义的内部路由才使用客户端导航
     const isInternalRoute = internalRoutes.includes(app.url);
@@ -202,6 +202,13 @@ export function HomePage() {
       emoji: '🎴',
       url: '/card-preview',
       description: '自定义卡片',
+      isStatic: true
+    },
+    {
+      name: '定数表生成',
+      emoji: '📊',
+      url: '/freedom-const',
+      description: '自定义定数表',
       isStatic: true
     },
   ];
@@ -567,7 +574,7 @@ export function HomePage() {
         fontSize: '12px',
         textAlign: 'right'
       }}>
-        <span style={{ color: 'green', cursor: 'pointer' }}>powered by LLMs</span> | 
+        <span style={{ color: 'green', cursor: 'pointer' }}>powered by Gemini 3 Pro</span> | 
         <span style={{ color: 'green' }}> 仅供个人学习使用，备案号：</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/about')}>关于🔗</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/license')}>LICENSE🔗</span> | 
