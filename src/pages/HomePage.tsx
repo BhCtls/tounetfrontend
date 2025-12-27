@@ -159,6 +159,13 @@ export function HomePage() {
       isStatic: true
     },
     {
+      name: 'Download Order',
+      emoji: '📥',
+      url: '/download-order',
+      description: '获取游戏更新指示书',
+      isStatic: true
+    },
+    {
       name: '赞助我……',
       emoji: '🥺',
       url: '/sponsor.html',

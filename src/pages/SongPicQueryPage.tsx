@@ -6,6 +6,7 @@
 // 使用说明: 选择 game 与 sort (可输入自定义), 可输入 name 进行部分匹配并获取图片；列表展示解析后的 base 与扩展名
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { publicApi } from '../lib/api';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
@@ -29,6 +30,7 @@ export function SongPicQueryPage() {
 	const [previewUrl, setPreviewUrl] = useState<string>('');
 	const [previewBase, setPreviewBase] = useState<string>('');
 	const [objectUrls, setObjectUrls] = useState<string[]>([]); // cleanup
+	const navigate = useNavigate();
 
 	const effectiveSort = customSort.trim() !== '' ? customSort.trim() : sort;
 
@@ -104,7 +106,10 @@ export function SongPicQueryPage() {
 		}}>
 			<Card className="max-w-5xl mx-auto mb-6">
 				<CardHeader>
-					<CardTitle>曲绘检索</CardTitle>
+					<div className="flex items-center justify-between">
+						<CardTitle>曲绘检索</CardTitle>
+						<Button onClick={() => navigate('/')}>返回主页</Button>
+					</div>
 					<CardDescription>通过后端 Jackets 接口查询/预览资源</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">

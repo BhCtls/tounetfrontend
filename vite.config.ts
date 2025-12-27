@@ -14,6 +14,12 @@ export default defineConfig({
         target: 'http://localhost:44544',
         changeOrigin: true,
         secure: false,
+      },
+      '/naominet': {
+        target: 'http://naominet.jp',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/naominet/, ''),
+        secure: false,
       }
     }
   },

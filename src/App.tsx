@@ -10,6 +10,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { AppsPage } from './pages/AppsPage';
 import { AboutMePage } from './pages/AboutMePage';
 import { SongPicQueryPage } from './pages/SongPicQueryPage';
+import { DownloadOrderPage } from './pages/DownloadOrderPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,6 +57,7 @@ function App() {
                 } 
               />
               <Route path="/song-pic-query" element={<SongPicQueryPage />} />
+              <Route path="/download-order" element={<DownloadOrderPage />} />
             </Routes>
           </Router>
         </AuthProvider>

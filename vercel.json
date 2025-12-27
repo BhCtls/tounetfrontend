@@ -1,15 +1,18 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/v1/(.*)",
-      "dest": "https://api.riv62hjux.nyat.app:43419/api/v1/$1"
+      "source": "/api/v1/:path*",
+      "destination": "https://api.riv62hjux.nyat.app:43419/api/v1/:path*"
     },
-    { "handle": "filesystem" },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/naominet/:path*",
+      "destination": "http://naominet.jp/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
