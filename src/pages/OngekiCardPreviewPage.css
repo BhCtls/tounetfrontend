@@ -1,0 +1,204 @@
+/* Font Definition */
+@font-face {
+  font-family: SEGA_Humming;
+  src: url(/assets/fonts/SEGA_Humming.ttf) format("truetype");
+}
+
+/* Scoped styles for Ongeki Card Preview */
+.ongeki-card-preview {
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-black: #000;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-gray-dark: #343a40;
+  --bs-primary: #0d6efd;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+}
+
+.ongeki-card-preview .cards-col {
+  width: 100%;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  --rotator-transition: all .6s ease-out;
+  --rotator-global-rotate-y: 0deg;
+  --rotator-rotate-x: 0deg;
+  --rotator-rotate-y: 0deg;
+  --pseudo-opacity: 0;
+  --pseudo-left: 50%;
+  --pseudo-top: 50%;
+  --holo-sheet-bottom: none;
+  --holo-sheet-middle: none;
+  --holo-sheet-top: none;
+}
+
+.ongeki-card-preview .card-container {
+  aspect-ratio: .730038022813688;
+  width: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 3%;
+  overflow: hidden;
+  position: relative;
+  background-size: cover;
+  container: card-container / inline-size;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.ongeki-card-preview .card-chara {
+  position: absolute;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+}
+
+.ongeki-card-preview .card-attribute {
+  width: 17%;
+  top: 8%;
+  left: 12%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-rare {
+  width: 26%;
+  top: 2.5%;
+  left: 16%;
+  position: absolute;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-gakunen {
+  width: 12%;
+  top: 0;
+  right: 3%;
+  position: absolute;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-name {
+  color: #fff;
+  width: 100%;
+  height: 10%;
+  text-align: right;
+  top: 67%;
+  right: 7%;
+  position: absolute;
+  font-family: SEGA_Humming, sans-serif;
+  rotate: -6deg;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-name-shadow {
+  position: absolute;
+  top: calc(50% + .3cqw);
+  right: -.3cqw;
+  color: #2592c1;
+  -webkit-text-stroke: .9cqw #2592C1;
+  transform: translateY(-50%);
+}
+
+.ongeki-card-preview .card-name-text {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.ongeki-card-preview .card-name-nick {
+  font-size: 2.8cqw;
+}
+
+.ongeki-card-preview .card-name-chara {
+  font-size: 5.4cqw;
+}
+
+.ongeki-card-preview .card-info-footer {
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  color: #fff;
+  font-family: SEGA_Humming, sans-serif;
+  font-size: 3cqw;
+  background: rgba(0, 0, 0, .5);
+  position: absolute;
+  padding: 0.5% 2%;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-kaika-state {
+  width: 22%;
+  top: 15%;
+  left: 3%;
+  position: absolute;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-skill-bg {
+  width: 85%;
+  top: 80%;
+  left: 4%;
+  position: absolute;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-star-container {
+  width: 70%;
+  height: 4.7%;
+  top: 75%;
+  left: 21%;
+  position: absolute;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-star {
+  text-align: left;
+  height: 100%;
+  margin: 0 -1.2%;
+  float: left;
+}
+
+.ongeki-card-preview .card-max-atk-title {
+  width: 14%;
+  top: 70%;
+  left: 6%;
+  position: absolute;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-max-atk-value-container {
+  width: 25%;
+  height: 6.5%;
+  top: 73.5%;
+  left: 0%;
+  position: absolute;
+  text-align: center;
+  z-index: 10;
+}
+
+.ongeki-card-preview .card-max-atk-value-number {
+  vertical-align: top;
+  height: 100%;
+  margin: 0 -8.2%;
+}
+
+/* Utility classes for visibility toggle */
+.hidden {
+  display: none !important;
+}

@@ -168,7 +168,7 @@ export function HomePage() {
     {
       name: '赞助我……',
       emoji: '🥺',
-      url: '/sponsor.html',
+      url: '/sponsor',
       description: '支持开发者',
       isStatic: true
     },
@@ -195,6 +195,13 @@ export function HomePage() {
       emoji: '✍️',
       url: 'https://huggingface.co/spaces/BhCtls/Chunipic',
       description: '识图脚本',
+      isStatic: true
+    },
+    {
+      name: '音击卡片生成',
+      emoji: '🎴',
+      url: '/card-preview',
+      description: '自定义卡片',
       isStatic: true
     },
   ];
