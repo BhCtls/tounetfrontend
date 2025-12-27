@@ -11,6 +11,9 @@ import { AppsPage } from './pages/AppsPage';
 import { AboutMePage } from './pages/AboutMePage';
 import { SongPicQueryPage } from './pages/SongPicQueryPage';
 import { DownloadOrderPage } from './pages/DownloadOrderPage';
+import { AnnouncementsPage } from './pages/AnnouncementsPage';
+import { LicensePage } from './pages/LicensePage';
+import { SponsorPage } from './pages/SponsorPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,6 +61,9 @@ function App() {
               />
               <Route path="/song-pic-query" element={<SongPicQueryPage />} />
               <Route path="/download-order" element={<DownloadOrderPage />} />
+              <Route path="/announcements" element={<AnnouncementsPage />} />
+              <Route path="/license" element={<LicensePage />} />
+              <Route path="/sponsor" element={<SponsorPage />} />
             </Routes>
           </Router>
         </AuthProvider>

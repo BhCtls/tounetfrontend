@@ -563,8 +563,8 @@ export function HomePage() {
         <span style={{ color: 'green', cursor: 'pointer' }}>powered by LLMs</span> | 
         <span style={{ color: 'green' }}> 仅供个人学习使用，备案号：</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/about')}>关于🔗</span> | 
-        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'docs/license.html'}>LICENSE🔗</span> | 
-        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'announce.html'}>公告🔗</span>
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/license')}>LICENSE🔗</span> | 
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/announcements')}>公告🔗</span>
       </div>
     </div>
   );
