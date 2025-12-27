@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Upload, RefreshCw, Image as ImageIcon, Settings, Layers } from 'lucide-react';
+import { ArrowLeft, Download, Upload, Image as ImageIcon, Settings, Layers } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import './OngekiCardPreviewPage.css';
