@@ -103,11 +103,6 @@ export function SongPicQueryPage() {
     navigator.clipboard.writeText(direct);
   };
 
-  const cleanupObjectUrls = () => {
-    objectUrls.forEach(u => URL.revokeObjectURL(u));
-    setObjectUrls([]);
-  };
-
   // Cleanup on unmount
   useEffect(() => {
     return () => {
