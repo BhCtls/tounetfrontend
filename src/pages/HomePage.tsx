@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { userApi, nkeyApi } from '../lib/api';
+import { userApi, nkeyApi, publicApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
@@ -47,12 +47,16 @@ export function HomePage() {
 
   // 获取用户可用的应用列表
   const { data: apiApps } = useQuery({
-    queryKey: ['user', 'apps'],
+    queryKey: ['apps', user?.username || 'public'],
     queryFn: async () => {
-      const response = await userApi.getMyApps();
-      return response.data;
+      if (user) {
+        const response = await userApi.getMyApps();
+        return response.data;
+      } else {
+        const response = await publicApi.getPublicApps();
+        return response.data;
+      }
     },
-    enabled: !!user, // 只有登录用户才获取应用列表
   });
 
   const {
@@ -107,7 +111,7 @@ export function HomePage() {
     }
     
     // 定义需要客户端路由的内部页面路径
-    const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps'];
+    const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps', '/song-pic-query'];
     
     // 只有明确定义的内部路由才使用客户端导航
     const isInternalRoute = internalRoutes.includes(app.url);
@@ -148,17 +152,10 @@ export function HomePage() {
 
   const apps = [
     {
-      name: '博客（不定期更新）',
-      emoji: '✍️',
-      url: 'https://bhctls.github.io/blog/',
-      description: '个人博客，不定期更新各种内容',
-      isStatic: true
-    },
-    {
-      name: '查询系统',
-      emoji: '🔍',
-      url: '/searchallv3/',
-      description: '搜索音乐游戏数据',
+      name: '曲绘查询',
+      emoji: '🖼️',
+      url: '/song-pic-query',
+      description: '查询音乐游戏曲绘',
       isStatic: true
     },
     {
@@ -176,36 +173,13 @@ export function HomePage() {
       isStatic: true
     },
     {
-      name: '安装应用',
-      emoji: '📱',
-      url: '/pwa/install.html',
-      description: '安装PWA应用',
-      isStatic: true
-    },
-
-    {
       name: 'Nkey申请',
       emoji: '🔑',
-      url: '/frontend',
+      url: '/apps',
       description: '申请访问密钥',
       requireAuth: true,
       isStatic: true
     },
-    {
-      name: '预算检查器',
-      emoji: '💰',
-      url: '/tools/BudgetChecker.html',
-      description: '检查和管理预算',
-      isStatic: true
-    },
-    {
-      name: '积分生成器',
-      emoji: '📝',
-      url: '/integertoy/',
-      description: '生成随机积分',
-      isStatic: true
-    }
-
   ];
 
   const toolApps = [
@@ -216,31 +190,12 @@ export function HomePage() {
       description: '识图脚本',
       isStatic: true
     },
-    {
-      name: '语法填空生成器',
-      emoji: '📄',
-      url: '/wxtk/',
-      description: '生成语法填空练习',
-      isStatic: true
-    },
-    {
-      name: '内网穿透管理（不可用）',
-      emoji: '🔧',
-      url: 'https://192.168.1.3:4101/',
-      description: '内网穿透管理'
-    },
-    {
-      name: '虚拟花园（暂不可用）',
-      emoji: '🌸',
-      url: '/function2',
-      description: '虚拟花园功能'
-    }
   ];
 
   // 合并静态应用和API应用
   const allBasicApps = [
-    ...apps.map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
-    ...(user && apiApps || []).map((app: App) => ({
+    ...apps.filter(app => !app.requireAuth || user).map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
+    ...(apiApps || []).map((app: App) => ({
       name: app.name,
       emoji: app.emoji || app.name.charAt(0).toUpperCase(), // 优先使用API应用的emoji字段
       url: app.url || '',

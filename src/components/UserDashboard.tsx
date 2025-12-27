@@ -13,7 +13,6 @@ export function UserDashboard() {
   const navigate = useNavigate();
   const [accessingApp, setAccessingApp] = useState<string>('');
   const [appStatus, setAppStatus] = useState<Record<string, 'checking' | 'online' | 'offline'>>({});
-  const [signingIn, setSigningIn] = useState<boolean>(false);
 
   const { data: apps, isLoading: appsLoading } = useQuery({
     queryKey: ['user', 'apps'],

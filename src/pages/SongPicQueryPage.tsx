@@ -55,8 +55,9 @@ export function SongPicQueryPage() {
 			} else {
 				setFilteredItems(items);
 			}
-		} catch (e: any) {
-			setError(e?.response?.data?.message || '获取列表失败');
+		} catch (e: unknown) {
+			const errorMessage = e instanceof Error ? (e as any).response?.data?.message || e.message : '获取列表失败';
+			setError(errorMessage);
 			setDisplayItems([]);
 			setFilteredItems([]);
 		} finally {
@@ -74,8 +75,9 @@ export function SongPicQueryPage() {
 			setPreviewUrl(url);
 			setPreviewBase(baseName);
 			setObjectUrls(prev => [...prev, url]);
-		} catch (e: any) {
-			setError(e?.response?.data?.message || '获取图片失败');
+		} catch (e: unknown) {
+			const errorMessage = e instanceof Error ? (e as any).response?.data?.message || e.message : '获取图片失败';
+			setError(errorMessage);
 		} finally {
 			setImageLoading(false);
 		}

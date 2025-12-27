@@ -220,6 +220,11 @@ export const adminApi = {
     const response = await apiClient.get(`/admin/audit-logs?page=${page}&size=${size}`);
     return response.data;
   },
+
+  generateNKey: async (data: AdminGenerateNKeyRequest): Promise<ApiResponse<NKey>> => {
+    const response = await apiClient.post('/admin/nkey/generate', data);
+    return response.data;
+  },
 };
 
 export default apiClient;

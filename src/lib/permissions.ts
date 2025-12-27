@@ -3,11 +3,12 @@
  * Based on the hierarchical permission system: admin > trusted > user > disableduser
  */
 
-export type PermissionLevel = 'admin' | 'trusted' | 'user' | 'disableduser';
+export type PermissionLevel = 'admin' | 'trusted' | 'user' | 'disableduser' | 'disabled';
 
 export const PermissionUtils = {
   // Permission level hierarchy with numeric values
   PERMISSION_LEVELS: {
+    'disabled': 1,
     'disableduser': 1,
     'user': 2,
     'trusted': 3,
@@ -30,7 +31,8 @@ export const PermissionUtils = {
       'admin': 'Administrator',
       'trusted': 'Trusted User',
       'user': 'Standard User',
-      'disableduser': 'Disabled User'
+      'disableduser': 'Disabled User',
+      'disabled': 'Disabled User'
     };
     return names[level] || 'Unknown';
   },
@@ -41,7 +43,8 @@ export const PermissionUtils = {
       'admin': 'purple',
       'trusted': 'blue',
       'user': 'green',
-      'disableduser': 'red'
+      'disableduser': 'red',
+      'disabled': 'red'
     };
     return colors[level] || 'gray';
   },

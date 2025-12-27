@@ -9,6 +9,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { AppsPage } from './pages/AppsPage';
 import { AboutMePage } from './pages/AboutMePage';
+import { SongPicQueryPage } from './pages/SongPicQueryPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +55,7 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+              <Route path="/song-pic-query" element={<SongPicQueryPage />} />
             </Routes>
           </Router>
         </AuthProvider>

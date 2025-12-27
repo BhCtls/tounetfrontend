@@ -56,10 +56,16 @@ const updateAppSchema = z.object({
   is_active: z.boolean().optional(),
 });
 
+const adminGenerateNKeySchema = z.object({
+  username: z.string().min(1, 'Username is required'),
+  app_ids: z.string().min(1, 'At least one app ID is required'),
+});
+
 type CreateUserForm = z.infer<typeof createUserSchema>;
 type CreateAppForm = z.infer<typeof createAppSchema>;
 type UpdateUserForm = z.infer<typeof updateUserSchema>;
 type UpdateAppForm = z.infer<typeof updateAppSchema>;
+type AdminGenerateNKeyForm = z.infer<typeof adminGenerateNKeySchema>;
 
 export function AdminDashboard() {
   const queryClient = useQueryClient();
@@ -70,6 +76,35 @@ export function AdminDashboard() {
   const [editingApp, setEditingApp] = useState<any>(null);
   const [copiedCode, setCopiedCode] = useState<string>('');
   const [generatedNKey, setGeneratedNKey] = useState<string>('');
+
+  const adminGenerateNKeyForm = useForm<AdminGenerateNKeyForm>({
+    resolver: zodResolver(adminGenerateNKeySchema),
+    defaultValues: {
+      username: '',
+      app_ids: '',
+    },
+  });
+
+  const adminGenerateNKeyMutation = useMutation({
+    mutationFn: adminApi.generateNKey,
+    onSuccess: (response: any) => {
+      setGeneratedNKey(response.data.nkey);
+      adminGenerateNKeyForm.reset();
+    },
+  });
+
+  const onAdminGenerateNKey = (data: AdminGenerateNKeyForm) => {
+    adminGenerateNKeyMutation.mutate({
+      username: data.username,
+      app_ids: data.app_ids.split(',').map(id => id.trim()),
+    });
+  };
+
+  const handleCopyNKey = async (nkey: string) => {
+    await copyToClipboard(nkey);
+    setCopiedCode(nkey);
+    setTimeout(() => setCopiedCode(''), 2000);
+  };
 
   // Queries
   const { data: usersData, isLoading: usersLoading } = useQuery({

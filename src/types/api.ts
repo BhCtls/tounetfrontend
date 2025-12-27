@@ -3,7 +3,7 @@ export interface User {
   username: string;
   phone: string;
   pushdeer_token?: string;
-  status: 'admin' | 'user' | 'disabled';
+  status: 'admin' | 'trusted' | 'user' | 'disabled' | 'disableduser';
   created_at: string;
   updated_at?: string;
   last_login?: string;
@@ -122,7 +122,9 @@ export interface CreateAppRequest {
 export interface UpdateAppRequest {
   name?: string;
   description?: string;
-  required_permission_level?: 'admin' | 'user';
+  url?: string;
+  emoji?: string;
+  required_permission_level?: 'admin' | 'trusted' | 'user';
   is_active?: boolean;
 }
 
@@ -133,7 +135,7 @@ export interface UpdateUserRequest {
 
 export interface AdminUpdateUserRequest {
   username?: string;
-  status?: 'admin' | 'user' | 'disabled';
+  status?: 'admin' | 'trusted' | 'user' | 'disabled' | 'disableduser';
   phone?: string;
   pushdeer_token?: string;
 }
