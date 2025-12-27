@@ -181,7 +181,7 @@ export function HomePage() {
     },
     {
       name: 'Nkey申请',
-      emoji: '🔑',
+      emoji: '�',
       url: '/apps',
       description: '申请访问密钥',
       requireAuth: true,
@@ -222,7 +222,7 @@ export function HomePage() {
   const debugApps = [
     {
       name: 'Null Definition',
-      emoji: '🚫',
+      emoji: '�',
       url: '/scoresheet/',
       description: '暂时未定义功能',
       isStatic: true
@@ -253,7 +253,7 @@ export function HomePage() {
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-  <h1>Tounet 5.3.0 202511</h1>
+  <h1>Tounet 5.4.3 202601</h1>
       </div>
 
       {/* Switch and Login */}

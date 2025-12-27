@@ -12,6 +12,11 @@
   src: url('/assets/fonts/FWQingYin.TTF') format("truetype")
 }
 
+/* helper class to explicitly apply FWQingYin where needed */
+.font-fwqingyin {
+  font-family: FWQingYin, Arial, sans-serif;
+}
+
 @layer base {
   html {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -19,7 +24,7 @@
 
   body {
     @apply bg-gray-50 text-gray-900;
-    font-family: SEGA_Humming, Arial, sans-serif;
+    font-family: FWQingYin, Arial, sans-serif;
   }
 }
 
