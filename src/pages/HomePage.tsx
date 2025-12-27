@@ -168,7 +168,7 @@ export function HomePage() {
     {
       name: '赞助我……',
       emoji: '🥺',
-      url: '/sponsor.html',
+      url: '/sponsor',
       description: '支持开发者',
       isStatic: true
     },
@@ -195,6 +195,13 @@ export function HomePage() {
       emoji: '✍️',
       url: 'https://huggingface.co/spaces/BhCtls/Chunipic',
       description: '识图脚本',
+      isStatic: true
+    },
+    {
+      name: '音击卡片生成',
+      emoji: '🎴',
+      url: '/card-preview',
+      description: '自定义卡片',
       isStatic: true
     },
   ];
@@ -563,8 +570,8 @@ export function HomePage() {
         <span style={{ color: 'green', cursor: 'pointer' }}>powered by LLMs</span> | 
         <span style={{ color: 'green' }}> 仅供个人学习使用，备案号：</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/about')}>关于🔗</span> | 
-        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'docs/license.html'}>LICENSE🔗</span> | 
-        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => window.location.href = 'announce.html'}>公告🔗</span>
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/license')}>LICENSE🔗</span> | 
+        <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/announcements')}>公告🔗</span>
       </div>
     </div>
   );

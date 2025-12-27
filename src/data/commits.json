@@ -1,0 +1,182 @@
+[
+  {
+    "hash": "c36ab6d",
+    "date": "2025-12-27",
+    "message": "更新版本到5.4.5",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "9022bb8",
+    "date": "2025-12-27",
+    "message": "重构项目结构，删除冗余文档，添加下载订单页面，更新权限系统，优化路由和状态管理",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "c7363f1",
+    "date": "2025-12-27",
+    "message": "更新标题和版本，添加曲绘查询页面，优化public/disabled权限管理，增强错误处理",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "eace0d4",
+    "date": "2025-11-13",
+    "message": "简单修复",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "5b1460b",
+    "date": "2025-11-06",
+    "message": "redy to CICD deployment",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "7e9787e",
+    "date": "2025-10-19",
+    "message": "tiny patch and upgrade to 5.2.4",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "29871b8",
+    "date": "2025-10-17",
+    "message": "no",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "e68ab9a",
+    "date": "2025-09-12",
+    "message": "兼容性优化",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "3472fb0",
+    "date": "2025-09-09",
+    "message": "bugfix&限时应用分类",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "391defb",
+    "date": "2025-09-08",
+    "message": "Update .gitignore to exclude OS and IDE files",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "df7ecde",
+    "date": "2025-09-08",
+    "message": "bugfix",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "68b0007",
+    "date": "2025-09-08",
+    "message": "5.2.1 Bugfix",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "661220c",
+    "date": "2025-09-07",
+    "message": "bugfix",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "a4f6276",
+    "date": "2025-09-07",
+    "message": "Merge pull request #1 from BhCtls/v5.0-dev",
+    "author": "XiaHua"
+  },
+  {
+    "hash": "cf79a98",
+    "date": "2025-09-07",
+    "message": "最终检测",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "c5896d1",
+    "date": "2025-09-04",
+    "message": "v5.0.0 alpha3 人机交互优化",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "76df260",
+    "date": "2025-09-04",
+    "message": "v5.0.0 alpha2 Emoji完整支持",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "3f10272",
+    "date": "2025-09-04",
+    "message": "v5.0.0_alpha。基础功能已接近实现。",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "24e3a2d",
+    "date": "2025-06-30",
+    "message": "yes",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "c74e996",
+    "date": "2025-06-29",
+    "message": "✅ PostCSS Configuration Fix",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "ac06383",
+    "date": "2025-12-21",
+    "message": "update routine",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "fd0dfb6",
+    "date": "2025-11-18",
+    "message": "user interface",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "8040bd2",
+    "date": "2025-11-12",
+    "message": "神秘更新",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "2fb8ef0",
+    "date": "2025-09-04",
+    "message": "dev version=2",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "8ce49db",
+    "date": "2025-09-03",
+    "message": "branch waiting for pr",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "5e3a861",
+    "date": "2025-08-04",
+    "message": "新功能",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "0714eab",
+    "date": "2025-08-03",
+    "message": "ui更新，完全支持url",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "16d56e9",
+    "date": "2025-07-05",
+    "message": "可用版本",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "a8d3f56",
+    "date": "2025-06-30",
+    "message": "权限更新",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "2c2a053",
+    "date": "2025-06-29",
+    "message": "tounet frontend",
+    "author": "BhCtls"
+  }
+]
