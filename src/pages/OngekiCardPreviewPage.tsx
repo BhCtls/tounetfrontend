@@ -7,7 +7,6 @@ import './OngekiCardPreviewPage.css';
 
 // Asset Paths
 const ASSET_BASE = '/assets/images/ui';
-const PREVIEW_BASE = '/card-preview/CardPreview';
 
 const ATTRIBUTES = [
   { label: 'Fire', value: `${ASSET_BASE}/UI_Card_Attribute_00_Red.webp` },

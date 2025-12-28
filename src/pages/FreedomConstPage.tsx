@@ -216,9 +216,9 @@ export default function FreedomConstPage() {
         scale: 2, 
         useCORS: true, 
         allowTaint: true,
-        onclone: (clonedDoc) => {
+        onclone: (clonedDoc: Document) => {
             const inputs = clonedDoc.querySelectorAll('input');
-            inputs.forEach((input) => {
+            inputs.forEach((input: HTMLInputElement) => {
                 const div = clonedDoc.createElement('div');
                 div.innerText = input.value;
                 div.style.cssText = window.getComputedStyle(input).cssText;
@@ -233,7 +233,7 @@ export default function FreedomConstPage() {
             });
 
             const textareas = clonedDoc.querySelectorAll('textarea');
-            textareas.forEach((textarea) => {
+            textareas.forEach((textarea: HTMLTextAreaElement) => {
                 const div = clonedDoc.createElement('div');
                 div.innerText = textarea.value;
                 div.style.cssText = window.getComputedStyle(textarea).cssText;
