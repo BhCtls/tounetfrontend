@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
 import type { SongData, GameType, ConstBlock, BlockItem } from '../types/freedomConst';
 import { Search, Plus, Trash2, Download, Maximize, Minimize, Palette, ArrowLeftRight, ArrowUpDown, Image as ImageIcon, ArrowLeft } from 'lucide-react';
 import html2canvas from 'html2canvas';
@@ -58,6 +58,7 @@ export default function FreedomConstPage() {
   const [selectedSong, setSelectedSong] = useState<SongData | null>(null);
   const [specialType, setSpecialType] = useState<'blank' | 'empty' | 'text'>('blank');
   const [tableName, setTableName] = useState('我的定数表');
+  const [isTitleTruncated, setIsTitleTruncated] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
 
   // Fetch data on mount
@@ -211,7 +212,45 @@ export default function FreedomConstPage() {
   const handleExport = async () => {
     if (!tableRef.current) return;
     try {
-      const canvas = await html2canvas(tableRef.current, { scale: 2, useCORS: true, allowTaint: true } as any);
+      const canvas = await html2canvas(tableRef.current, { 
+        scale: 2, 
+        useCORS: true, 
+        allowTaint: true,
+        onclone: (clonedDoc) => {
+            const inputs = clonedDoc.querySelectorAll('input');
+            inputs.forEach((input) => {
+                const div = clonedDoc.createElement('div');
+                div.innerText = input.value;
+                div.style.cssText = window.getComputedStyle(input).cssText;
+                div.style.display = 'flex';
+                div.style.alignItems = 'center';
+                div.style.justifyContent = 'center';
+                // Ensure font size is copied correctly if it was inline
+                if (input.style.fontSize) {
+                    div.style.fontSize = input.style.fontSize;
+                }
+                input.parentNode?.replaceChild(div, input);
+            });
+
+            const textareas = clonedDoc.querySelectorAll('textarea');
+            textareas.forEach((textarea) => {
+                const div = clonedDoc.createElement('div');
+                div.innerText = textarea.value;
+                div.style.cssText = window.getComputedStyle(textarea).cssText;
+                div.style.display = 'flex';
+                div.style.alignItems = 'center';
+                div.style.justifyContent = 'center';
+                div.style.whiteSpace = 'pre-wrap';
+                if (textarea.style.fontSize) {
+                    div.style.fontSize = textarea.style.fontSize;
+                }
+                if (textarea.style.paddingTop) {
+                    div.style.paddingTop = textarea.style.paddingTop;
+                }
+                textarea.parentNode?.replaceChild(div, textarea);
+            });
+        }
+      } as any);
       const link = document.createElement('a');
       link.download = `freedom-const-${Date.now()}.jpg`;
       link.href = canvas.toDataURL('image/jpeg');
@@ -298,6 +337,13 @@ export default function FreedomConstPage() {
                   <Button onClick={handleExport} className="flex-1 flex items-center justify-center gap-2 bg-[#667eea] hover:bg-[#5a6fd6]">
                     <Download size={16} /> 保存图片
                   </Button>
+                  <Button 
+                    onClick={() => setIsTitleTruncated(!isTitleTruncated)} 
+                    className="flex-none px-3 bg-white/50 hover:bg-white/80 text-gray-700 border border-gray-200"
+                    title={isTitleTruncated ? "显示完整标题" : "缩略标题"}
+                  >
+                    {isTitleTruncated ? <Maximize size={16} /> : <Minimize size={16} />}
+                  </Button>
                 </div>
               </div>
 
@@ -351,7 +397,7 @@ export default function FreedomConstPage() {
                    ))}
                 </div>
 
-                <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-1 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                   <div className="grid grid-cols-3 gap-2 mb-2">
                     <button
                       onClick={() => { setSelectedSong(null); setSpecialType('empty'); }}
@@ -410,8 +456,8 @@ export default function FreedomConstPage() {
                   {tableName}
                 </h1>
 
-                <div className="space-y-4" id="constlist">
-                  <div className="flex justify-center">
+                <div className="space-y-1" id="constlist">
+                  <div className="flex justify-center" data-html2canvas-ignore="true">
                      <button 
                        onClick={() => handleAddBlock(0)}
                        className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-400 hover:border-[#667eea] hover:text-[#667eea] transition-colors flex items-center justify-center gap-2"
@@ -421,8 +467,8 @@ export default function FreedomConstPage() {
                   </div>
 
                   {blocks.map((block, index) => (
-                    <div key={block.id} className="relative group border-2 border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
-                      <div className="absolute -right-3 -top-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white shadow-sm rounded-full p-1 border z-10">
+                    <div key={block.id} className="relative group border-2 border-gray-200 rounded-lg p-2 hover:border-gray-300 transition-colors">
+                      <div className="absolute -right-3 -top-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white shadow-sm rounded-full p-1 border z-10" data-html2canvas-ignore="true">
                         <button onClick={() => handleRemoveBlock(block.id)} className="p-1 text-red-500 hover:bg-red-50 rounded-full" title="删除区块">
                           <Trash2 size={16} />
                         </button>
@@ -488,24 +534,38 @@ export default function FreedomConstPage() {
                         {/* Items Area */}
                         <div className="flex-1 flex flex-wrap gap-2 items-start content-start min-h-[100px]">
                           {block.items.map((item, itemIndex) => (
-                            item.type === 'separator' ? (
-                              <div key={item.id} className="w-full h-8 flex items-center justify-center group/sep relative">
-                                <div className="w-full h-px bg-gray-300 absolute"></div>
-                                <div className="z-10 flex gap-2 bg-white px-2 opacity-0 group-hover/sep:opacity-100 transition-opacity border border-gray-200 rounded-full shadow-sm">
+                            <Fragment key={item.id}>
+                            {item.type === 'separator' && (
+                                <div className="flex gap-2" data-html2canvas-ignore="true">
                                     <button 
-                                        onClick={() => {
-                                            if (selectedSong) {
-                                                handleAddItem(block.id, 'song', selectedSong, itemIndex);
-                                            } else {
-                                                handleAddItem(block.id, specialType, undefined, itemIndex);
-                                            }
-                                        }}
-                                        className="p-1 text-blue-500 hover:bg-blue-50 rounded flex items-center gap-1 text-[10px]"
-                                        title="在此行前插入"
+                                      onClick={() => {
+                                        if (selectedSong) {
+                                          handleAddItem(block.id, 'song', selectedSong, itemIndex);
+                                        } else {
+                                          handleAddItem(block.id, specialType, undefined, itemIndex);
+                                        }
+                                      }}
+                                      className="w-24 aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 hover:border-[#667eea] hover:text-[#667eea] transition-colors"
+                                      title={selectedSong ? `添加 "${selectedSong.title}"` : `添加 ${specialType === 'empty' ? '空位' : specialType === 'blank' ? '占位符' : '文本'}`}
                                     >
-                                        <Plus size={12} /> 插入
+                                      <Plus size={24} />
                                     </button>
-                                    <div className="w-px bg-gray-200 my-1"></div>
+
+                                    <button 
+                                      onClick={() => handleAddItem(block.id, 'separator', undefined, itemIndex)}
+                                      className="w-8 aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 hover:border-[#667eea] hover:text-[#667eea] transition-colors"
+                                      title="添加分隔线"
+                                    >
+                                      <ArrowUpDown size={16} className="rotate-90" />
+                                    </button>
+                                </div>
+                            )}
+                            {item.type === 'separator' ? (
+                              <div className="w-full h-0 flex items-center justify-center group/sep relative">
+                                <div className="w-full h-px bg-gray-300 absolute"></div>
+                                <div className="z-10 flex gap-2 bg-white px-2 opacity-0 group-hover/sep:opacity-100 transition-opacity border border-gray-200 rounded-full shadow-sm" data-html2canvas-ignore="true">
+
+
                                     <button 
                                       onClick={() => handleRemoveItem(block.id, item.id)}
                                       className="p-1 text-red-500 hover:bg-red-50 rounded"
@@ -516,9 +576,9 @@ export default function FreedomConstPage() {
                                 </div>
                               </div>
                             ) : (
-                            <div key={item.id} className="relative group/item w-24">
+                            <div className="relative group/item w-24">
                               {/* Item Controls */}
-                              <div className="absolute -top-8 -right-8 z-20 opacity-0 group-hover/item:opacity-100 transition-opacity bg-white shadow-lg rounded-lg border p-1 flex flex-col gap-1 w-24">
+                              <div className="absolute -top-8 -right-8 z-20 opacity-0 group-hover/item:opacity-100 transition-opacity bg-white shadow-lg rounded-lg border p-1 flex flex-col gap-1 w-24" data-html2canvas-ignore="true">
                                 <div className="flex justify-between border-b pb-1">
                                     <span className="text-[10px] font-bold text-gray-500">操作</span>
                                     <button onClick={() => handleRemoveItem(block.id, item.id)} className="text-red-500 hover:bg-red-50 rounded">
@@ -651,22 +711,17 @@ export default function FreedomConstPage() {
                               <div 
                                 contentEditable 
                                 suppressContentEditableWarning
-                                className="text-[10px] text-center mt-1 leading-tight outline-none focus:bg-yellow-50 rounded px-1"
+                                className={`text-[10px] text-center mt-1 leading-normal outline-none focus:bg-yellow-50 rounded px-1 pb-0.5 ${isTitleTruncated ? 'truncate w-full' : ''}`}
                               >
                                 {item.song?.title || 'Title'}
                               </div>
                             </div>
-                            )
+                            )}
+                            </Fragment>
                           ))}
 
-                          <div className="flex gap-2">
-                            <button 
-                              onClick={() => handleAddItem(block.id, 'separator')}
-                              className="w-8 aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 hover:border-[#667eea] hover:text-[#667eea] transition-colors"
-                              title="添加分隔线"
-                            >
-                              <ArrowUpDown size={16} className="rotate-90" />
-                            </button>
+                          <div className="flex gap-2" data-html2canvas-ignore="true">
+
                             <button 
                               onClick={() => {
                                 if (selectedSong) {
@@ -680,11 +735,19 @@ export default function FreedomConstPage() {
                             >
                               <Plus size={24} />
                             </button>
+
+                            <button 
+                              onClick={() => handleAddItem(block.id, 'separator')}
+                              className="w-8 aspect-square border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 hover:border-[#667eea] hover:text-[#667eea] transition-colors"
+                              title="添加分隔线"
+                            >
+                              <ArrowUpDown size={16} className="rotate-90" />
+                            </button>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                      <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-10" data-html2canvas-ignore="true">
                          <button 
                            onClick={() => handleAddBlock(index + 1)}
                            className="bg-[#667eea] text-white rounded-full p-1 shadow-lg hover:bg-[#5a6fd6]"
@@ -697,7 +760,7 @@ export default function FreedomConstPage() {
                   ))}
 
                   {blocks.length === 0 && (
-                    <div className="text-center py-12 text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
+                    <div className="text-center py-12 text-gray-400 border-2 border-dashed border-gray-200 rounded-lg" data-html2canvas-ignore="true">
                       <p className="mb-4">还没有定数区块</p>
                       <Button onClick={() => handleAddBlock()}>
                         <Plus size={16} className="mr-2" /> 添加第一个区块

@@ -60,8 +60,8 @@ export function OngekiCardPreviewPage() {
   const [grade, setGrade] = useState(GRADES[2].value);
 
   const [showSubAttributes, setShowSubAttributes] = useState(true);
-  const [serial, setSerial] = useState('11010119530615199001');
-  const [version, setVersion] = useState('[O.N.G.E.K.I.]2.05-0001');
+  const [serial, setSerial] = useState('　　1101 0119 5306 1519 9001');
+  const [version, setVersion] = useState('　[O.N.G.E.K.I.]2.05-0001');
   const [skill, setSkill] = useState(SKILLS[0].value);
   const [skillName, setSkillName] = useState('先制攻撃 +5');
   const [skillInfo, setSkillInfo] = useState('攻撃弾に当たるとダメージ');
