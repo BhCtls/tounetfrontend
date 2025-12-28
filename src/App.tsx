@@ -15,6 +15,7 @@ import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { LicensePage } from './pages/LicensePage';
 import { SponsorPage } from './pages/SponsorPage';
 import { OngekiCardPreviewPage } from './pages/OngekiCardPreviewPage';
+import FreedomConstPage from './pages/FreedomConstPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,6 +67,7 @@ function App() {
               <Route path="/license" element={<LicensePage />} />
               <Route path="/sponsor" element={<SponsorPage />} />
               <Route path="/card-preview" element={<OngekiCardPreviewPage />} />
+              <Route path="/freedom-const" element={<FreedomConstPage />} />
             </Routes>
           </Router>
         </AuthProvider>

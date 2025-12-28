@@ -7,7 +7,6 @@ import './OngekiCardPreviewPage.css';
 
 // Asset Paths
 const ASSET_BASE = '/assets/images/ui';
-const PREVIEW_BASE = '/card-preview/CardPreview';
 
 const ATTRIBUTES = [
   { label: 'Fire', value: `${ASSET_BASE}/UI_Card_Attribute_00_Red.webp` },
@@ -40,7 +39,7 @@ const SKILLS = [
 const STARS = [0, 1, 2, 3, 4, 5];
 
 // Number images for ATK
-const getNumberImg = (num: string) => `${PREVIEW_BASE}/${num}.webp`;
+const getNumberImg = (num: string) => `${ASSET_BASE}/${num}.webp`;
 
 export function OngekiCardPreviewPage() {
   const navigate = useNavigate();
@@ -60,9 +59,11 @@ export function OngekiCardPreviewPage() {
   const [grade, setGrade] = useState(GRADES[2].value);
 
   const [showSubAttributes, setShowSubAttributes] = useState(true);
-  const [serial, setSerial] = useState('11010119530615199001');
-  const [version, setVersion] = useState('[O.N.G.E.K.I.]2.05-0001');
+  const [serial, setSerial] = useState('　　1101 0119 5306 1519 9001');
+  const [version, setVersion] = useState('　[O.N.G.E.K.I.]2.05-0001');
   const [skill, setSkill] = useState(SKILLS[0].value);
+  const [skillName, setSkillName] = useState('先制攻撃 +5');
+  const [skillInfo, setSkillInfo] = useState('攻撃弾に当たるとダメージ');
   const [starCount, setStarCount] = useState(5);
   const [atk, setAtk] = useState(331);
 
@@ -108,11 +109,11 @@ export function OngekiCardPreviewPage() {
 
   // Helper to render ATK numbers
   const renderAtkNumbers = () => {
-    const atkStr = atk.toString().padStart(3, '0'); // Ensure at least 3 digits logic if needed, but original just renders digits
+    const atkStr = atk.toString();
     return atkStr.split('').map((digit, idx) => (
       <img 
         key={idx} 
-        className="card-max-atk-value-number" 
+        className="card-max-atk-value-number inline-block" 
         src={getNumberImg(digit)} 
         alt={digit} 
       />
@@ -338,6 +339,16 @@ export function OngekiCardPreviewPage() {
                   </div>
 
                   <div>
+                    <label className="block text-sm font-bold text-gray-600 mb-1">技能名称</label>
+                    <Input value={skillName} onChange={(e) => setSkillName(e.target.value)} className="bg-white" />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-gray-600 mb-1">技能描述</label>
+                    <Input value={skillInfo} onChange={(e) => setSkillInfo(e.target.value)} className="bg-white" />
+                  </div>
+
+                  <div>
                     <label className="block text-sm font-bold text-gray-600 mb-1">攻击力 (0-999)</label>
                     <Input 
                       type="number" 
@@ -431,6 +442,17 @@ export function OngekiCardPreviewPage() {
                       />
                     </div>
                   </div>
+                  
+                  {/* Skill name */}
+                  <div className="card-skill-name">
+                    <span className="card-skill-name-text">{skillName}</span>
+                  </div>
+
+
+                  {/* Skill info */}
+                  <div className="card-skill-info">
+                    <span className="card-skill-info-text">{skillInfo}</span>
+                  </div>
 
                   {/* Stars */}
                   <div className="card-star-container">
@@ -451,7 +473,7 @@ export function OngekiCardPreviewPage() {
                     src="/assets/images/ui/UI_Card_max_00.webp"
                     alt="max"
                   />
-                  <div className="card-max-atk-value-container">
+                  <div className="card-max-atk-value-container whitespace-nowrap">
                     {renderAtkNumbers()}
                   </div>
                 </div>

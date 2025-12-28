@@ -154,10 +154,7 @@ export function DownloadOrderPage() {
 
           {result && (
             <div className="mt-6 space-y-4 border-t pt-4">
-              <div className="text-center font-bold text-gray-500">
-                ▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
-              </div>
-              
+
               <div>
                 <h3 className="font-bold mb-2">【请求参数】</h3>
                 <div className="grid grid-cols-[100px_1fr] gap-1 text-sm">
@@ -168,10 +165,6 @@ export function DownloadOrderPage() {
                   <span className="text-gray-600">序列号:</span>
                   <span className="font-mono">{serial}</span>
                 </div>
-              </div>
-
-              <div className="text-center font-bold text-gray-500">
-                ▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
               </div>
 
               <div className={`flex items-center gap-2 font-bold ${result.stat == '1' ? 'text-green-600' : 'text-red-600'}`}>
@@ -208,9 +201,6 @@ export function DownloadOrderPage() {
                 )}
               </div>
 
-              <div className="text-center font-bold text-gray-500">
-                ▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
-              </div>
             </div>
           )}
         </CardContent>
