@@ -1,10 +1,23 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 
 export function AboutMePage() {
   const navigate = useNavigate();
   const [showContact, setShowContact] = useState(false);
+  const [selectedAchievement, setSelectedAchievement] = useState<{src: string, title: string, desc: string} | null>(null);
+
+  const achievements = [
+    { src: '/assets/images/kl/博客_1.png', title: '博客', desc: 'bhctls.github.io' },
+    { src: '/assets/images/kl/工具_1.png', title: '实用工具 I', desc: '学科小工具&各种奇思妙想' },
+    { src: '/assets/images/kl/工具_2.png', title: '实用工具 II', desc: '音乐游戏相关开发' },
+    { src: '/assets/images/kl/活动_1.jpg', title: '线下活动', desc: '2024.10 Google DevFest' },
+    { src: '/assets/images/kl/游戏_1.JPG', title: '游戏成就 I', desc: '2025.12 雪男AJ！！！！' },
+    { src: '/assets/images/kl/游戏_2.JPG', title: '游戏成就 II', desc: '音击 15.3全鸟' },
+    { src: '/assets/images/kl/游戏_3.JPG', title: '游戏成就 III', desc: 'XV版本b50，风呗8247和makear一绿是亮点' },
+    { src: '/assets/images/kl/谷饭_1.JPG', title: '谷子与美食 I', desc: '我喜欢三角葵，也喜欢甜点！' },
+    { src: '/assets/images/kl/谷饭_2.JPG', title: '谷子与美食 II', desc: '目前最高兴的一次生日饭，感谢朋友们' },
+  ];
 
   return (
     <div 
@@ -52,7 +65,7 @@ export function AboutMePage() {
               <h2 className="text-xl font-bold mb-2">兴趣爱好</h2>
               <p>喜欢音乐游戏(特别是街机)与写博客。编程未入门。美食和逛街也是我人生中不可或缺的部分。</p>
               <p>SEGA三家平均游戏经验4年以上，三虹极曾达成。</p>
-              <p>🚰SDVX vf17或帝，💿二寺sp初段，🎹钢琴机泼盆仅摸过。</p>
+              <p>🚰SDVX vf17或帝，💿二寺sp初段，ub鸟了十几个10级，🎹钢琴机泼盆仅摸过。</p>
               <p>个人买一些周边专辑做收藏，不过我更青睐数字专辑。</p>
             </section>
 
@@ -73,11 +86,11 @@ export function AboutMePage() {
 
             <section>
               <h2 className="text-xl font-bold mb-2">关于交友</h2>
-              <p>只要没有聊到闹掰，加不加好友，无非只是方便或不方便看看聊聊。</p>
+              <p>加不加好友，无非只是方便或不方便看看聊聊。看着顺眼就大胆加好友</p>
               <p>
                 最大的雷点是
-                <span className="text-red-600 font-bold text-[110%] mx-1">云玩家发言·行为</span>。
-                我极端讨厌狗屁不懂且乐意当串子的人。
+                <span className="text-red-600 font-bold text-[110%] mx-1">云玩家发言·行为</span>
+                （也不要当串子哦）。
               </p>
               <p>
                 空间会发
@@ -88,7 +101,7 @@ export function AboutMePage() {
               </p>
               <div 
                 className="bg-[#fffbe6] rounded-[10px] px-[14px] py-[8px] text-[#b08a00] inline-block mt-2 cursor-pointer hover:opacity-80"
-                onClick={() => window.open('/assets/images/misc/kl_image.png')}
+                onClick={() => window.open('/assets/images/kl/kl_image.png')}
               >
                 关注我，获取更多细碎生活日常！
                 <span className="text-[80%] text-gray-500 ml-2">点击此处获取扩列图全图</span>
@@ -96,24 +109,29 @@ export function AboutMePage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold mb-2">成就解锁（全都可以点）</h2>
-              <p>音乐游戏：<span>舞萌祭将星将</span>|<span>中二 雪男AJ</span>|<span>音击 Viyella's scream ABFB</span></p>
-              <p>
-                ai辅助编程：
-                <span className="cursor-pointer hover:underline" onClick={() => window.open('/wxtk/')}>语法填空生成器</span>｜
-                <span className="cursor-pointer hover:underline" onClick={() => window.open('/')}>中二节奏读图算rating</span>｜
-                <span className="cursor-pointer hover:underline" onClick={() => window.open('/searchall')}>数据库查找工具</span>｜
-                <span className="cursor-pointer hover:underline" onClick={() => window.open('/')}>文字游戏：魔法花园</span>
-              </p>
-              <p>博客：三年来已持续书写80000余字（略摸），仍在持续更新</p>
-              <p>同音：电子专辑墙有100+张专辑（含二寺ost等）</p>
+              <h2 className="text-xl font-bold mb-2">成就解锁（点看大图）</h2>
+              <div className="grid grid-cols-3 gap-2">
+                {achievements.map((item, index) => (
+                  <div 
+                    key={index} 
+                    className="aspect-square cursor-pointer overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white"
+                    onClick={() => setSelectedAchievement(item)}
+                  >
+                    <img 
+                      src={item.src} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                ))}
+              </div>
             </section>
           </div>
 
           {/* Contact Toggle Button (Collapsed) */}
           {!showContact && (
             <div 
-              className="absolute bottom-[10px] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer w-[30px] text-center leading-[1.2] font-fwqingyin hover:bg-pink-400 transition-colors"
+              className="absolute bottom-[60%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer w-[30px] text-center leading-[1.2] font-fwqingyin hover:bg-pink-400 transition-colors"
               onClick={() => setShowContact(true)}
             >
               <p>&nbsp;</p>
@@ -125,7 +143,7 @@ export function AboutMePage() {
           {/* Contact Container (Expanded) */}
           {showContact && (
             <div 
-              className="absolute bottom-[10px] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer font-fwqingyin z-10 shadow-lg"
+              className="absolute bottom-[50%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer font-fwqingyin z-10 shadow-lg"
               onClick={() => setShowContact(false)}
             >
               <p className="text-[60%] text-center mb-1">＞＞＞＞关闭＞＞＞＞</p>
@@ -154,7 +172,7 @@ export function AboutMePage() {
                 </span>
               </p>
               <img 
-                src="/assets/images/misc/qr.png" 
+                src="/assets/images/kl/qr.jpg" 
                 alt="点击下载扩列二维码" 
                 className="w-[170px] h-[170px] bg-white"
               />
@@ -162,6 +180,40 @@ export function AboutMePage() {
           )}
         </div>
       </div>
+
+      {/* Achievement Modal */}
+      {selectedAchievement && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 font-fwqingyin"
+          onClick={() => setSelectedAchievement(null)}
+        >
+          <div 
+            className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative animate-in fade-in zoom-in duration-200"
+            onClick={e => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setSelectedAchievement(null)}
+              className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            <h3 className="text-2xl font-bold mb-4 pr-10">{selectedAchievement.title}</h3>
+            
+            <div className="mb-6 rounded-lg overflow-hidden bg-gray-50 flex justify-center border border-gray-100">
+              <img 
+                src={selectedAchievement.src} 
+                alt={selectedAchievement.title} 
+                className="max-h-[60vh] w-auto object-contain"
+              />
+            </div>
+            
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-gray-700 text-lg leading-relaxed">{selectedAchievement.desc}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

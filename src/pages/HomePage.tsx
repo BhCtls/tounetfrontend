@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { userApi, nkeyApi, publicApi } from '../lib/api';
+import { userApi, publicApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
@@ -26,7 +26,6 @@ export function HomePage() {
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
-  const [accessingApp, setAccessingApp] = useState<string>('');
   // 可切换的背景图片列表（位于 public/assets/images/backgrounds）
   const backgrounds = [
     'bg.png',
@@ -84,23 +83,8 @@ export function HomePage() {
       return;
     }
 
-    setAccessingApp(app.app_id);
-    
-    try {
-      const response = await nkeyApi.generate({
-        username: [user.username],
-        app_ids: [app.app_id],
-      });
-
-      const nkey = response.data.nkey;
-      const urlWithNkey = `${app.url}${app.url.includes('?') ? '&' : '?'}ntoken=${nkey}`;
-      window.location.href = urlWithNkey;
-    } catch (error) {
-      console.error('Failed to generate NKey for app access:', error);
-      alert('Failed to access application. Please try again.');
-    } finally {
-      setAccessingApp('');
-    }
+    // Navigate to the launcher page which handles authentication and redirection
+    navigate(`/launch/${app.app_id}`);
   };
 
   // 处理静态应用访问（不需要ntoken）
@@ -152,20 +136,6 @@ export function HomePage() {
 
   const apps = [
     {
-      name: '曲绘查询',
-      emoji: '🖼️',
-      url: '/song-pic-query',
-      description: '查询音乐游戏曲绘',
-      isStatic: true
-    },
-    {
-      name: 'Download Order',
-      emoji: '📥',
-      url: '/download-order',
-      description: '获取游戏更新指示书',
-      isStatic: true
-    },
-    {
       name: '赞助我……',
       emoji: '🥺',
       url: '/sponsor',
@@ -195,20 +165,6 @@ export function HomePage() {
       emoji: '✍️',
       url: 'https://huggingface.co/spaces/BhCtls/Chunipic',
       description: '识图脚本',
-      isStatic: true
-    },
-    {
-      name: '音击卡片生成',
-      emoji: '🎴',
-      url: '/card-preview',
-      description: '自定义卡片',
-      isStatic: true
-    },
-    {
-      name: '定数表生成',
-      emoji: '📊',
-      url: '/freedom-const',
-      description: '自定义定数表',
       isStatic: true
     },
   ];
@@ -438,17 +394,12 @@ export function HomePage() {
               WebkitBackdropFilter: 'blur(5px)',
               boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
               flexDirection: 'row',
-              opacity: accessingApp === app.app_id ? 0.6 : 1,
-              pointerEvents: accessingApp === app.app_id ? 'none' : 'auto'
             }}
           >
             <span style={{ fontSize: '20px', marginRight: '10px' }}>
               {getAppIcon(app)}
             </span>
             <span>{app.name}</span>
-            {accessingApp === app.app_id && (
-              <div style={{ marginLeft: '10px', fontSize: '12px' }}>登录中...</div>
-            )}
           </div>
         ))}
       </div>

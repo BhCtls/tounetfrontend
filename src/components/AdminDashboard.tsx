@@ -36,7 +36,7 @@ const createAppSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   emoji: z.string().optional(),
-  required_permission_level: z.enum(['admin', 'trusted', 'user']),
+  required_permission_level: z.enum(['admin', 'trusted', 'user', 'disableduser']),
   is_active: z.boolean(),
 });
 
@@ -52,7 +52,7 @@ const updateAppSchema = z.object({
   description: z.string().min(1, 'Description is required').optional(),
   url: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   emoji: z.string().optional(),
-  required_permission_level: z.enum(['admin', 'trusted', 'user']).optional(),
+  required_permission_level: z.enum(['admin', 'trusted', 'user', 'disableduser']).optional(),
   is_active: z.boolean().optional(),
 });
 
@@ -414,7 +414,7 @@ export function AdminDashboard() {
                         <option value="user">User</option>
                         <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
-                        <option value="disableduser">Disabled User</option>
+                        <option value="disableduser">Public</option>
                       </select>
                     </div>
                   </div>
@@ -458,6 +458,7 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
                         <option value="disabled">Disabled</option>
                       </select>
@@ -663,7 +664,9 @@ export function AdminDashboard() {
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       >
                         <option value="user">User</option>
+                        <option value="trusted">Trusted User</option>
                         <option value="admin">Admin</option>
+                        <option value="disableduser">Public</option>
                       </select>
                     </div>
                   </div>

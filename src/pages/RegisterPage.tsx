@@ -54,7 +54,12 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 relative"
+          style={{ 
+        backgroundImage: 'url(/assets/images/backgrounds/bg6.png)',
+        backgroundColor: '#f2f2f2'
+      }}
+    >
       {/* Back to Home Button */}
       <button
         onClick={() => navigate('/')}

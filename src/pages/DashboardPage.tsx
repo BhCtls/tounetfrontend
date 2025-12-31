@@ -39,7 +39,7 @@ export function DashboardPage() {
       className="min-h-screen" 
       style={{
         backgroundColor: '#f2f2f2',
-        backgroundImage: 'url("/assets/images/backgrounds/bg7.png")',
+        backgroundImage: 'url("/assets/images/backgrounds/bg6.png")',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'top',
         backgroundSize: 'cover',

@@ -1,5 +1,53 @@
 [
   {
+    "hash": "cf8af7b",
+    "date": "2025-12-28",
+    "message": "Ready for merging to main",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "dba8b28",
+    "date": "2025-12-28",
+    "message": "调整OngekiCardPreview页面的序列号和版本号格式，优化显示效果 调整constpage",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "47cfc49",
+    "date": "2025-12-28",
+    "message": "cardPreview现已支持技能文字。感恩gemini",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "7073439",
+    "date": "2025-12-28",
+    "message": "新版自由定数表（不太自由但比较新）",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "2e2e124",
+    "date": "2025-12-27",
+    "message": "完全重写了CardPreview；以及数个css的修改和bugfix",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "4901629",
+    "date": "2025-12-27",
+    "message": "完全重写了CardPreview；以及数个css的修改和bugfix",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "970d918",
+    "date": "2025-12-27",
+    "message": "完全重写了CardPreview；以及数个css的修改和bugfix",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "2da376c",
+    "date": "2025-12-27",
+    "message": "添加公告、许可证和赞助页面，更新路由配置，优化主页链接",
+    "author": "BhCtls"
+  },
+  {
     "hash": "c36ab6d",
     "date": "2025-12-27",
     "message": "更新版本到5.4.5",
