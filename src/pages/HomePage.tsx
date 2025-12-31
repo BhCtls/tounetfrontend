@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { userApi, publicApi } from '../lib/api';
@@ -26,6 +26,16 @@ export function HomePage() {
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'info' | 'error' } | null>(null);
+  const [confirmAppUrl, setConfirmAppUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   // 可切换的背景图片列表（位于 public/assets/images/backgrounds）
   const backgrounds = [
     'bg.png',
@@ -90,8 +100,13 @@ export function HomePage() {
   // 处理静态应用访问（不需要ntoken）
   const handleStaticAppAccess = (app: any) => {
     if (app.requireAuth && !user) {
-      alert('请先登录后访问此功能');
-      return;
+      if (confirmAppUrl !== app.url) {
+        setConfirmAppUrl(app.url);
+        setToast({ message: '可以尝试注册账号，或再次点击进入应用', type: 'info' });
+        return;
+      }
+      // If clicked again, proceed
+      setConfirmAppUrl(null);
     }
     
     // 定义需要客户端路由的内部页面路径
@@ -216,6 +231,13 @@ export function HomePage() {
       margin: 0,
       fontFamily: 'FWQingYin, Arial, sans-serif'
     }}>
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-xl bg-gray-800 text-white bg-opacity-90 transition-all duration-300 flex items-center gap-2 backdrop-blur-sm border border-gray-700">
+          <span>{toast.message}</span>
+        </div>
+      )}
+
       {/* Title */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
@@ -223,7 +245,7 @@ export function HomePage() {
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-  <h1>Tounet 5.4.3 202601</h1>
+  <h1>Tounet 5.5.0 202601</h1>
       </div>
 
       {/* Switch and Login */}
@@ -262,7 +284,7 @@ export function HomePage() {
           ) : (
             <>
               {/* Desktop Login Form */}
-              <Card className="w-80 hidden md:block">
+              <Card className="w-80">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg flex items-center">
                     <LogIn className="w-5 h-5 mr-2" />
@@ -309,28 +331,6 @@ export function HomePage() {
                   </form>
                 </CardContent>
               </Card>
-
-              {/* Mobile Login Buttons */}
-              <div className="flex gap-2 md:hidden">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => navigate('/login')}
-                  className="flex items-center gap-2"
-                >
-                  <LogIn className="w-4 h-4" />
-                  登录
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => navigate('/register')}
-                  className="flex items-center gap-2"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  注册
-                </Button>
-              </div>
             </>
           )}
         </div>
