@@ -16,6 +16,7 @@ import { LicensePage } from './pages/LicensePage';
 import { SponsorPage } from './pages/SponsorPage';
 import { OngekiCardPreviewPage } from './pages/OngekiCardPreviewPage';
 import FreedomConstPage from './pages/FreedomConstPage';
+import { AppLauncherPage } from './pages/AppLauncherPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +51,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AppsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/launch/:appId" 
+                element={
+                  <ProtectedRoute>
+                    <AppLauncherPage />
                   </ProtectedRoute>
                 } 
               />

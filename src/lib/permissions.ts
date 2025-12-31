@@ -31,7 +31,7 @@ export const PermissionUtils = {
       'admin': 'Administrator',
       'trusted': 'Trusted User',
       'user': 'Standard User',
-      'disableduser': 'Disabled User',
+      'disableduser': 'Public',
       'disabled': 'Disabled User'
     };
     return names[level] || 'Unknown';
@@ -41,9 +41,9 @@ export const PermissionUtils = {
   getPermissionLevelColor: (level: PermissionLevel): string => {
     const colors = {
       'admin': 'purple',
-      'trusted': 'blue',
-      'user': 'green',
-      'disableduser': 'red',
+      'trusted': 'green',
+      'user': 'blue',
+      'disableduser': 'gray',
       'disabled': 'red'
     };
     return colors[level] || 'gray';
