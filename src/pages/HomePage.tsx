@@ -158,15 +158,8 @@ export function HomePage() {
       isStatic: true
     },
     {
-      name: 'nano banana',
-      emoji: '🍌',
-      url: 'https://aistudio.google.com/prompts/new_chat?model=models%2Fgemini-2.5-flash-image&prompt=e.',
-      description: '快速入口',
-      isStatic: true
-    },
-    {
       name: 'Nkey申请',
-      emoji: '�',
+      emoji: '🔑',
       url: '/apps',
       description: '申请访问密钥',
       requireAuth: true,
@@ -207,7 +200,7 @@ export function HomePage() {
   const debugApps = [
     {
       name: 'Null Definition',
-      emoji: '�',
+      emoji: '🈲',
       url: '/scoresheet/',
       description: '暂时未定义功能',
       isStatic: true
