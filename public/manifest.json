@@ -13,17 +13,7 @@
   "start_url": "/?utm_source=homescreen",
   "icons": [
     {
-      "src": "/assets/images/icons/icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/assets/images/icons/icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "/vite.svg",
+      "src": "/assets/images/icons/emblem2.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }
