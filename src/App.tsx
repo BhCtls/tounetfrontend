@@ -14,7 +14,6 @@ import { DownloadOrderPage } from './pages/DownloadOrderPage';
 import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { LicensePage } from './pages/LicensePage';
 import { SponsorPage } from './pages/SponsorPage';
-import { OngekiCardPreviewPage } from './pages/OngekiCardPreviewPage';
 import FreedomConstPage from './pages/FreedomConstPage';
 import { AppLauncherPage } from './pages/AppLauncherPage';
 
@@ -75,7 +74,6 @@ function App() {
               <Route path="/announcements" element={<AnnouncementsPage />} />
               <Route path="/license" element={<LicensePage />} />
               <Route path="/sponsor" element={<SponsorPage />} />
-              <Route path="/card-preview" element={<OngekiCardPreviewPage />} />
               <Route path="/freedom-const" element={<FreedomConstPage />} />
             </Routes>
           </Router>

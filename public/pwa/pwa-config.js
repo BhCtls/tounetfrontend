@@ -55,8 +55,8 @@ class PWATools {
   async sendNotification(title, options = {}) {
     if (PWAConfig.notifications.permission === 'granted') {
       const notification = new Notification(title, {
-        icon: '/icon.png',
-        badge: '/icon.png',
+        icon: '/assets/images/icons/emblem2.svg',
+        badge: '/assets/images/icons/emblem2.svg',
         ...options
       });
       
