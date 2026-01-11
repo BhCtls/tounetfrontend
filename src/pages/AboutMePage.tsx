@@ -47,7 +47,7 @@ export function AboutMePage() {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row items-center gap-5 mb-4">
             <img 
-              src="/assets/images/icons/emblem2.svg" 
+              src="/assets/images/icons/icon.png" 
               alt="Profile Icon"
               className="w-[100px] h-[100px] rounded-full"
             />
