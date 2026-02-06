@@ -43,6 +43,9 @@ export interface BlockItem {
   fontSize?: number;
   textOffsetY?: number;
   isRainbow?: boolean;
+  // Position offsets for Edit Mode
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export interface ConstBlock {
