@@ -6,6 +6,16 @@ export function ErrorBoundary({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     const handleError = (event: ErrorEvent) => {
+      // 忽略常见的非关键性错误
+      if (
+        event.message === 'Script error.' || 
+        event.message.includes('Script error') ||
+        event.message.includes('ResizeObserver loop')
+      ) {
+        console.warn('Ignored non-critical error:', event.message);
+        return;
+      }
+
       setHasError(true);
       setError(new Error(event.message));
       console.error('Global error caught:', event.error);
