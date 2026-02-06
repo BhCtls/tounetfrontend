@@ -4,11 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, ArrowLeft } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { authApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
+import { AuthPageLayout } from '../components/AuthPageLayout';
 
 const registerSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters'),
@@ -39,7 +40,7 @@ export function RegisterPage() {
       setSuccess('Account created successfully! Please login.');
       setTimeout(() => navigate('/login'), 2000);
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       setError(error.response?.data?.message || 'Registration failed');
     },
   });
@@ -54,124 +55,106 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 relative"
-          style={{ 
-        backgroundImage: 'url(/assets/images/backgrounds/bg6.png)',
-        backgroundColor: '#f2f2f2'
-      }}
+    <AuthPageLayout
+      icon={<UserPlus className="h-12 w-12" />}
+      title="用户注册"
+      subtitle={
+        <>
+          Or{' '}
+          <Link
+            to="/login"
+            className="font-medium text-primary-600 hover:text-primary-500"
+          >
+            已有账号？点此登陆
+          </Link>
+        </>
+      }
     >
-      {/* Back to Home Button */}
-      <button
-        onClick={() => navigate('/')}
-        className="fixed top-5 left-5 z-50 flex items-center gap-2 bg-white/90 backdrop-blur-sm text-blue-600 px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 hover:text-white transition-all"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        返回主页
-      </button>
-
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <UserPlus className="mx-auto h-12 w-12 text-primary-600" />
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            用户注册
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Or{' '}
-            <Link
-              to="/login"
-              className="font-medium text-primary-600 hover:text-primary-500"
-            >
-              已有账号？点此登陆
-            </Link>
-          </p>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>注册</CardTitle>
-            <CardDescription>
-              创建新TouNet账号
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {error && (
-                <div className="rounded-md bg-red-50 p-4">
-                  <div className="text-sm text-red-700">{error}</div>
-                </div>
-              )}
-
-              {success && (
-                <div className="rounded-md bg-green-50 p-4">
-                  <div className="text-sm text-green-700">{success}</div>
-                </div>
-              )}
-
-              <Input
-                label="Username"
-                {...register('username')}
-                error={errors.username?.message}
-                placeholder="Enter your username（其实可以中文）"
-              />
-
-              <Input
-                label="Password"
-                type="password"
-                {...register('password')}
-                error={errors.password?.message}
-                placeholder="Enter your password"
-              />
-
-              <Input
-                label="Phone Number"
-                {...register('phone')}
-                error={errors.phone?.message}
-                placeholder="13800138000（必填，无需提供真实手机号）"
-              />
-
-              <Input
-                label="PushDeer Token"
-                {...register('pushdeer_token')}
-                error={errors.pushdeer_token?.message}
-                placeholder="PUSHDEER_XXXXXXXXX（可选）"
-              />
-
-              <Input
-                label="Invite Code"
-                {...register('invite_code')}
-                error={errors.invite_code?.message}
-                placeholder="Enter your invite code"
-              />
-
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={registerMutation.isPending}
-              >
-                {registerMutation.isPending ? 'Creating account...' : 'Create account'}
-              </Button>
-            </form>
-
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">
-                    这个地方css写的太好不想删了
-                  </span>
-                </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>注册</CardTitle>
+          <CardDescription>
+            创建新TouNet账号
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {error && (
+              <div className="rounded-md bg-red-50 p-4">
+                <div className="text-sm text-red-700">{error}</div>
               </div>
-              <div className="mt-2 text-xs text-gray-500 text-center">
-                <code className="bg-gray-100 px-1 rounded">Powered by Vite+ts+React</code>
-                <br />
-                <code className="bg-gray-100 px-1 rounded">Code by Claude Sonnet 4.0</code>
+            )}
+
+            {success && (
+              <div className="rounded-md bg-green-50 p-4">
+                <div className="text-sm text-green-700">{success}</div>
+              </div>
+            )}
+
+            <Input
+              label="Username"
+              {...register('username')}
+              error={errors.username?.message}
+              placeholder="Enter your username（其实可以中文）"
+            />
+
+            <Input
+              label="Password"
+              type="password"
+              {...register('password')}
+              error={errors.password?.message}
+              placeholder="Enter your password"
+            />
+
+            <Input
+              label="Phone Number"
+              {...register('phone')}
+              error={errors.phone?.message}
+              placeholder="13800138000（必填，无需提供真实手机号）"
+            />
+
+            <Input
+              label="PushDeer Token"
+              {...register('pushdeer_token')}
+              error={errors.pushdeer_token?.message}
+              placeholder="PUSHDEER_XXXXXXXXX（可选）"
+            />
+
+            <Input
+              label="Invite Code"
+              {...register('invite_code')}
+              error={errors.invite_code?.message}
+              placeholder="Enter your invite code"
+            />
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={registerMutation.isPending}
+            >
+              {registerMutation.isPending ? 'Creating account...' : 'Create account'}
+            </Button>
+          </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  这个地方css写的太好不想删了
+                </span>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+            <div className="mt-2 text-xs text-gray-500 text-center">
+              <code className="bg-gray-100 px-1 rounded">Powered by Vite+ts+React</code>
+              <br />
+              <code className="bg-gray-100 px-1 rounded">Code by Claude Sonnet 4.0</code>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </AuthPageLayout>
   );
 }
