@@ -61,6 +61,8 @@ export default function FreedomConstPage() {
   const [isTitleTruncated, setIsTitleTruncated] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  const cleanupDragRef = useRef<(() => void) | null>(null);
+  const lastDragUpdateRef = useRef<number>(0);
 
   // Fetch data on mount
   useEffect(() => {
@@ -91,6 +93,16 @@ export default function FreedomConstPage() {
     };
     fetchData();
   }, []);
+
+  // Clean up drag listeners when edit mode changes or component unmounts
+  useEffect(() => {
+    return () => {
+      if (cleanupDragRef.current) {
+        cleanupDragRef.current();
+        cleanupDragRef.current = null;
+      }
+    };
+  }, [isEditMode]);
 
   // Filter songs
   const filteredSongs = data[activeGame].filter(song => {
@@ -227,6 +239,11 @@ export default function FreedomConstPage() {
     const startY = e.clientY;
 
     const onMouseMove = (moveEvent: MouseEvent) => {
+      // Throttle updates to ~60fps for performance
+      const now = Date.now();
+      if (now - lastDragUpdateRef.current < 16) return;
+      lastDragUpdateRef.current = now;
+
       const deltaX = moveEvent.clientX - startX;
       const deltaY = moveEvent.clientY - startY;
 
@@ -239,7 +256,11 @@ export default function FreedomConstPage() {
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+      cleanupDragRef.current = null;
     };
+
+    // Store cleanup function for emergency cleanup
+    cleanupDragRef.current = onMouseUp;
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
@@ -261,6 +282,12 @@ export default function FreedomConstPage() {
 
     const onTouchMove = (moveEvent: TouchEvent) => {
       if (moveEvent.cancelable) moveEvent.preventDefault(); // Prevent scrolling
+
+      // Throttle updates to ~60fps for performance
+      const now = Date.now();
+      if (now - lastDragUpdateRef.current < 16) return;
+      lastDragUpdateRef.current = now;
+
       const deltaX = moveEvent.touches[0].clientX - startX;
       const deltaY = moveEvent.touches[0].clientY - startY;
 
@@ -273,7 +300,11 @@ export default function FreedomConstPage() {
     const onTouchEnd = () => {
       document.removeEventListener('touchmove', onTouchMove);
       document.removeEventListener('touchend', onTouchEnd);
+      cleanupDragRef.current = null;
     };
+
+    // Store cleanup function for emergency cleanup
+    cleanupDragRef.current = onTouchEnd;
 
     document.addEventListener('touchmove', onTouchMove, { passive: false });
     document.addEventListener('touchend', onTouchEnd);
@@ -318,6 +349,17 @@ export default function FreedomConstPage() {
               div.style.paddingTop = textarea.style.paddingTop;
             }
             textarea.parentNode?.replaceChild(div, textarea);
+          });
+
+          // Ensure contentEditable elements have their latest edited content
+          const originalEditableElements = document.querySelectorAll<HTMLElement>('[contenteditable="true"]');
+          const clonedEditableElements = clonedDoc.querySelectorAll<HTMLElement>('[contenteditable="true"]');
+
+          clonedEditableElements.forEach((editable, index) => {
+            const original = originalEditableElements[index];
+            if (original) {
+              editable.innerHTML = original.innerHTML;
+            }
           });
         }
       } as any);
@@ -373,8 +415,7 @@ export default function FreedomConstPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Sidebar */}
-            {/* Left Sidebar */}
-            <div className="lg:col-span-1 space-y-6 sticky top-24 self-start">
+            <div className="lg:col-span-1 space-y-6 sticky top-32 lg:top-24 self-start">
               <div className="bg-white/60 rounded-xl p-4 space-y-4 shadow-sm border border-white/50">
                 <h2 className="text-xl font-bold text-gray-800">设置</h2>
 
@@ -411,6 +452,7 @@ export default function FreedomConstPage() {
                     onClick={() => setIsEditMode(!isEditMode)}
                     className={`flex-none px-3 border ${isEditMode ? 'bg-blue-100 text-blue-600 border-blue-200' : 'bg-white/50 text-gray-700 border-gray-200'} hover:bg-white/80`}
                     title={isEditMode ? "退出编辑模式" : "进入编辑模式"}
+                    aria-label={isEditMode ? "退出编辑模式" : "进入编辑模式"}
                   >
                     <Pen size={16} />
                   </Button>
@@ -832,8 +874,9 @@ export default function FreedomConstPage() {
                                           contentEditable={!isEditMode}
                                           suppressContentEditableWarning
                                           className={`text-[10px] text-center mt-1 leading-normal outline-none focus:bg-yellow-50 rounded px-1 pb-0.5 ${isTitleTruncated ? 'truncate w-full' : ''} ${isEditMode ? 'select-none pointer-events-none' : ''}`}
+                                          onBlur={(e) => handleUpdateItem(block.id, item.id, { title: e.currentTarget.innerText })}
                                         >
-                                          {item.song?.title || 'Title'}
+                                          {item.title ?? item.song?.title ?? 'Title'}
                                         </div>
                                       </>
                                     ) : item.type === 'empty' ? (

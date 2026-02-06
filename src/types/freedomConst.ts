@@ -32,6 +32,7 @@ export interface BlockItem {
   id: string;
   type: 'song' | 'blank' | 'fake' | 'empty' | 'text' | 'separator';
   text?: string;
+  title?: string;  // Custom title override for song items
   song?: SongData;
   game?: GameType;
   difficulty?: string; // 'bas', 'adv', 'exp', 'mas', 'ult', etc.

@@ -3,16 +3,22 @@ import React from 'react';
 export function ErrorBoundary({ children }: { children: React.ReactNode }) {
   const [hasError, setHasError] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
+  const ignoredErrorCountRef = React.useRef(0);
 
   React.useEffect(() => {
     const handleError = (event: ErrorEvent) => {
       // 忽略常见的非关键性错误
       if (
-        event.message === 'Script error.' || 
+        event.message === 'Script error.' ||
         event.message.includes('Script error') ||
         event.message.includes('ResizeObserver loop')
       ) {
-        console.warn('Ignored non-critical error:', event.message);
+        ignoredErrorCountRef.current += 1;
+        console.warn(
+          'Ignored non-critical error:',
+          event.message,
+          `(Total ignored: ${ignoredErrorCountRef.current})`
+        );
         return;
       }
 
