@@ -1,29 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Shield, Check, X } from 'lucide-react';
+import { Shield, Check, X } from 'lucide-react';
+import { PageLayout } from '../components/PageLayout';
+import { PageCard } from '../components/PageCard';
 
 export function LicensePage() {
-  const navigate = useNavigate();
-
   return (
-    <div 
-      className="min-h-screen bg-cover bg-top bg-no-repeat font-fwqingyin"
-      style={{ 
-        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)',
-        backgroundColor: '#f2f2f2'
-      }}
-    >
-      {/* Back Link */}
-      <button
-        onClick={() => navigate('/')}
-        className="fixed top-5 left-5 bg-white/90 text-[#667eea] px-4 py-2.5 rounded-[20px] backdrop-blur-md shadow-lg z-50 hover:bg-[#667eea] hover:text-white transition-colors flex items-center gap-1 no-underline"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        返回主页
-      </button>
-
+    <PageLayout backgroundImage="bg3.png">
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-[#e0e0e0]/90 backdrop-blur-sm rounded-[15px] p-8 max-w-[900px] mx-auto shadow-lg relative">
-          
+        <PageCard>
           {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#2c3e50] mb-2">License Information</h1>
@@ -93,9 +76,8 @@ export function LicensePage() {
           <div className="mt-8 p-4 bg-[#ecf0f1] rounded-lg text-gray-600 italic text-sm">
             Note: This license information applies to projects hosted on this domain and related repositories unless otherwise specified in the project's specific license file.
           </div>
-
-        </div>
+        </PageCard>
       </div>
-    </div>
+    </PageLayout>
   );
 }

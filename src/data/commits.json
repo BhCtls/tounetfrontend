@@ -1,5 +1,77 @@
 [
   {
+    "hash": "478916a",
+    "date": "2026-02-10",
+    "message": "css层抽象",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "9a5c56e",
+    "date": "2026-02-06",
+    "message": "feat: Introduce new page layout components, remove Ongeki card preview, and enhance Freedom Const page drag and export functionality.",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "8c21a0e",
+    "date": "2026-02-06",
+    "message": "FreedomConstPage V1.0.0 所有问题均已修复，所有功能均已追加，体验/ui问题也得到解决。",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "a887035",
+    "date": "2026-01-11",
+    "message": "script error错误修正 FRP系统稳定性提升",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "b7cb6e6",
+    "date": "2026-01-11",
+    "message": "换成了朱莉icon",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "9517efb",
+    "date": "2026-01-05",
+    "message": "将CardPreview安全移除。将emblem2作为网页和pwa应用的icon",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "760584c",
+    "date": "2026-01-01",
+    "message": "删去了硬编码的nanobanana",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "5393edf",
+    "date": "2026-01-01",
+    "message": "紧急去除了登录才能访问应用的alert",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "b8bbfa6",
+    "date": "2025-12-31",
+    "message": "增加了一个统一的鉴权页面",
+    "author": "XiaHua"
+  },
+  {
+    "hash": "1a618e0",
+    "date": "2025-12-31",
+    "message": "跳转页鉴权设计",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "3e18430",
+    "date": "2025-12-31",
+    "message": "模板优化",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "95d5c60",
+    "date": "2025-12-28",
+    "message": "Merge pull request #3 from BhCtls/dev-feature",
+    "author": "XiaHua"
+  },
+  {
     "hash": "cf8af7b",
     "date": "2025-12-28",
     "message": "Ready for merging to main",
@@ -22,6 +94,12 @@
     "date": "2025-12-28",
     "message": "新版自由定数表（不太自由但比较新）",
     "author": "BhCtls"
+  },
+  {
+    "hash": "0cfd16c",
+    "date": "2025-12-27",
+    "message": "Merge pull request #2 from BhCtls/dev-feature",
+    "author": "XiaHua"
   },
   {
     "hash": "2e2e124",
@@ -219,12 +297,6 @@
     "hash": "a8d3f56",
     "date": "2025-06-30",
     "message": "权限更新",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "2c2a053",
-    "date": "2025-06-29",
-    "message": "tounet frontend",
     "author": "BhCtls"
   }
 ]

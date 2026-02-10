@@ -410,7 +410,7 @@ export default function FreedomConstPage() {
               <ImageIcon className="w-8 h-8" />
               定数表生成
             </h1>
-            <p className="text-gray-500 text-sm mt-2 font-sans">自定义生成定数表 / Freedom Const Generator Clone</p>
+            <p className="text-gray-500 text-sm mt-2 font-sans">自定义生成定数表 / 目前暂不支持手机端！</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

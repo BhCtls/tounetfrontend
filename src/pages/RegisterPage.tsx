@@ -7,9 +7,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
 import { authApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { AuthPageLayout } from '../components/AuthPageLayout';
+import { Alert } from '../components/ui/Alert';
+import { FormField } from '../components/ui/FormField';
 
 const registerSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters'),
@@ -80,25 +81,21 @@ export function RegisterPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
-              <div className="rounded-md bg-red-50 p-4">
-                <div className="text-sm text-red-700">{error}</div>
-              </div>
+              <Alert variant="error">{error}</Alert>
             )}
 
             {success && (
-              <div className="rounded-md bg-green-50 p-4">
-                <div className="text-sm text-green-700">{success}</div>
-              </div>
+              <Alert variant="success">{success}</Alert>
             )}
 
-            <Input
+            <FormField
               label="Username"
               {...register('username')}
               error={errors.username?.message}
               placeholder="Enter your username（其实可以中文）"
             />
 
-            <Input
+            <FormField
               label="Password"
               type="password"
               {...register('password')}
@@ -106,21 +103,21 @@ export function RegisterPage() {
               placeholder="Enter your password"
             />
 
-            <Input
+            <FormField
               label="Phone Number"
               {...register('phone')}
               error={errors.phone?.message}
               placeholder="13800138000（必填，无需提供真实手机号）"
             />
 
-            <Input
+            <FormField
               label="PushDeer Token"
               {...register('pushdeer_token')}
               error={errors.pushdeer_token?.message}
               placeholder="PUSHDEER_XXXXXXXXX（可选）"
             />
 
-            <Input
+            <FormField
               label="Invite Code"
               {...register('invite_code')}
               error={errors.invite_code?.message}

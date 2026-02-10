@@ -3,9 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { userApi, nkeyApi } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { StatusPage } from '../components/StatusPage';
 
 interface ApiError extends Error {
   response?: {
@@ -105,48 +103,30 @@ export function AppLauncherPage() {
   // Show loading if user or appId not ready
   if (!user || !appId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
-        <Card className="w-full max-w-md">
-          <CardContent className="flex flex-col items-center justify-center space-y-6 py-6">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
-            <p className="text-gray-500 dark:text-gray-400 animate-pulse">
-              Checking authentication...
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <StatusPage
+        status="loading"
+        loadingText="Checking authentication..."
+      />
+    );
+  }
+
+  if (error) {
+    return (
+      <StatusPage
+        status="error"
+        title="Launch Failed"
+        message={error}
+        onBack={handleBack}
+        backText="Return to Dashboard"
+      />
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-center">
-            {error ? 'Launch Failed' : 'Launching Application'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center space-y-6 py-6">
-          {error ? (
-            <>
-              <div className="text-red-500 flex flex-col items-center">
-                <AlertCircle className="h-12 w-12 mb-2" />
-                <p className="text-center">{error}</p>
-              </div>
-              <Button onClick={handleBack} variant="outline" className="w-full">
-                Return to Dashboard
-              </Button>
-            </>
-          ) : (
-            <>
-              <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
-              <p className="text-gray-500 dark:text-gray-400 animate-pulse">
-                {status}
-              </p>
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    <StatusPage
+      status="loading"
+      title="Launching Application"
+      loadingText={status}
+    />
   );
 }
