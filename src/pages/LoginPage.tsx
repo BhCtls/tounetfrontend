@@ -8,9 +8,10 @@ import { LogIn } from 'lucide-react';
 import { authApi } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { AuthPageLayout } from '../components/AuthPageLayout';
+import { Alert } from '../components/ui/Alert';
+import { FormField } from '../components/ui/FormField';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -74,19 +75,17 @@ export function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {error && (
-              <div className="rounded-md bg-red-50 p-4">
-                <div className="text-sm text-red-700">{error}</div>
-              </div>
+              <Alert variant="error">{error}</Alert>
             )}
 
-            <Input
+            <FormField
               label="Username"
               {...register('username')}
               error={errors.username?.message}
               placeholder="Enter your username"
             />
 
-            <Input
+            <FormField
               label="Password"
               type="password"
               {...register('password')}

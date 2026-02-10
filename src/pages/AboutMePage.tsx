@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import { PageLayout } from '../components/PageLayout';
+import { PageCard } from '../components/PageCard';
 
 export function AboutMePage() {
-  const navigate = useNavigate();
   const [showContact, setShowContact] = useState(false);
   const [selectedAchievement, setSelectedAchievement] = useState<{src: string, title: string, desc: string} | null>(null);
 
@@ -20,33 +20,18 @@ export function AboutMePage() {
   ];
 
   return (
-    <div 
-      className="page-background"
-      style={{ 
-        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)'
-      }}
-    >
-      {/* Back Link */}
-      <button
-        onClick={() => navigate('/')}
-        className="back-button"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        返回主页
-      </button>
-
+    <PageLayout backgroundImage="bg3.png">
       <div className="container mx-auto px-4 py-12">
-        <div className="container-main">
-          
+        <PageCard>
           {/* Title */}
-          <div className="title-container">
+          <div className="flex justify-center text-[#6495ed] drop-shadow-[1px_1px_1px_darkgray] mb-5">
             <h1 className="text-3xl font-bold">关于透明</h1>
           </div>
 
           {/* Header Section */}
           <div className="flex flex-col md:flex-row items-center gap-5 mb-4">
-            <img 
-              src="/assets/images/icons/icon.png" 
+            <img
+              src="/assets/images/icons/icon.png"
               alt="Profile Icon"
               className="w-[100px] h-[100px] rounded-full"
             />
@@ -101,7 +86,7 @@ export function AboutMePage() {
                 <span className="text-red-600 font-bold text-[110%] mx-1">待人刻薄者</span>
                 也不建议加好友。
               </p>
-              <div 
+              <div
                 className="bg-[#fffbe6] rounded-[10px] px-[14px] py-[8px] text-[#b08a00] inline-block mt-2 cursor-pointer hover:opacity-80"
                 onClick={() => window.open('/assets/images/kl/kl_image.png')}
               >
@@ -114,14 +99,14 @@ export function AboutMePage() {
               <h2 className="text-xl font-bold mb-2">成就解锁（点看大图）</h2>
               <div className="grid grid-cols-3 gap-2">
                 {achievements.map((item, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className="aspect-square cursor-pointer overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white"
                     onClick={() => setSelectedAchievement(item)}
                   >
-                    <img 
-                      src={item.src} 
-                      alt={item.title} 
+                    <img
+                      src={item.src}
+                      alt={item.title}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                     />
                   </div>
@@ -132,7 +117,7 @@ export function AboutMePage() {
 
           {/* Contact Toggle Button (Collapsed) */}
           {!showContact && (
-            <div 
+            <div
               className="absolute bottom-[60%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer w-[30px] text-center leading-[1.2] font-fwqingyin hover:bg-pink-400 transition-colors"
               onClick={() => setShowContact(true)}
             >
@@ -144,14 +129,14 @@ export function AboutMePage() {
 
           {/* Contact Container (Expanded) */}
           {showContact && (
-            <div 
+            <div
               className="absolute bottom-[50%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer font-fwqingyin z-10 shadow-lg"
               onClick={() => setShowContact(false)}
             >
               <p className="text-[60%] text-center mb-1">＞＞＞＞关闭＞＞＞＞</p>
               <p className="mb-1">
                 B站：
-                <span 
+                <span
                   className="text-blue-600 cursor-pointer hover:underline"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -163,7 +148,7 @@ export function AboutMePage() {
               </p>
               <p className="mb-1">
                 QQ:
-                <span 
+                <span
                   className="text-blue-600 cursor-pointer hover:underline"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -173,49 +158,49 @@ export function AboutMePage() {
                   1084701403
                 </span>
               </p>
-              <img 
-                src="/assets/images/kl/qr.jpg" 
-                alt="点击下载扩列二维码" 
+              <img
+                src="/assets/images/kl/qr.jpg"
+                alt="点击下载扩列二维码"
                 className="w-[170px] h-[170px] bg-white"
               />
             </div>
           )}
-        </div>
+        </PageCard>
       </div>
 
       {/* Achievement Modal */}
       {selectedAchievement && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 font-fwqingyin"
           onClick={() => setSelectedAchievement(null)}
         >
-          <div 
+          <div
             className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative animate-in fade-in zoom-in duration-200"
             onClick={e => e.stopPropagation()}
           >
-            <button 
+            <button
               onClick={() => setSelectedAchievement(null)}
               className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
-            
+
             <h3 className="text-2xl font-bold mb-4 pr-10">{selectedAchievement.title}</h3>
-            
+
             <div className="mb-6 rounded-lg overflow-hidden bg-gray-50 flex justify-center border border-gray-100">
-              <img 
-                src={selectedAchievement.src} 
-                alt={selectedAchievement.title} 
+              <img
+                src={selectedAchievement.src}
+                alt={selectedAchievement.title}
                 className="max-h-[60vh] w-auto object-contain"
               />
             </div>
-            
+
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="text-gray-700 text-lg leading-relaxed">{selectedAchievement.desc}</p>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

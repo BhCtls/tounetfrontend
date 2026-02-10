@@ -1,28 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Shield, Check, X } from 'lucide-react';
+import { Shield, Check, X } from 'lucide-react';
+import { PageLayout } from '../components/PageLayout';
+import { PageCard } from '../components/PageCard';
 
 export function LicensePage() {
-  const navigate = useNavigate();
-
   return (
-    <div 
-      className="page-background"
-      style={{ 
-        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)'
-      }}
-    >
-      {/* Back Link */}
-      <button
-        onClick={() => navigate('/')}
-        className="back-button"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        返回主页
-      </button>
-
+    <PageLayout backgroundImage="bg3.png">
       <div className="container mx-auto px-4 py-12">
-        <div className="container-main-lg">
-          
+        <PageCard>
           {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#2c3e50] mb-2">License Information</h1>
@@ -31,7 +15,7 @@ export function LicensePage() {
 
           <div className="space-y-6">
             {/* Pure HTML Projects */}
-            <div className="card-license-allowed">
+            <div className="bg-[#f8f9fa] rounded-r-lg border-l-4 border-[#27ae60] p-6 shadow-sm">
               <h2 className="text-xl font-bold text-[#2c3e50] mb-3 flex items-center gap-2">
                 <Shield className="w-5 h-5 text-[#27ae60]" />
                 Pure HTML Projects
@@ -50,7 +34,7 @@ export function LicensePage() {
             </div>
 
             {/* Other Open Source Projects */}
-            <div className="card-license-warning">
+            <div className="bg-[#f8f9fa] rounded-r-lg border-l-4 border-[#f39c12] p-6 shadow-sm">
               <h2 className="text-xl font-bold text-[#2c3e50] mb-3 flex items-center gap-2">
                 <Shield className="w-5 h-5 text-[#f39c12]" />
                 Other Open Source Projects
@@ -92,9 +76,8 @@ export function LicensePage() {
           <div className="mt-8 p-4 bg-[#ecf0f1] rounded-lg text-gray-600 italic text-sm">
             Note: This license information applies to projects hosted on this domain and related repositories unless otherwise specified in the project's specific license file.
           </div>
-
-        </div>
+        </PageCard>
       </div>
-    </div>
+    </PageLayout>
   );
 }

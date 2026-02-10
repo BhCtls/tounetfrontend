@@ -15,25 +15,26 @@ export function AnnouncementsPage() {
 
   return (
     <div 
-      className="page-background"
+      className="min-h-screen bg-cover bg-top bg-no-repeat font-fwqingyin"
       style={{ 
-        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)'
+        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)',
+        backgroundColor: '#f2f2f2'
       }}
     >
       {/* Back Link */}
       <button
         onClick={() => navigate('/')}
-        className="back-button"
+        className="fixed top-5 left-5 bg-white/90 text-[#667eea] px-4 py-2.5 rounded-[20px] backdrop-blur-md shadow-lg z-50 hover:bg-[#667eea] hover:text-white transition-colors flex items-center gap-1 no-underline"
       >
         <ArrowLeft className="w-4 h-4" />
         返回主页
       </button>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="container-main-lg">
+        <div className="bg-[#e0e0e0]/90 backdrop-blur-sm rounded-[15px] p-5 max-w-[900px] mx-auto shadow-lg relative">
           
           {/* Title */}
-          <div className="title-container-lg">
+          <div className="flex justify-center text-[#6495ed] drop-shadow-[1px_1px_1px_darkgray] mb-8">
             <h1 className="text-3xl font-bold">更新公告</h1>
           </div>
 

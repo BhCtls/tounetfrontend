@@ -9,9 +9,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Loading } from '../components/ui/Loading';
-import { Key, User, ArrowLeft, Copy, Check, RefreshCw, Smartphone } from 'lucide-react';
+import { Key, User, Copy, Check, RefreshCw, Smartphone } from 'lucide-react';
 import { copyToClipboard } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { PageLayout } from '../components/PageLayout';
+import { PageHeader } from '../components/PageHeader';
 
 const updateProfileSchema = z.object({
   phone: z.string().min(10, 'Phone number is required'),
@@ -76,7 +78,7 @@ export function AppsPage() {
 
   const onGenerateNKey = async (data: GenerateNKeyForm) => {
     const isTrusted = user?.status === 'trusted' || user?.status === 'admin';
-    
+
     try {
       let response;
       if (isTrusted) {
@@ -90,7 +92,7 @@ export function AppsPage() {
           app_ids: data.app_ids.split(',').map(id => id.trim()),
         });
       }
-      
+
       setGeneratedNKey(response.data.nkey);
       generateNKeyForm.reset({
         username: isTrusted ? '' : user?.username || '',
@@ -112,13 +114,13 @@ export function AppsPage() {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
+
       const response = await fetch(url, {
         method: 'HEAD',
         mode: 'cors',
         signal: controller.signal,
       });
-      
+
       clearTimeout(timeoutId);
       return response.status >= 200 && response.status < 404;
     } catch (error) {
@@ -129,9 +131,9 @@ export function AppsPage() {
   const checkAppStatus = async (appId: string, url: string) => {
     setAppStatus(prev => ({ ...prev, [appId]: 'checking' }));
     const isOnline = await pingUrl(url);
-    setAppStatus(prev => ({ 
-      ...prev, 
-      [appId]: isOnline ? 'online' : 'offline' 
+    setAppStatus(prev => ({
+      ...prev,
+      [appId]: isOnline ? 'online' : 'offline'
     }));
   };
 
@@ -141,7 +143,7 @@ export function AppsPage() {
     }
 
     setAccessingApp(appId);
-    
+
     try {
       const response = await nkeyApi.generate({
         username: [user.username],
@@ -164,30 +166,20 @@ export function AppsPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{
-      backgroundColor: '#f2f2f2',
-      backgroundImage: 'url("assets/images/backgrounds/bg.png")',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'top',
-      backgroundSize: 'cover',
-      backgroundAttachment: 'fixed'
-    }}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm shadow-sm">
-        <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={() => navigate('/')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            返回主页
-          </Button>
-          <h1 className="text-2xl font-bold text-gray-900" style={{
-            fontFamily: 'FWQingYin, Arial, sans-serif'
-          }}>应用管理</h1>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-700">
-          <User className="w-4 h-4" />
-          {user?.username}
-        </div>
-      </div>
+    <PageLayout backgroundImage="bg.png">
+      <PageHeader
+        title="应用管理"
+        subtitle={user?.username}
+        showBack
+        backText="返回主页"
+        onBack={() => navigate('/')}
+        actions={
+          <div className="flex items-center gap-2 text-sm text-gray-700">
+            <User className="w-4 h-4" />
+            <span>{user?.username}</span>
+          </div>
+        }
+      />
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
         {/* Apps Grid in Index.html Style */}
@@ -199,7 +191,7 @@ export function AppsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div 
+            <div
               className="grid gap-5 p-5"
               style={{
                 gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
@@ -220,28 +212,28 @@ export function AppsPage() {
                   <div className="flex items-center justify-between w-full mb-2">
                     <span className="text-xl">{app.emoji || '🎮'}</span>
                     <div className={`w-2 h-2 rounded-full ${
-                      !app.url 
+                      !app.url
                         ? 'bg-gray-400'
-                        : appStatus[app.app_id] === 'checking' 
+                        : appStatus[app.app_id] === 'checking'
                           ? 'bg-yellow-400 animate-pulse'
-                          : appStatus[app.app_id] === 'online' 
+                          : appStatus[app.app_id] === 'online'
                             ? 'bg-green-400'
                             : 'bg-red-400'
                     }`} />
                   </div>
-                  
+
                   <span className="text-sm mb-2">{app.name}</span>
                   <span className="text-xs text-gray-600 bg-blue-100 px-2 py-1 rounded-full">
                     {app.app_id}
                   </span>
-                  
+
                   {accessingApp === app.app_id && (
                     <div className="mt-2 flex items-center gap-1">
                       <div className="animate-spin w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full"></div>
                       <span className="text-xs">登录中...</span>
                     </div>
                   )}
-                  
+
                   {app.url && (
                     <div className="mt-2 flex gap-1">
                       <Button
@@ -320,7 +312,7 @@ export function AppsPage() {
                 )}
               </CardTitle>
               <CardDescription>
-                {(user?.status === 'trusted' || user?.status === 'admin') 
+                {(user?.status === 'trusted' || user?.status === 'admin')
                   ? '为任何用户及其应用生成临时访问密钥'
                   : '为您的应用生成临时访问密钥'
                 }
@@ -330,16 +322,16 @@ export function AppsPage() {
               <form onSubmit={generateNKeyForm.handleSubmit(onGenerateNKey)} className="space-y-4">
                 <Input
                   label={
-                    (user?.status === 'trusted' || user?.status === 'admin') 
-                      ? "目标用户名" 
+                    (user?.status === 'trusted' || user?.status === 'admin')
+                      ? "目标用户名"
                       : "用户名"
                   }
                   {...generateNKeyForm.register('username')}
                   error={generateNKeyForm.formState.errors.username?.message}
                   readOnly={!(user?.status === 'trusted' || user?.status === 'admin')}
                   placeholder={
-                    (user?.status === 'trusted' || user?.status === 'admin') 
-                      ? "输入任何用户名" 
+                    (user?.status === 'trusted' || user?.status === 'admin')
+                      ? "输入任何用户名"
                       : user?.username
                   }
                 />
@@ -385,6 +377,6 @@ export function AppsPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
