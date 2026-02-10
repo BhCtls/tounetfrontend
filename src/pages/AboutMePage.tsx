@@ -21,26 +21,25 @@ export function AboutMePage() {
 
   return (
     <div 
-      className="min-h-screen bg-cover bg-top bg-no-repeat font-fwqingyin"
+      className="page-background"
       style={{ 
-        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)',
-        backgroundColor: '#f2f2f2'
+        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)'
       }}
     >
       {/* Back Link */}
       <button
         onClick={() => navigate('/')}
-        className="fixed top-5 left-5 bg-white/90 text-[#667eea] px-4 py-2.5 rounded-[20px] backdrop-blur-md shadow-lg z-50 hover:bg-[#667eea] hover:text-white transition-colors flex items-center gap-1 no-underline"
+        className="back-button"
       >
         <ArrowLeft className="w-4 h-4" />
         返回主页
       </button>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-[#e0e0e0] rounded-[15px] p-5 max-w-[900px] mx-auto shadow-lg relative">
+        <div className="container-main">
           
           {/* Title */}
-          <div className="flex justify-center text-[#6495ed] drop-shadow-[1px_1px_1px_darkgray] mb-5">
+          <div className="title-container">
             <h1 className="text-3xl font-bold">关于透明</h1>
           </div>
 
@@ -64,7 +63,7 @@ export function AboutMePage() {
             <section>
               <h2 className="text-xl font-bold mb-2">兴趣爱好</h2>
               <p>喜欢音乐游戏(特别是街机)与写博客。编程未入门。美食和逛街也是我人生中不可或缺的部分。</p>
-              <p>SEGA三家平均游戏经验4年以上，三虹极曾达成。</p>
+              <p>SEGA三家平均游戏经验6年左右，三虹极曾达成。</p>
               <p>🚰SDVX vf17或帝，💿二寺sp初段，ub鸟了十几个10级，🎹钢琴机泼盆仅摸过。</p>
               <p>个人买一些周边专辑做收藏，不过我更青睐数字专辑。</p>
             </section>
@@ -73,14 +72,17 @@ export function AboutMePage() {
               <h2 className="text-xl font-bold mb-2">关于自推</h2>
               <p>
                 目前主推
-                <span className="text-[skyblue] font-bold text-[110%] mx-1">三角葵</span>
-                （如生命般激推），在推
+                <span className="text-[#EFBAA8] font-bold text-[110%] mx-1">南风野朱莉</span>
+                ，在推
+                <span className="text-[skyblue] font-bold text-[110%] mx-1">三角葵</span>，
+                <span className="text-[orange] font-bold text-[110%] mx-1">オランジェント</span>，
+                <span className="text-[purple] font-bold text-[110%] mx-1">水户雫</span>，
                 <span className="text-[lightskyblue] font-bold text-[110%] mx-1">双葉湊音</span>，
                 <span className="text-[#ff8cb8] font-bold text-[110%] mx-1">鳳ここな</span>。
                 喜欢玉桂狗视频。
               </p>
-              <p>您若是BlackY与onoken的粉丝，也欢迎与我交友！</p>
-              <p>如果您是我的同担，那么随时欢迎探讨推活事宜。若您有忌讳请提前考虑，我恐怕难以顾及所有忌讳。</p>
+              <p>您若是暴走p的粉丝，也欢迎与我交友！</p>
+              <p>欢迎正常人，正常的意思是发一大堆空间或者转发一大堆东西。</p>
               <p>自己虽年迈，但等待发现更多可爱且值得一推的生命!</p>
             </section>
 

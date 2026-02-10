@@ -28,6 +28,121 @@
   }
 }
 
+/* CSS 抽象层 - 统一样式定义 */
+@layer components {
+  /* ==================== 页面级样式 ==================== */
+  
+  /* 标准页面背景 - 用于大多数页面背景 */
+  .page-background {
+    @apply min-h-screen bg-cover bg-top bg-no-repeat font-fwqingyin;
+    background-color: #f2f2f2;
+  }
+
+  /* 固定背景（不随滚动） */
+  .page-background-fixed {
+    @apply min-h-screen bg-cover bg-top bg-no-repeat font-fwqingyin bg-fixed;
+    background-color: #f2f2f2;
+  }
+
+  /* ==================== 按钮样式 ==================== */
+  
+  /* 返回按钮 - 固定位置 */
+  .back-button {
+    @apply fixed top-5 left-5 bg-white/90 text-[#667eea] px-4 py-2.5 rounded-[20px] backdrop-blur-md shadow-lg z-50;
+    @apply hover:bg-[#667eea] hover:text-white transition-colors flex items-center gap-1 no-underline;
+  }
+
+  /* 一级操作按钮 */
+  .btn-primary-action {
+    @apply flex-1 flex items-center justify-center gap-2 bg-[#667eea] hover:bg-[#5a6fd6];
+    @apply rounded transition-colors;
+  }
+
+  /* 二级操作按钮 */
+  .btn-secondary-action {
+    @apply px-3 bg-white/50 hover:bg-white/80 text-gray-700 border border-gray-200;
+    @apply rounded transition-colors;
+  }
+
+  /* ==================== 容器/卡片样式 ==================== */
+  
+  /* 主容器 - 半透明灰色背景 */
+  .container-main {
+    @apply bg-[#e0e0e0] rounded-[15px] p-5 max-w-[900px] mx-auto shadow-lg relative;
+  }
+
+  /* 大型主容器 - 用于复杂内容 */
+  .container-main-lg {
+    @apply bg-[#e0e0e0]/95 backdrop-blur-sm rounded-[15px] p-6 max-w-[1400px] mx-auto shadow-lg relative;
+  }
+
+  /* 内容卡片 - 半透明白色 */
+  .card-content {
+    @apply bg-white/60 rounded-xl p-4 space-y-4 shadow-sm border border-white/50;
+  }
+
+  /* 许可证信息卡片 */
+  .card-license {
+    @apply bg-[#f8f9fa] rounded-r-lg border-l-4 p-6 shadow-sm;
+  }
+
+  /* 许可证卡片 - 成功状态（绿色） */
+  .card-license-allowed {
+    @apply card-license border-l-[#27ae60];
+  }
+
+  /* 许可证卡片 - 警告状态（橙色） */
+  .card-license-warning {
+    @apply card-license border-l-[#f39c12];
+  }
+
+  /* ==================== 文本和标题样式 ==================== */
+  
+  /* 页面主标题 */
+  .title-page {
+    @apply text-3xl font-bold;
+  }
+
+  /* 带阴影的标题容器 */
+  .title-container {
+    @apply flex flex-col items-center text-[#6495ed] drop-shadow-[1px_1px_1px_darkgray] mb-5;
+  }
+
+  /* 带阴影的大标题容器 */
+  .title-container-lg {
+    @apply flex flex-col items-center text-[#6495ed] drop-shadow-[1px_1px_1px_darkgray] mb-8;
+  }
+
+  /* 小节标题 */
+  .title-section {
+    @apply text-xl font-bold;
+  }
+
+  /* 彩色强调文本 */
+  .text-emphasis {
+    @apply font-bold text-[110%] mx-1;
+  }
+
+  /* ==================== 输入框和表单样式 ==================== */
+  
+  /* 亮色背景输入框 */
+  .input-light {
+    @apply bg-white/80;
+  }
+
+  /* ==================== 特殊效果样式 ==================== */
+  
+  /* 梯度背景 - 用于特殊强调 */
+  .bg-gradient-gaming {
+    @apply bg-gradient-to-br from-red-500 via-yellow-500 to-blue-500 text-white;
+  }
+
+  /* 下拉阴影效果 */
+  .shadow-text {
+    text-shadow: darkgray 1px 1px 1px;
+  }
+}
+
 /* 移动端适配样式 */
 @media (max-width: 768px) {
   .app-container {

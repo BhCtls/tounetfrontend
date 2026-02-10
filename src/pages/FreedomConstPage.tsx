@@ -386,38 +386,37 @@ export default function FreedomConstPage() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-top bg-no-repeat font-fwqingyin"
+      className="page-background"
       style={{
-        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)',
-        backgroundColor: '#f2f2f2'
+        backgroundImage: 'url(/assets/images/backgrounds/bg3.png)'
       }}
     >
       {/* Back Button */}
       <button
         onClick={() => navigate('/')}
-        className="fixed top-5 left-5 bg-white/90 text-[#667eea] px-4 py-2.5 rounded-[20px] backdrop-blur-md shadow-lg z-50 hover:bg-[#667eea] hover:text-white transition-colors flex items-center gap-1 no-underline"
+        className="back-button"
       >
         <ArrowLeft className="w-4 h-4" />
         返回主页
       </button>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="bg-[#e0e0e0]/95 backdrop-blur-sm rounded-[15px] p-6 max-w-[1400px] mx-auto shadow-lg relative">
+        <div className="container-main-lg">
 
           {/* Title */}
-          <div className="flex flex-col items-center text-[#6495ed] drop-shadow-[1px_1px_1px_darkgray] mb-8">
+          <div className="title-container-lg">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <ImageIcon className="w-8 h-8" />
               定数表生成
             </h1>
-            <p className="text-gray-500 text-sm mt-2 font-sans">自定义生成定数表 / Freedom Const Generator Clone</p>
+            <p className="text-gray-500 text-sm mt-2 font-sans">自定义生成定数表 / 目前暂不支持手机端！</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Sidebar */}
             <div className="lg:col-span-1 space-y-6 sticky top-32 lg:top-24 self-start">
-              <div className="bg-white/60 rounded-xl p-4 space-y-4 shadow-sm border border-white/50">
-                <h2 className="text-xl font-bold text-gray-800">设置</h2>
+              <div className="card-content">
+                <h2 className="title-section text-gray-800">设置</h2>
 
                 <div className="flex gap-2">
                   {(Object.keys(GAME_NAMES) as GameType[]).map(game => (
@@ -466,8 +465,8 @@ export default function FreedomConstPage() {
                 </div>
               </div>
 
-              <div className="bg-white/60 rounded-xl p-4 space-y-4 shadow-sm border border-white/50">
-                <h2 className="text-xl font-bold text-gray-800">歌曲选择</h2>
+              <div className="card-content">
+                <h2 className="title-section text-gray-800">歌曲选择</h2>
 
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
@@ -619,7 +618,7 @@ export default function FreedomConstPage() {
                         <div
                           className={`
                             flex-shrink-0 flex flex-col items-center justify-center border-r-2 border-gray-100 pr-4
-                            ${block.settings.isGaming ? 'bg-gradient-to-br from-red-500 via-yellow-500 to-blue-500 text-white' : 'bg-transparent text-gray-800'}
+                            ${block.settings.isGaming ? 'bg-gradient-gaming' : 'bg-transparent text-gray-800'}
                           `}
                           style={{
                             width: '100px',

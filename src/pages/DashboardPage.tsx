@@ -36,15 +36,9 @@ export function DashboardPage() {
 
   return (
     <div 
-      className="min-h-screen" 
+      className="page-background-fixed"
       style={{
-        backgroundColor: '#f2f2f2',
-        backgroundImage: 'url("/assets/images/backgrounds/bg6.png")',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'top',
-        backgroundSize: 'cover',
-        backgroundAttachment: 'fixed',
-        fontFamily: 'FWQingYin, Arial, sans-serif'
+        backgroundImage: 'url("/assets/images/backgrounds/bg6.png")'
       }}
     >
       {/* Header */}
