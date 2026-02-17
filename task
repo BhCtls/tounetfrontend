@@ -28,26 +28,10 @@
   - 针对未登录或缺少 appId 的情形仅设置状态，未统一重定向或提示。
   - 未对 `useEffect` 中的异步请求做取消处理。
 
-- **AnnouncementsPage.tsx**
-  - 完全依赖静态 `commits.json`，缺少为空或加载失败时的占位/错误提示。
-  - 无分页/筛选，列表增长时可能渲染性能问题。
-
 - **SongPicQueryPage.tsx**
   - `navigator.clipboard` 复制无降级方案，HTTP 环境或 Safari 下可能失败。
   - `objectUrls` 仅在卸载时清理，未在新图片加载时回收，可能导致内存泄漏。
   - 大量内联样式与组件逻辑混杂，缺少拆分（列表/控制面板/预览）。
-
-- **OngekiCardPreviewPage.tsx**
-  - 功能已经迁移。需要安全删除。
-
-- **LicensePage.tsx**
-  - 页面布局/背景样式重复其他页面，未抽离公共组件或布局。
-
-- **SponsorPage.tsx**
-  - 布局和背景样式与其他页面重复，未复用。
-
-- **AboutMePage.tsx**
-  - `window.open` 直接绑定在点击事件中，未做拦截/新窗口安全属性处理。
 
 - **FreedomConstPage.tsx**
   - 超大单文件组件，集成数据拉取、筛选、画布编辑、导出等多职责，维护性差。
