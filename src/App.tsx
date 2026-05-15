@@ -9,8 +9,6 @@ import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { AppsPage } from './pages/AppsPage';
 import { AboutMePage } from './pages/AboutMePage';
-import { SongPicQueryPage } from './pages/SongPicQueryPage';
-import { DownloadOrderPage } from './pages/DownloadOrderPage';
 import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { LicensePage } from './pages/LicensePage';
 import { SponsorPage } from './pages/SponsorPage';
@@ -70,12 +68,10 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route path="/song-pic-query" element={<SongPicQueryPage />} />
-              <Route path="/download-order" element={<DownloadOrderPage />} />
-              <Route path="/announcements" element={<AnnouncementsPage />} />
-              <Route path="/license" element={<LicensePage />} />
               <Route path="/sponsor" element={<SponsorPage />} />
               <Route path="/freedom-const" element={<FreedomConstPage />} />
+              <Route path="/announcements" element={<AnnouncementsPage />} />
+              <Route path="/license" element={<LicensePage />} />
             </Routes>
           </Router>
         </AuthProvider>
