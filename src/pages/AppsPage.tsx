@@ -170,9 +170,7 @@ export function AppsPage() {
       <PageHeader
         title="应用管理"
         subtitle={user?.username}
-        showBack
-        backText="返回主页"
-        onBack={() => navigate('/')}
+        showBack={false}
         actions={
           <div className="flex items-center gap-2 text-sm text-gray-700">
             <User className="w-4 h-4" />

@@ -16,7 +16,7 @@ export function DashboardPage() {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/desktop');
   };
 
   if (isLoading) {
@@ -46,7 +46,7 @@ export function DashboardPage() {
         showBack={false}
         actions={
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={() => navigate('/')}>
+            <Button variant="outline" size="sm" onClick={() => navigate('/desktop')}>
               <Home className="w-4 h-4 mr-2" />
               返回主页
             </Button>

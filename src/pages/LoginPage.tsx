@@ -37,7 +37,7 @@ export function LoginPage() {
     mutationFn: authApi.login,
     onSuccess: (response) => {
       login(response.data.token);
-      navigate('/');
+      navigate('/desktop');
     },
     onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       setError(error.response?.data?.message || 'Login failed');

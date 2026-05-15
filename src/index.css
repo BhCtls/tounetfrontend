@@ -17,6 +17,11 @@
   font-family: FWQingYin, Arial, sans-serif;
 }
 
+.home-content {
+  padding-left: 90px;
+  padding-right: 16px;
+}
+
 @layer base {
   html {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -30,6 +35,11 @@
 
 /* 移动端适配样式 */
 @media (max-width: 768px) {
+  .home-content {
+    padding-left: 16px;
+    padding-right: 12px;
+  }
+
   .app-container {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
     gap: 10px !important;

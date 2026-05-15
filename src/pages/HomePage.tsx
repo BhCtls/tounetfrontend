@@ -3,28 +3,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { userApi, publicApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
-import { Input } from '../components/ui/Input';
-import { LogIn, User, UserPlus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useMutation } from '@tanstack/react-query';
-import { authApi } from '../lib/api';
+import { LogIn, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { App } from '../types/api';
-
-const loginSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  password: z.string().min(1, 'Password is required'),
-});
-
-type LoginForm = z.infer<typeof loginSchema>;
+import { BackToHomeButton } from '../components/BackToHomeButton';
 
 export function HomePage() {
-  const { user, login, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'error' } | null>(null);
   const [confirmAppUrl, setConfirmAppUrl] = useState<string | null>(null);
@@ -68,24 +54,6 @@ export function HomePage() {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const loginMutation = useMutation({
-    mutationFn: authApi.login,
-    onSuccess: (response: any) => {
-      login(response.data.token);
-      // Stay on homepage after login
-    },
-    onError: (error: any) => {
-      setError(error.response?.data?.message || 'Login failed');
-    },
-  });
 
   // 处理应用访问 - API应用（需要ntoken）
   const handleApiAppAccess = async (app: App) => {
@@ -140,11 +108,6 @@ export function HomePage() {
     return app.name?.charAt(0) || '📱';
   };
 
-  const onSubmit = (data: LoginForm) => {
-    setError('');
-    loginMutation.mutate(data);
-  };
-
   const toggleDebug = () => {
     setShowDebug(!showDebug);
   };
@@ -167,16 +130,6 @@ export function HomePage() {
     },
   ];
 
-  const toolApps = [
-        {
-      name: '中二成绩图识别',
-      emoji: '✍️',
-      url: 'https://huggingface.co/spaces/BhCtls/Chunipic',
-      description: '识图脚本',
-      isStatic: true
-    },
-  ];
-
   // 合并静态应用和API应用
   const allBasicApps = [
     ...apps.filter(app => !app.requireAuth || user).map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
@@ -190,27 +143,6 @@ export function HomePage() {
       isStatic: false,
       apiApp: app
     }))
-  ];
-
-  const allToolApps = [
-    ...toolApps.map(app => ({ ...app, app_id: undefined, apiApp: undefined })),
-    // 可以在这里添加更多从API获取的工具应用
-  ];
-
-  const debugApps = [
-    {
-      name: 'Null Definition',
-      emoji: '🈲',
-      url: '/scoresheet/',
-      description: '暂时未定义功能',
-      isStatic: true
-    },
-    {
-      name: 'PWA测试',
-      emoji: '🎵',
-      url: 'pwa/pwa-test.html',
-      description: 'PWA功能测试'
-    }
   ];
 
   return (
@@ -231,6 +163,10 @@ export function HomePage() {
         </div>
       )}
 
+      <BackToHomeButton />
+
+      <div className="home-content">
+
       {/* Title */}
       <div className="flex justify-center" style={{
         color: 'rgb(53, 53, 53)',
@@ -238,7 +174,7 @@ export function HomePage() {
         fontSize: 'x-large',
         textShadow: 'darkgray 1px 1px 1px'
       }}>
-  <h1>Tounet 5.5.0 202601</h1>
+  <h1>Tounet 5.5.1 202605</h1>
       </div>
 
       {/* Switch and Login */}
@@ -274,58 +210,7 @@ export function HomePage() {
                 Logout
               </Button>
             </div>
-          ) : (
-            <>
-              {/* Desktop Login Form */}
-              <Card className="w-80">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center">
-                    <LogIn className="w-5 h-5 mr-2" />
-                    快速登录
-                  </CardTitle>
-                  <CardDescription>登录后可访问更多功能</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                    {error && (
-                      <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-                        {error}
-                      </div>
-                    )}
-                    <Input
-                      placeholder="Username"
-                      {...register('username')}
-                      error={errors.username?.message}
-                    />
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      {...register('password')}
-                      error={errors.password?.message}
-                    />
-                    <div className="flex gap-2">
-                      <Button
-                        type="submit"
-                        size="sm"
-                        className="flex-1"
-                        disabled={loginMutation.isPending}
-                      >
-                        {loginMutation.isPending ? 'Logging in...' : 'Login'}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate('/register')}
-                      >
-                        <UserPlus className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -335,7 +220,7 @@ export function HomePage() {
         fontFamily: 'FWQingYin, Arial, sans-serif',
         fontSize: 'large'
       }}>
-        <h3>基本功能</h3>
+        <h3>应用列表</h3>
       </div>
       
       <div 
@@ -397,119 +282,6 @@ export function HomePage() {
         ))}
       </div>
 
-        {/* Other Tools */}
-        <div className="flex justify-center" style={{
-          color: 'rgb(53, 53, 53)',
-          fontFamily: 'FWQingYin, Arial, sans-serif',
-          fontSize: 'large',
-          marginTop: '20px'
-        }}>
-          <h3>限时应用</h3>
-        </div>
-        
-        <div 
-          className="app-container"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-            gap: '20px',
-            padding: '20px',
-            justifyContent: 'center',
-            alignItems: 'center',
-            transition: 'all 0.3s ease',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            borderRadius: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-            margin: '20px auto',
-            maxWidth: '95vw'
-          }}
-        >
-          {allToolApps.map((app, index) => (
-            <div
-              key={index}
-              className="app-button"
-              onClick={() => handleStaticAppAccess(app)}
-              style={{
-                margin: '10px',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '10px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '16px',
-                fontWeight: 'bold',
-                textAlign: 'center',
-                padding: '15px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                backdropFilter: 'blur(5px)',
-                WebkitBackdropFilter: 'blur(5px)',
-                boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
-                flexDirection: 'row'
-              }}
-            >
-              <span style={{ fontSize: '20px', marginRight: '10px' }}>
-                {getAppIcon(app)}
-              </span>
-              <span>{app.name}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Debug Apps */}
-        {showDebug && (
-          <div 
-            className="app-container"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-              gap: '20px',
-              padding: '20px',
-              justifyContent: 'center',
-              alignItems: 'center',
-              transition: 'all 0.3s ease',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
-              borderRadius: '10px',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-              margin: '20px auto',
-              maxWidth: '95vw'
-            }}
-          >
-            {debugApps.map((app, index) => (
-              <div
-                key={index}
-                className="app-button"
-                onClick={() => window.location.href = app.url}
-                style={{
-                  margin: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  padding: '15px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: 'blur(5px)',
-                  WebkitBackdropFilter: 'blur(5px)',
-                  boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',
-                  flexDirection: 'row'
-                }}
-              >
-                <span style={{ fontSize: '20px', marginRight: '10px' }}>{app.emoji}</span>
-                <span>{app.name}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
       {/* Footer */}
       <div style={{
         position: 'fixed',
@@ -523,6 +295,7 @@ export function HomePage() {
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/about')}>关于🔗</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/license')}>LICENSE🔗</span> | 
         <span style={{ color: 'green', cursor: 'pointer' }} onClick={() => navigate('/announcements')}>公告🔗</span>
+      </div>
       </div>
     </div>
   );
