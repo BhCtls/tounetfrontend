@@ -24,7 +24,7 @@ export function AppLauncherPage() {
   // Redirect if no appId
   useEffect(() => {
     if (!appId) {
-      navigate('/');
+      navigate('/desktop');
     }
   }, [appId, navigate]);
 
@@ -97,7 +97,7 @@ export function AppLauncherPage() {
   }, [appId, user, apps, isLoadingApps]);
 
   const handleBack = () => {
-    navigate('/');
+    navigate('/desktop');
   };
 
   // Show loading if user or appId not ready

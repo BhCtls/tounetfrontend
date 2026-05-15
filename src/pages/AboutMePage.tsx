@@ -9,12 +9,12 @@ export function AboutMePage() {
 
   const achievements = [
     { src: '/assets/images/kl/博客_1.png', title: '博客', desc: 'bhctls.github.io' },
-    { src: '/assets/images/kl/工具_1.png', title: '实用工具 I', desc: '学科小工具&各种奇思妙想' },
-    { src: '/assets/images/kl/工具_2.png', title: '实用工具 II', desc: '音乐游戏相关开发' },
-    { src: '/assets/images/kl/活动_1.jpg', title: '线下活动', desc: '2024.10 Google DevFest' },
+    { src: '/assets/images/kl/兴趣_1.png', title: 'zipai', desc: '这是我？' },
+    { src: '/assets/images/kl/兴趣_2.png', title: '实用工具 II', desc: '十几个有趣工具' },
+    { src: '/assets/images/kl/兴趣_3.jpg', title: '任意定数表', desc: '混乱' },
+    { src: '/assets/images/kl/兴趣_4.jpg', title: '游戏成就 III', desc: '2024.10 Google DevFest' },
     { src: '/assets/images/kl/游戏_1.JPG', title: '游戏成就 I', desc: '2025.12 雪男AJ！！！！' },
     { src: '/assets/images/kl/游戏_2.JPG', title: '游戏成就 II', desc: '音击 15.3全鸟' },
-    { src: '/assets/images/kl/游戏_3.JPG', title: '游戏成就 III', desc: 'XV版本b50，风呗8247和makear一绿是亮点' },
     { src: '/assets/images/kl/谷饭_1.JPG', title: '谷子与美食 I', desc: '我喜欢三角葵，也喜欢甜点！' },
     { src: '/assets/images/kl/谷饭_2.JPG', title: '谷子与美食 II', desc: '目前最高兴的一次生日饭，感谢朋友们' },
   ];
@@ -47,9 +47,9 @@ export function AboutMePage() {
           <div className="font-fwqingyin space-y-4">
             <section>
               <h2 className="text-xl font-bold mb-2">兴趣爱好</h2>
-              <p>喜欢音乐游戏(特别是街机)与写博客。编程未入门。美食和逛街也是我人生中不可或缺的部分。</p>
-              <p>SEGA三家平均游戏经验6年左右，三虹极曾达成。</p>
-              <p>🚰SDVX vf17或帝，💿二寺sp初段，ub鸟了十几个10级，🎹钢琴机泼盆仅摸过。</p>
+              <p>喜欢音乐游戏和写博客，也写点代码仿真。美食和逛街也是我人生中不可或缺的部分。</p>
+              <p>SEGA三家平均游戏经验6年左右，三虹极达成。</p>
+              <p>b打的真不多：🚰SDVX vf17或帝，💿二寺sp初段，ub鸟了十几个10级，🎹钢琴机泼盆仅摸过。</p>
               <p>个人买一些周边专辑做收藏，不过我更青睐数字专辑。</p>
             </section>
 
@@ -80,10 +80,9 @@ export function AboutMePage() {
                 （也不要当串子哦）。
               </p>
               <p>
-                空间会发
-                <span className="text-red-600 font-bold text-[110%] mx-1">无预警血图</span>
-                的,
-                <span className="text-red-600 font-bold text-[110%] mx-1">待人刻薄者</span>
+                <span className="text-red-600 font-bold text-[110%] mx-1">待人刻薄or自我意识过强</span>
+                以及
+                <span className="text-red-600 font-bold text-[80%] mx-1">任意fps+任意galgame且街机只玩舞萌</span>
                 也不建议加好友。
               </p>
               <div
@@ -118,7 +117,7 @@ export function AboutMePage() {
           {/* Contact Toggle Button (Collapsed) */}
           {!showContact && (
             <div
-              className="absolute bottom-[60%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer w-[30px] text-center leading-[1.2] font-fwqingyin hover:bg-pink-400 transition-colors"
+              className="absolute bottom-[65%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer w-[30px] text-center leading-[1.2] font-fwqingyin hover:bg-pink-400 transition-colors"
               onClick={() => setShowContact(true)}
             >
               <p>&nbsp;</p>
@@ -130,7 +129,7 @@ export function AboutMePage() {
           {/* Contact Container (Expanded) */}
           {showContact && (
             <div
-              className="absolute bottom-[50%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer font-fwqingyin z-10 shadow-lg"
+              className="absolute bottom-[55%] right-[10px] bg-pink-300 p-[5px] rounded-[10px] cursor-pointer font-fwqingyin z-10 shadow-lg"
               onClick={() => setShowContact(false)}
             >
               <p className="text-[60%] text-center mb-1">＞＞＞＞关闭＞＞＞＞</p>

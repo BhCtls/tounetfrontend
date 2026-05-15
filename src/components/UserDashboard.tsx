@@ -169,15 +169,7 @@ export function UserDashboard() {
                   {accessingApp === app.app_id && (
                     <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
                   )}
-                  <div className={`w-2 h-2 rounded-full ${
-                    !app.url 
-                      ? 'bg-gray-400'
-                      : appStatus[app.app_id] === 'checking' 
-                        ? 'bg-yellow-400 animate-pulse'
-                        : appStatus[app.app_id] === 'online' 
-                          ? 'bg-green-400'
-                          : 'bg-red-400'
-                  }`} />
+
                 </div>
                 
                 <span className="text-sm mb-2">{app.name}</span>

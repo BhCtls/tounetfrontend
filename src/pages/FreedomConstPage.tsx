@@ -394,7 +394,7 @@ export default function FreedomConstPage() {
     >
       {/* Back Button */}
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/desktop')}
         className="fixed top-5 left-5 bg-white/90 text-[#667eea] px-4 py-2.5 rounded-[20px] backdrop-blur-md shadow-lg z-50 hover:bg-[#667eea] hover:text-white transition-colors flex items-center gap-1 no-underline"
       >
         <ArrowLeft className="w-4 h-4" />

@@ -11,7 +11,6 @@ import { Input } from '../components/ui/Input';
 import { Loading } from '../components/ui/Loading';
 import { Key, User, Copy, Check, RefreshCw, Smartphone } from 'lucide-react';
 import { copyToClipboard } from '../lib/utils';
-import { useNavigate } from 'react-router-dom';
 import { PageLayout } from '../components/PageLayout';
 import { PageHeader } from '../components/PageHeader';
 
@@ -29,7 +28,6 @@ type UpdateProfileForm = z.infer<typeof updateProfileSchema>;
 type GenerateNKeyForm = z.infer<typeof generateNKeySchema>;
 
 export function AppsPage() {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [copiedNKey, setCopiedNKey] = useState<string>('');
   const [generatedNKey, setGeneratedNKey] = useState<string>('');
@@ -170,9 +168,7 @@ export function AppsPage() {
       <PageHeader
         title="应用管理"
         subtitle={user?.username}
-        showBack
-        backText="返回主页"
-        onBack={() => navigate('/')}
+        showBack={false}
         actions={
           <div className="flex items-center gap-2 text-sm text-gray-700">
             <User className="w-4 h-4" />
