@@ -78,7 +78,7 @@ export function HomePage() {
     }
     
     // 定义需要客户端路由的内部页面路径
-    const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps', '/song-pic-query', '/freedom-const'];
+    const internalRoutes = ['/frontend', '/about', '/login', '/register', '/dashboard', '/apps', '/freedom-const'];
     
     // 只有明确定义的内部路由才使用客户端导航
     const isInternalRoute = internalRoutes.includes(app.url);
