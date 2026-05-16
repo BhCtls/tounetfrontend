@@ -3,11 +3,6 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: SEGA_Humming;
-  src: url('./assets/fonts/SEGA_Humming.ttf') format("truetype")
-}
-
-@font-face {
   font-family: FWQingYin;
   src: url('/assets/fonts/FWQingYin.TTF') format("truetype")
 }

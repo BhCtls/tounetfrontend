@@ -1,5 +1,41 @@
 [
   {
+    "hash": "fde692b",
+    "date": "2026-05-16",
+    "message": "将多余且没有实际打包作用的 src/assets/images 文件夹整体删除了，图片资源现在全部统一管理在 images 中，更加直观。",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "1becc30",
+    "date": "2026-05-15",
+    "message": "安全删除downloadorder和songpicquery。并通过mpn 润",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "e6e8360",
+    "date": "2026-05-15",
+    "message": "删除了未使用的 navigate 定义以及相应的 useNavigate 导入",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "493177e",
+    "date": "2026-05-15",
+    "message": "大更新。不再有默认的应用界面了",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "4eef015",
+    "date": "2026-02-17",
+    "message": "扩列图换了",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "4daa979",
+    "date": "2026-02-10",
+    "message": "css层抽象-2",
+    "author": "BhCtls"
+  },
+  {
     "hash": "478916a",
     "date": "2026-02-10",
     "message": "css层抽象",
@@ -261,42 +297,6 @@
     "hash": "8040bd2",
     "date": "2025-11-12",
     "message": "神秘更新",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "2fb8ef0",
-    "date": "2025-09-04",
-    "message": "dev version=2",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "8ce49db",
-    "date": "2025-09-03",
-    "message": "branch waiting for pr",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "5e3a861",
-    "date": "2025-08-04",
-    "message": "新功能",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "0714eab",
-    "date": "2025-08-03",
-    "message": "ui更新，完全支持url",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "16d56e9",
-    "date": "2025-07-05",
-    "message": "可用版本",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "a8d3f56",
-    "date": "2025-06-30",
-    "message": "权限更新",
     "author": "BhCtls"
   }
 ]
