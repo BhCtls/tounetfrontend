@@ -10,11 +10,14 @@ export function AboutMePage() {
   const achievements = [
     { src: '/assets/images/kl/博客_1.png', title: '博客', desc: 'bhctls.github.io' },
     { src: '/assets/images/kl/兴趣_1.png', title: 'zipai', desc: '这是我？' },
+    { src: '/assets/images/kl/兴趣_6.jpg', title: '魂之对镜拍', desc: '打音乐游戏打出肌肉' },
     { src: '/assets/images/kl/兴趣_2.png', title: '实用工具 II', desc: '十几个有趣工具' },
     { src: '/assets/images/kl/兴趣_3.jpg', title: '任意定数表', desc: '混乱' },
-    { src: '/assets/images/kl/兴趣_4.jpg', title: '游戏成就 III', desc: '2024.10 Google DevFest' },
+    { src: '/assets/images/kl/兴趣_4.jpg', title: 'devfest', desc: '2024.10 Google DevFest' },
+    { src: '/assets/images/kl/兴趣_5.jpg', title: '拟录取通知', desc: '和喜欢的学校一志愿在一起了' },
     { src: '/assets/images/kl/游戏_1.JPG', title: '游戏成就 I', desc: '2025.12 雪男AJ！！！！' },
     { src: '/assets/images/kl/游戏_2.JPG', title: '游戏成就 II', desc: '音击 15.3全鸟' },
+    { src: '/assets/images/kl/游戏_3.JPG', title: '游戏成就 III', desc: '赤击达成' },
     { src: '/assets/images/kl/谷饭_1.JPG', title: '谷子与美食 I', desc: '我喜欢三角葵，也喜欢甜点！' },
     { src: '/assets/images/kl/谷饭_2.JPG', title: '谷子与美食 II', desc: '目前最高兴的一次生日饭，感谢朋友们' },
   ];
