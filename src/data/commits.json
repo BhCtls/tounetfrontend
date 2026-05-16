@@ -1,5 +1,17 @@
 [
   {
+    "hash": "80d9faa",
+    "date": "2026-05-16",
+    "message": "紧急修复tailwind css问题",
+    "author": "BhCtls"
+  },
+  {
+    "hash": "dc26730",
+    "date": "2026-05-16",
+    "message": "清理项目包体，部分冗余文件完全删除",
+    "author": "BhCtls"
+  },
+  {
     "hash": "fde692b",
     "date": "2026-05-16",
     "message": "将多余且没有实际打包作用的 src/assets/images 文件夹整体删除了，图片资源现在全部统一管理在 images 中，更加直观。",
@@ -285,18 +297,6 @@
     "hash": "ac06383",
     "date": "2025-12-21",
     "message": "update routine",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "fd0dfb6",
-    "date": "2025-11-18",
-    "message": "user interface",
-    "author": "BhCtls"
-  },
-  {
-    "hash": "8040bd2",
-    "date": "2025-11-12",
-    "message": "神秘更新",
     "author": "BhCtls"
   }
 ]
