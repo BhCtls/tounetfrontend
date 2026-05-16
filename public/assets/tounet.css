@@ -1,7 +1,7 @@
 /* SEGA Humming Font */
 @font-face {
   font-family: 'SEGA_Humming';
-  src: url('./assets/fonts/SEGA_Humming.ttf') format('truetype');
+  src: url('fonts/FWQingYin.TTF') format('truetype');
   font-display: swap;
 }
 
@@ -12,7 +12,7 @@
 
 .tounet-bg {
   background-color: #f2f2f2;
-  background-image: url('./assets/images/backgrounds/bg.png');
+  background-image: url('/assets/images/backgrounds/bg.png');
   background-repeat: no-repeat;
   background-position: top;
   background-size: cover;
